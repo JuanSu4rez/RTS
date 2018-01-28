@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33392019651143662}
   - component: {fileID: 65956182162787876}
   - component: {fileID: 23804856369066764}
+  - component: {fileID: 114743400181800106}
   m_Layer: 0
   m_Name: GoldMIne
   m_TagString: Untagged
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1624383653773826}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.922403, y: 0.5, z: 11.350983}
+  m_LocalPosition: {x: -27.922403, y: 1, z: 11.350983}
   m_LocalScale: {x: 5, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -95,3 +96,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1, y: 1, z: 1.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114743400181800106
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624383653773826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67ab8bea12cf4084e911995e952e4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 1
+  totalAmount: 500

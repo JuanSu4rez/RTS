@@ -14,11 +14,16 @@ public interface IFigther{
 
 public interface IWorker {
     float ResourceCapacity { get; set; }
+    float CurrentAmountResouce { get; set; }
     float BuildingSpeed { get; set; }
     float GatheringSpeed { get; set; }
-    Resources Resource { get; set; }
+    Resources CurrentResource { get; set; }
 }
 
 public interface IResource {
     float ResourceAmount { get; set; }
+}
+
+public interface IStatus {
+    string GetStatus();
 }

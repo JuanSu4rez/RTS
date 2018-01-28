@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33457193023192880}
   - component: {fileID: 23694217079058224}
   - component: {fileID: 136311012828400822}
+  - component: {fileID: 114479268929353586}
   m_Layer: 0
   m_Name: Forest
   m_TagString: Untagged
@@ -83,6 +84,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1546361794389262}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114479268929353586
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1546361794389262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67ab8bea12cf4084e911995e952e4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 0
+  totalAmount: 0
 --- !u!136 &136311012828400822
 CapsuleCollider:
   m_ObjectHideFlags: 1
