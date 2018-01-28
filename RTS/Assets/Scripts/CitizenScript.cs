@@ -43,7 +43,8 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Colision "+ pointResource);
-     
+        var name = collision.gameObject.name;
+        var tag = collision.gameObject.tag;
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -62,7 +63,9 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 break;
             case CitizenStates.Walking:
                 Debug.Log("Collision enter");
-                if (collision.gameObject.name.Equals("GoldMine") || collision.gameObject.name.Equals("Forest"))
+           
+
+                if (name.Equals("GoldMine") || name.Equals("Forest"))
                 {
                     if (citizenLabor != CitizenStates.None) {
 
@@ -71,26 +74,37 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                     }
                        
                 }
-                else if (collision.gameObject.name.Equals("UrbanCenter") )
+                else if (name.Equals("UrbanCenter") )
                 {
                     Debug.Log("Collision enter UrbanCenter");
                     if (citizenLabor != CitizenStates.None)
                     {
-                        //TODO  ahumentar recursos al jugador
+                       
                         if (CurrentAmountResouce > 0)
-                        {
+                        { 
+                            //TODO add resources to the player
                             CurrentAmountResouce = 0;
                         }
                       
                      
                         pointToMove = pointResource;
-                        //ahumentar el score del player
+                      
 
                     }
 
-                }            
+                }
 
-                break;
+                if (collision.gameObject.CompareTag("Building"))
+                {
+                    if (citizenLabor != CitizenStates.None)
+                    {
+
+                        citizenState = citizenLabor;
+                      
+                    }
+                }
+
+                    break;
             default:
                 break;
         }
@@ -104,6 +118,16 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
+                var aux = collision.gameObject.GetComponent<BuildingBehaviour>();
+                Debug.Log("CurrentBuiltAmount  " + aux.CurrentBuiltAmount);
+                if (aux.IsBulding())
+                    aux.AddCurrentBuiltAmount(this.BuildingSpeed);
+                else if (aux.CheckState(BuildingStates.Built))
+                {
+                    //TODO check if there is other Building to build
+                    SetState(CitizenStates.Idle);
+                }
+                   
                 break;
             case CitizenStates.Died:
                 break;
@@ -167,12 +191,10 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                     {
 
                         //TODO Descontar del recurso con el que se colisiona
-
-                        CurrentAmountResouce += resourceTemp.DiscountAmount(GatheringSpeed);
-
+                        CurrentAmountResouce += resourceTemp.DiscountAmount(CalculateGatheringSpeed());
 
                     } else if (!resourceTemp.HasResource()) {
-                        citizenState = CitizenStates.Idle;
+                        SetState(CitizenStates.Idle);
                         //TODO buscar recurso CERCANO del mapa explorado y construido
                     }
                     else
@@ -232,5 +254,15 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
         var distance = positionDif.magnitude;
         var direction = positionDif / distance;
         gameObject.transform.position += direction * speedWalk;
+    }
+
+    private float CalculateGatheringSpeed()
+    {
+        var result = GatheringSpeed;
+        var leftquantity = ResourceCapacity - CurrentAmountResouce;
+        if (GatheringSpeed > leftquantity)
+            result = leftquantity;
+        
+        return result;
     }
 }

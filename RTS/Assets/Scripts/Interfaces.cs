@@ -20,6 +20,17 @@ public interface IWorker {
     Resources CurrentResource { get; set; }
 }
 
+public interface IBulding
+{
+    float Resistence { get; set; }
+    float TotalBuiltAmount { get; set; }
+    float CurrentBuiltAmount { get; }
+    List<Cost> GetCosts();
+    BuildingStates State { get; set; }
+    BuildingType Type { get; set; }
+
+}
+
 public interface IResource {
     float ResourceAmount { get; set; }
 }

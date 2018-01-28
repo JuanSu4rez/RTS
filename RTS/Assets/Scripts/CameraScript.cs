@@ -58,6 +58,24 @@ public class CameraScript : MonoBehaviour {
                         break;
                 }
 
+                rightclickedObj = hit.transform.gameObject.tag;
+
+                switch (rightclickedObj)
+                {
+                    case "Building":
+
+
+                        //TODO the player has selected a kind of bulding
+                        //TODO check if the player can afford to build the bulding
+                        //TODO create the gameobject depeding on the kind of bulding
+                     
+                       var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                        citizenTemp.SetPointToMove(hit.transform.position);
+                        citizenTemp.SetState(CitizenStates.Building);
+                        
+                        break;
+                }
+
                 Debug.Log(hit.transform.gameObject.name);
 
                // currentSelected = hit.transform.gameObject;

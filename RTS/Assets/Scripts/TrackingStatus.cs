@@ -26,13 +26,13 @@ public class TrackingStatus : MonoBehaviour {
         //    print("You clicked the button!");
         //Debug.Log("ongui");
         Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
-        GUI.Button(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
+        GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
       
     }
 
     private string printMessage()
     {
-        string finalString = "";
+        string finalString = this.gameObject.name;
         if (status != null){
             finalString = string.Concat(" status ", status.GetStatus());
         }
