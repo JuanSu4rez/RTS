@@ -6,9 +6,21 @@ public class CameraScript : MonoBehaviour {
 
     private GameObject currentSelected;
 
+    [SerializeField]
+    private Plane plane;
+
+    private GameObject pointtomove;
 	// Use this for initialization
 	void Start () {
+
       
+        pointtomove =  GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        pointtomove.transform.position = Camera.main.transform.position;
+        pointtomove.transform.localScale = new Vector3(1, 1, 1);
+        pointtomove.GetComponent<Renderer>().enabled = false;
+        pointtomove.name = "POINTTOMOVE";
+
+       
     }
 
     // Update is called once per frame
@@ -19,13 +31,18 @@ public class CameraScript : MonoBehaviour {
             Debug.Log("click izquierdo");
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name.Equals("Citizen"))
             {
                 currentSelected = hit.transform.gameObject;
 
                 printStatus(hit.transform);
             }
+
+            //cuando volver el currentselected null
+           
         }
+
+
         if (Input.GetMouseButtonDown(1))
         {
             RaycastHit hit;
@@ -36,12 +53,22 @@ public class CameraScript : MonoBehaviour {
                 switch (rightclickedObj)
                 {
                     case "Land":
-                     //   Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                      //  newPosition.y = 1;
-                      //  currentSelected.transform.position = newPosition;
+                        var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+
+                       
+                       // if (hit.rigidbody != null)
+                        {
+                            
+                          
+                            pointtomove.transform.position = new Vector3( hit.point.x,1,hit.point.z);
+                            citizenTemp.SetPointToMove(pointtomove.transform.position);
+                            citizenTemp.SetState(CitizenStates.Walking);
+
+                           
+                                }
                         break;
                     case "GoldMine":
-                        var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                         citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetPointResource(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Gathering);
@@ -78,10 +105,23 @@ public class CameraScript : MonoBehaviour {
 
                 Debug.Log(hit.transform.gameObject.name);
 
-               // currentSelected = hit.transform.gameObject;
+                // currentSelected = hit.transform.gameObject;
 
                 //printStatus(hit.transform);
+
+                //float rayDistance = 0;
+                //var _plane = plane.GetComponent<Plane>();
+                //if (_plane.Raycast(ray, out rayDistance))
+                //{
+                //    var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                //    Debug.Log(hit.transform.position);
+                //    pointtomove.transform.position = hit.transform.position;
+                //    citizenTemp.SetPointToMove(hit.transform.position);
+                //    citizenTemp.SetState(CitizenStates.Walking);
+                //}
             }
+        
+               
         }
     }
 
