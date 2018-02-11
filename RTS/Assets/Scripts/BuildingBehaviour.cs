@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingBehaviour : MonoBehaviour, IBulding{
+public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
+{
 
     private float LastCurrentBuiltAmount;
 
@@ -34,7 +35,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding{
 	// Update is called once per frame
 	void Update ()
     {
-     
+       
         switch (State)
         {
             case BuildingStates.Building:
@@ -44,6 +45,11 @@ public class BuildingBehaviour : MonoBehaviour, IBulding{
                     //TODO send a notification indicating that a building has been Built
 
                     SetBulding();
+                    DisabledTrackingStatus();
+                }
+                else
+                {
+                    EnabledTrackingStatus();
                 }
                 break;
             case BuildingStates.Built:
@@ -94,6 +100,20 @@ public class BuildingBehaviour : MonoBehaviour, IBulding{
         LastCurrentBuiltAmount = CurrentBuiltAmount;
     }
 
+    private void EnabledTrackingStatus()
+    {
+        var status = this.gameObject.GetComponent<TrackingStatus>();
+        if (status != null && !status.enabled)
+            status.enabled = true; 
+    }
+
+    private void DisabledTrackingStatus()
+    {
+        var status = this.gameObject.GetComponent<TrackingStatus>();
+        if (status != null && !status.enabled)
+            status.enabled = true;
+    }
+
     private void SetBulding()
     {
         //change sprite or model
@@ -141,5 +161,11 @@ public class BuildingBehaviour : MonoBehaviour, IBulding{
     public List<Cost> GetCosts()
     {
         return Costs;
+    }
+
+    public string GetStatus()
+    {
+        var result = "Bulding " + this.State.ToString() + ", CurrentBuiltAmount = " + this.CurrentBuiltAmount;
+        return result;
     }
 }

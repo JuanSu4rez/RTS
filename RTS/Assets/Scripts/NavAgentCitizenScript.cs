@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-[System.Obsolete]
-public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
+
+public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
 {
 
     private Collider citizenCollider;
     private CitizenStates citizenState;
     private CitizenStates citizenLabor;
+    private BuildingBehaviour building;
+
     private Vector3 pointToMove;
     private Vector3 pointResource;
     private float speedWalk;
@@ -23,11 +26,13 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     public float Life { get; set; }
     public float CurrentAmountResouce { get; set; }
 
+    public NavMeshAgent navMeshAgent;
+
     // Use this for initialization
     void Start()
     {
-        citizenCollider = transform.GetComponent<Collider>();
         Debug.Log("citizenCollider " + citizenCollider != null);
+        citizenCollider = this.gameObject.GetComponent<Collider>();
         citizenState = CitizenStates.Idle;
         CurrentResource = Resources.None;
         speedWalk = 0.255F;
@@ -37,6 +42,8 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
         DefensePower = 0.1F;
         BuildingSpeed = 0.1F;
         citizenLabor = CitizenStates.None;
+
+        navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
 
     }
 
@@ -50,6 +57,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
+              
                 break;
             case CitizenStates.Died:
                 break;
@@ -64,10 +72,11 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.Walking:
                 Debug.Log("Collision enter");
 
-
+                //TODO THE VALIDATION MUST BE AGAINST THE MATERIAL TO CRAFT
                 if (name.Equals("GoldMine") || name.Equals("Forest"))
                 {
-                    if (citizenLabor != CitizenStates.None)
+                    navMeshAgent.enabled = false;
+                    if (citizenLabor ==  CitizenStates.Gathering)
                     {
 
                         citizenState = citizenLabor;
@@ -77,7 +86,9 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 }
                 else if (name.Equals("UrbanCenter"))
                 {
+
                     Debug.Log("Collision enter UrbanCenter");
+                   
                     if (citizenLabor != CitizenStates.None)
                     {
 
@@ -88,20 +99,22 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                         }
 
 
-                        pointToMove = pointResource;
-
+                        // pointToMove = pointResource;
+                        SetPointToMove(pointResource);
 
                     }
 
                 }
 
+                //TODO THE VALIDATION MUST BE AGAINST THE BUILDING TO BUILD
                 if (collision.gameObject.CompareTag("Building"))
                 {
-                    if (citizenLabor != CitizenStates.None)
+                    if (citizenLabor == CitizenStates.Building)
                     {
-
+                        building = collision.gameObject.GetComponent<BuildingBehaviour>();
+                        navMeshAgent.enabled = false;
                         citizenState = citizenLabor;
-
+                        
                     }
                 }
 
@@ -123,16 +136,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 {
 
            
-                     var aux = collision.gameObject.GetComponent<BuildingBehaviour>();
-
-                     Debug.Log("CurrentBuiltAmount  " + aux.CurrentBuiltAmount);
-                     if (aux.IsBulding())
-                         aux.AddCurrentBuiltAmount(this.BuildingSpeed);
-                     else if (aux.CheckState(BuildingStates.Built))
-                     {
-                         //TODO check if there is other Building to build
-                         SetState(CitizenStates.Idle);
-                     }
+                   
                 }
 
                 break;
@@ -144,7 +148,9 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 if (resourceTemp == null)
                 {
                     resourceTemp = collision.gameObject.GetComponent<ResourceScript>();
-                    pointToMove = pointResource;
+                    //pointToMove = pointResource;
+                    SetPointToMove(pointResource);
+
                 }
                 break;
 
@@ -163,8 +169,8 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                         {
                             CurrentAmountResouce = 0;
                         }
-                        pointToMove = pointResource;
-
+                        //pointToMove = pointResource;
+                        SetPointToMove(pointResource);
                     }
 
                 }
@@ -172,6 +178,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 {
                     collision.gameObject.transform.position = Camera.main.transform.position;
                     SetState(CitizenStates.Idle);
+                    navMeshAgent.enabled = false;
                 }
                 break;
             default:
@@ -190,6 +197,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
+                BuildProgress();
                 break;
             case CitizenStates.Died:
                 break;
@@ -218,6 +226,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                         citizenLabor = CitizenStates.Gathering;
                         //TODO CALCULAR EL PUNTO MAS CERCANO A DEPOSITAR
                         pointToMove = new Vector3(0, 1, 0);
+                        SetPointToMove(pointToMove);
                     }
                 }
                 break;
@@ -226,7 +235,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.None:
                 break;
             case CitizenStates.Walking:
-                Walking();
+                //Walking();
                 break;
             default:
                 break;
@@ -255,7 +264,8 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
-        pointToMove = newPointToMove;
+        navMeshAgent.enabled = true;
+        navMeshAgent.SetDestination(newPointToMove);
     }
 
     public void SetPointResource(Vector3 newPointToMove)
@@ -279,5 +289,21 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             result = leftquantity;
 
         return result;
+    }
+
+    private void BuildProgress()
+    {
+
+        if (building != null)
+        {
+            Debug.Log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
+            if (building.IsBulding())
+                building.AddCurrentBuiltAmount(this.BuildingSpeed);
+            else if (building.CheckState(BuildingStates.Built))
+            {
+                //TODO check if there is other Building to build
+                SetState(CitizenStates.Idle);
+            }
+        }
     }
 }

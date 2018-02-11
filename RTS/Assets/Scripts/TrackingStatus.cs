@@ -10,12 +10,33 @@ public class TrackingStatus : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-       object aux = this.gameObject.GetComponent<CitizenScript>();
+       object aux = this.gameObject.GetComponent<NavAgentCitizenScript>();
         if (aux != null)
         {
             status = aux as IStatus;
             worker = aux as IWorker;
         }
+
+        aux = this.gameObject.GetComponent<BuildingBehaviour>();
+        if (aux != null)
+        {
+            status = aux as IStatus;
+            worker = aux as IWorker;
+        }
+
+
+        //aux = this.gameObject.GetComponent<IStatus>();
+        //if (aux != null)
+        //{
+        //   // status = aux as IStatus;
+        //}
+
+        //aux = this.gameObject.GetComponent<IWorker>();
+        //if (aux != null)
+        //{
+        //   // worker = aux as IWorker;
+        //}
+
         Debug.Log("Status " + status);
     }
 	

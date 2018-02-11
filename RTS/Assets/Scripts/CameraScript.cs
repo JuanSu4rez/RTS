@@ -6,6 +6,14 @@ public class CameraScript : MonoBehaviour {
 
     private GameObject currentSelected;
 
+    public GameObject CurrentSelected
+    {
+        get
+        {
+            return currentSelected;
+        }
+    }
+
     [SerializeField]
     private Plane plane;
 
@@ -53,7 +61,7 @@ public class CameraScript : MonoBehaviour {
                 switch (rightclickedObj)
                 {
                     case "Land":
-                        var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                        var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
 
                        
                        // if (hit.rigidbody != null)
@@ -68,14 +76,14 @@ public class CameraScript : MonoBehaviour {
                                 }
                         break;
                     case "GoldMine":
-                         citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                        citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetPointResource(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Gathering);
                         citizenTemp.CurrentResource = Resources.Gold;                        
                         break;
                     case "Forest":
-                        citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                        citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetPointResource(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Gathering);
@@ -96,7 +104,7 @@ public class CameraScript : MonoBehaviour {
                         //TODO check if the player can afford to build the bulding
                         //TODO create the gameobject depeding on the kind of bulding
                      
-                       var citizenTemp = currentSelected.gameObject.GetComponent<CitizenScript>();
+                       var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Building);
                         
@@ -137,4 +145,10 @@ public class CameraScript : MonoBehaviour {
     //{
     //    Transform objectHit = hit.transform;
     //}
+
+    public bool HasScript<T>(){
+
+        return currentSelected != null && currentSelected.GetComponent<T>()!= null;
+    }
+
 }
