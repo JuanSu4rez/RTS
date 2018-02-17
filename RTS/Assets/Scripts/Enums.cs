@@ -35,6 +35,18 @@ public enum BuildingStates
     Repairing
 }
 
+public enum CameraStates
+{
+    //There is no selection made
+    None,
+    // one to many by mousewheel or double click
+    UnitsSelection,
+    // one to many by mousewheel or  double click
+    BuildingsSelection,
+   
+}
+
+
 /// <summary>
 /// Types of buildings that can be created by the citizens
 /// Taken from
