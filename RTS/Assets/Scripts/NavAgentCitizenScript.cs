@@ -31,7 +31,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     // Use this for initialization
     void Start()
     {
-        Debug.Log("citizenCollider " + citizenCollider != null);
+        //Debug.log("citizenCollider " + citizenCollider != null);
         citizenCollider = this.gameObject.GetComponent<Collider>();
         citizenState = CitizenStates.Idle;
         CurrentResource = Resources.None;
@@ -49,7 +49,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Colision " + pointResource);
+        //Debug.log("Colision " + pointResource);
         var name = collision.gameObject.name;
         var tag = collision.gameObject.tag;
         switch (citizenState)
@@ -70,7 +70,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
             case CitizenStates.None:
                 break;
             case CitizenStates.Walking:
-                Debug.Log("Collision enter");
+                //Debug.log("Collision enter");
 
                 //TODO THE VALIDATION MUST BE AGAINST THE MATERIAL TO CRAFT
                 if (name.Equals("GoldMine") || name.Equals("Forest"))
@@ -87,7 +87,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                 else if (name.Equals("UrbanCenter"))
                 {
 
-                    Debug.Log("Collision enter UrbanCenter");
+                    //Debug.log("Collision enter UrbanCenter");
                    
                     if (citizenLabor != CitizenStates.None)
                     {
@@ -126,7 +126,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("Collisionstay  " + pointResource);
+        //Debug.log("Collisionstay  " + pointResource);
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -161,7 +161,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
             case CitizenStates.Walking:
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
-                    Debug.Log("Collisionstay  UrbanCenter");
+                    //Debug.log("Collisionstay  UrbanCenter");
                     if (citizenLabor != CitizenStates.None)
                     {
                         //TODO  ahumentar recursos al jugador
@@ -191,7 +191,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(pointToMove);
+        //Debug.log(pointToMove);
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -296,7 +296,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
         if (building != null)
         {
-            Debug.Log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
+            //Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
             if (building.IsBulding())
                 building.AddCurrentBuiltAmount(this.BuildingSpeed);
             else if (building.CheckState(BuildingStates.Built))

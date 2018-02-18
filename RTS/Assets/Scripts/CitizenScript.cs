@@ -27,7 +27,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     void Start()
     {
         citizenCollider = transform.GetComponent<Collider>();
-        Debug.Log("citizenCollider " + citizenCollider != null);
+        //Debug.log("citizenCollider " + citizenCollider != null);
         citizenState = CitizenStates.Idle;
         CurrentResource = Resources.None;
         speedWalk = 0.255F;
@@ -42,7 +42,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Colision " + pointResource);
+        //Debug.log("Colision " + pointResource);
         var name = collision.gameObject.name;
         var tag = collision.gameObject.tag;
         switch (citizenState)
@@ -62,7 +62,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.None:
                 break;
             case CitizenStates.Walking:
-                Debug.Log("Collision enter");
+                //Debug.log("Collision enter");
 
 
                 if (name.Equals("GoldMine") || name.Equals("Forest"))
@@ -77,7 +77,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 }
                 else if (name.Equals("UrbanCenter"))
                 {
-                    Debug.Log("Collision enter UrbanCenter");
+                    //Debug.log("Collision enter UrbanCenter");
                     if (citizenLabor != CitizenStates.None)
                     {
 
@@ -113,7 +113,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
 
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("Collisionstay  " + pointResource);
+        //Debug.log("Collisionstay  " + pointResource);
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -125,7 +125,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
            
                      var aux = collision.gameObject.GetComponent<BuildingBehaviour>();
 
-                     Debug.Log("CurrentBuiltAmount  " + aux.CurrentBuiltAmount);
+                     //Debug.log("CurrentBuiltAmount  " + aux.CurrentBuiltAmount);
                      if (aux.IsBulding())
                          aux.AddCurrentBuiltAmount(this.BuildingSpeed);
                      else if (aux.CheckState(BuildingStates.Built))
@@ -155,7 +155,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             case CitizenStates.Walking:
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
-                    Debug.Log("Collisionstay  UrbanCenter");
+                    //Debug.log("Collisionstay  UrbanCenter");
                     if (citizenLabor != CitizenStates.None)
                     {
                         //TODO  ahumentar recursos al jugador
@@ -184,7 +184,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(pointToMove);
+        //Debug.log(pointToMove);
         switch (citizenState)
         {
             case CitizenStates.Attacking:

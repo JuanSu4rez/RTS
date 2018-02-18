@@ -33,6 +33,7 @@ public class CameraScript : MonoBehaviour {
     private GameObject pointtomove;
 
     private UnitsGui selectedGui;
+    private BuildingGui buildingGui;
 
     // Use this for initialization
     void Start () {
@@ -41,6 +42,9 @@ public class CameraScript : MonoBehaviour {
         firstclick = empty;
         secondclick = empty;
         selectedGui= ScriptableObject.CreateInstance<UnitsGui>();
+
+        buildingGui = ScriptableObject.CreateInstance<BuildingGui>();
+
 
         #region point to move
         pointtomove =  GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -55,71 +59,20 @@ public class CameraScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        userClick();
 
         switch (camerastate)
         {
-            case CameraStates.None:
-
-                
-                if (Input.GetMouseButtonDown(0) && firstclick== empty)
-                {
-                    firstclick = new Vector2( Input.mousePosition.x, Input.mousePosition.y);
-                }
-                else if (Input.GetMouseButtonUp(0))
-                {
-
-                    if(firstclick != empty)
-                    {
-                        //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
-
-                        //In the mean time keep the same logic
-                        RaycastHit hit;
-
-                        Ray ray = Camera.main.ScreenPointToRay(firstclick);
-                      
-                        if (Physics.Raycast(ray, out hit) )
-                        {
-                            var _name = hit.transform.gameObject.name;
-                            //TRANSATITION TO UnitsSelection OR BuildingsSelection
-                            currentSelected = hit.transform.gameObject;
-                            //TODO CREATE SOMETHING LIKE INSTANCE OF BY CHECKING ITS COMPONENTS
-
-                            switch (_name)
-                            {
-                                case "Citizen":
-                                    camerastate = CameraStates.UnitsSelection;
-                                    break;
-                                case "Armory":
-                                    camerastate = CameraStates.BuildingsSelection;
-                                    break;
-                                case "UrbanCenter":
-                                    camerastate = CameraStates.BuildingsSelection;
-                                    break;
-                                default:
-                                    camerastate = CameraStates.None;
-                                    break;
-
-                            }
-                        
-                            printStatus(hit.transform);
-                        }
-
-                        firstclick = empty;
-                    }
-                  
-                }
-
+            case CameraStates.None:                
                 break;
             case CameraStates.UnitsSelection:
+
                 if (!selectedGui.HasOptionSelected())
                     ClickActionsUnits();
                 else
                     selectedGui.Update();
                 break;
             case CameraStates.BuildingsSelection:
-
-
                 break;
         }
 
@@ -127,11 +80,73 @@ public class CameraScript : MonoBehaviour {
       
     }
 
+    private void userClick() {
+
+        if (Input.GetMouseButtonDown(0) && firstclick == empty){
+            firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (firstclick != empty)
+            {
+                //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+
+                //In the mean time keep the same logic
+                RaycastHit hit;
+
+                Ray ray = Camera.main.ScreenPointToRay(firstclick);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    var _name = hit.transform.gameObject.name;
+                    //TRANSATITION TO UnitsSelection OR BuildingsSelection
+                    currentSelected = hit.transform.gameObject;
+                    //TODO CREATE SOMETHING LIKE INSTANCE OF BY CHECKING ITS COMPONENTS
+
+                    switch (_name)
+                    {
+                        case "Citizen":
+                            camerastate = CameraStates.UnitsSelection;
+                            break;
+                        case "Barracks":
+                            camerastate = CameraStates.BuildingsSelection;
+                            break;
+                        case "UrbanCenter":
+                            camerastate = CameraStates.BuildingsSelection;
+                            break;
+                        default:
+                            camerastate = CameraStates.None;
+                            break;
+                    }
+
+                    var _tag = hit.transform.gameObject.tag;
+
+                    switch (_tag)
+                    {
+                        case "Citizen":
+                            camerastate = CameraStates.UnitsSelection;
+                            break;
+                        case "Building":
+                            camerastate = CameraStates.BuildingsSelection;
+                            break;
+                        default:
+                            camerastate = CameraStates.None;
+                            break;
+                    }
+
+                    printStatus(hit.transform);
+                }
+                firstclick = empty;
+            }
+        }
+    }
+
+
     private void printStatus(Transform transform)
     {
-        Debug.Log(transform.gameObject.name);
-        transform.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Specular");
-        transform.gameObject.GetComponent<Renderer>().material.SetColor("_SpecColor", Color.red);
+        //Debug.log(transform.gameObject.name);
+        //transform.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Specular");
+        //transform.gameObject.GetComponent<Renderer>().material.SetColor("_SpecColor", Color.red);
     }
 
     private void ClickActionsUnits()
@@ -236,7 +251,7 @@ public class CameraScript : MonoBehaviour {
                          secondclick  = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
 
 
-                        GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x,     (Screen.height - secondclick.y)- (Screen.height - firstclick.y)),"HOLA 2"); // -
+                        GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x,     (Screen.height - secondclick.y)- (Screen.height - firstclick.y)),""); // -
                     }
 
                 }
@@ -247,6 +262,7 @@ public class CameraScript : MonoBehaviour {
 
                 break;
             case CameraStates.BuildingsSelection:
+                buildingGui.ShowGUI(currentSelected);
                 break;
         }
     }

@@ -80,13 +80,18 @@ public enum BuildingType
     SiegeWorkshop,
     Stable,
     StoneWall,
-    //UrbanCenter
-    TownCenter,
+    //TownCenter,
     University,
+    UrbanCenter,
     WatchTower,
     Wonder
 }
 
+
+public enum UnitType {
+    Citizen,
+    SwordMan
+}
 
 
 public static class ExtensionMethods

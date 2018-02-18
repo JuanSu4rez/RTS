@@ -37,7 +37,7 @@ public class TrackingStatus : MonoBehaviour {
         //   // worker = aux as IWorker;
         //}
 
-        Debug.Log("Status " + status);
+        //Debug.log("Status " + status);
     }
 	
 	// Update is called once per frame
@@ -45,7 +45,7 @@ public class TrackingStatus : MonoBehaviour {
     {
         //if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button "+status.GetStatus()))
         //    print("You clicked the button!");
-        //Debug.Log("ongui");
+        ////Debug.log("ongui");
         Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
         GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
       

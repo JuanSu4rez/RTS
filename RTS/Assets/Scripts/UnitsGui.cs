@@ -109,6 +109,7 @@ public class UnitsGui : ScriptableObject
             mouseposition.y = 1;
             objectToCreate = UnityEngine.Resources.Load("House", typeof(GameObject)) as GameObject;
             createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
+            createdObject.name = "House";
 
 
         }
