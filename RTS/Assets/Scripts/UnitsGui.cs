@@ -19,35 +19,39 @@ public class UnitsGui : ScriptableObject
     public void Update()
     {
 
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit = new RaycastHit();
-        //TODO USE RayCasting with layer to avoid colliding with the createdObject 
-        var arrayCollisions = Physics.RaycastAll(ray);
-        if (arrayCollisions.Length > 0)
+        if (HasOptionSelected())
         {
-           if( SeekForaGameObjectByName(ref arrayCollisions, "Land",out hit))
+
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+            //TODO USE RayCasting with layer to avoid colliding with the createdObject 
+            var arrayCollisions = Physics.RaycastAll(ray);
+            if (arrayCollisions.Length > 0)
             {
-                createdObject.transform.position = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+                if (SeekForaGameObjectByName(ref arrayCollisions, "Land", out hit))
+                {
+                    createdObject.transform.position = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+                }
+
+
             }
 
-            
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            
-            if (
-                ValidateCollitionsToPutCreatedObject( ref arrayCollisions)
-                
-                )
+            if (Input.GetMouseButtonDown(0))
             {
 
-                arrayCollisions = Physics.BoxCastAll(createdObject.transform.position, createdObject.transform.localScale /2.0f , Vector3.up);
-                // var arrayCollisionsByCollider =   Physics.SphereCastAll(ray, createdObject.gameObject.GetComponent<SphereCollider>().radius);
-                // if(arrayCollisionsByCollider.Length == 1 && arrayCollisionsByCollider[0].collider.gameObject.name.Equals("Land"))
-                 if (  ValidateCollitionsToPutCreatedObject(ref arrayCollisions)        )
-                    createdObject = null;
+                if (
+                    ValidateCollitionsToPutCreatedObject(ref arrayCollisions)
+
+                    )
+                {
+
+                    arrayCollisions = Physics.BoxCastAll(createdObject.transform.position, createdObject.transform.localScale / 2.0f, Vector3.up);
+                    // var arrayCollisionsByCollider =   Physics.SphereCastAll(ray, createdObject.gameObject.GetComponent<SphereCollider>().radius);
+                    // if(arrayCollisionsByCollider.Length == 1 && arrayCollisionsByCollider[0].collider.gameObject.name.Equals("Land"))
+                    if (ValidateCollitionsToPutCreatedObject(ref arrayCollisions))
+                        createdObject = null;
+                }
             }
         }
 
@@ -55,7 +59,7 @@ public class UnitsGui : ScriptableObject
 
     private bool ValidateCollitionsToPutCreatedObject(ref RaycastHit[] arrayCollisions)
     {
-        return arrayCollisions.Length == 1 && (arrayCollisions[0].transform.gameObject.name.Equals("Land")|| arrayCollisions[0].transform.gameObject.Equals(createdObject))
+        return arrayCollisions.Length == 1 && (arrayCollisions[0].transform.gameObject.name.Equals("Land") || arrayCollisions[0].transform.gameObject.Equals(createdObject))
             ||
             arrayCollisions.Length == 2
             &&
@@ -71,7 +75,7 @@ public class UnitsGui : ScriptableObject
         result = new RaycastHit();
         if (hits != null && hits.Length > 0)
         {
-           for(int i = 0;i< hits.Length && !found; i++)
+            for (int i = 0; i < hits.Length && !found; i++)
             {
                 found = hits[i].transform.gameObject.name.Equals(name);
                 if (found)
@@ -83,8 +87,8 @@ public class UnitsGui : ScriptableObject
         return found;
     }
 
-  
-    public void OnGUI()
+
+    public void ShowGUI()
     {
 
 

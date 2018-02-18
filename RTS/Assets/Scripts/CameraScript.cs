@@ -90,7 +90,10 @@ public class CameraScript : MonoBehaviour {
                                 case "Citizen":
                                     camerastate = CameraStates.UnitsSelection;
                                     break;
-                                case "Building":
+                                case "Armory":
+                                    camerastate = CameraStates.BuildingsSelection;
+                                    break;
+                                case "UrbanCenter":
                                     camerastate = CameraStates.BuildingsSelection;
                                     break;
                                 default:
@@ -171,7 +174,6 @@ public class CameraScript : MonoBehaviour {
 
                     case "Building":
 
-
                         //TODO the player has selected a kind of bulding
                         //TODO check if the player can afford to build the bulding
                         //TODO create the gameobject depeding on the kind of bulding
@@ -186,8 +188,24 @@ public class CameraScript : MonoBehaviour {
                         break;
                 }
 
+                string rightclickedtag = hit.transform.gameObject.tag;
+                switch (rightclickedtag)
+                {
+                    case "Building":
+                        var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
+                        //TODO the player has selected a kind of bulding
+                        //TODO check if the player can afford to build the bulding
+                        //TODO create the gameobject depeding on the kind of bulding
 
-            }
+                        citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
+                        citizenTemp.SetPointToMove(hit.transform.position);
+                        citizenTemp.SetState(CitizenStates.Building);
+                        break;
+                }
+
+                  
+
+                }
 
 
         }
@@ -225,7 +243,7 @@ public class CameraScript : MonoBehaviour {
 
                 break;
             case CameraStates.UnitsSelection:
-                selectedGui.OnGUI();
+                selectedGui.ShowGUI();
 
                 break;
             case CameraStates.BuildingsSelection:
