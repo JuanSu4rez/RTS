@@ -22,6 +22,7 @@ public class UnitsGui : ScriptableObject
         if (HasOptionSelected())
         {
 
+         
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -95,7 +96,7 @@ public class UnitsGui : ScriptableObject
         var selected = false;
         if (createdObject == null)
         {
-            selected = GUI.Button(new Rect(0, Screen.height - 100, 100, 100), "Crear Casa");
+            selected = GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Casa");
         }
 
         if (selected)

@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class CameraScript : MonoBehaviour {
+public class CameraScript : MonoBehaviour
+{
 
     private readonly Vector2 empty = new Vector2(-10, -10);
 
-    private Vector2 firstclick ;
+    private Vector2 firstclick;
 
     private Vector2 secondclick;
 
@@ -32,22 +33,23 @@ public class CameraScript : MonoBehaviour {
 
     private GameObject pointtomove;
 
-    private UnitsGui selectedGui;
+    private UnitsGui unitsGui;
     private BuildingGui buildingGui;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         camerastate = CameraStates.None;
         firstclick = empty;
         secondclick = empty;
-        selectedGui= ScriptableObject.CreateInstance<UnitsGui>();
+        unitsGui = ScriptableObject.CreateInstance<UnitsGui>();
 
         buildingGui = ScriptableObject.CreateInstance<BuildingGui>();
 
 
         #region point to move
-        pointtomove =  GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        pointtomove = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         pointtomove.transform.position = Camera.main.transform.position;
         pointtomove.transform.localScale = new Vector3(1, 1, 1);
         pointtomove.GetComponent<Renderer>().enabled = false;
@@ -63,30 +65,51 @@ public class CameraScript : MonoBehaviour {
 
         switch (camerastate)
         {
-            case CameraStates.None:                
+            case CameraStates.None:
+
                 break;
             case CameraStates.UnitsSelection:
 
-                if (!selectedGui.HasOptionSelected())
+                if (!unitsGui.HasOptionSelected())
                     ClickActionsUnits();
                 else
-                    selectedGui.Update();
+                    unitsGui.Update();
                 break;
             case CameraStates.BuildingsSelection:
                 break;
         }
 
 
-      
+
     }
 
-    private void userClick() {
+    private void userClick()
+    {
 
-        if (Input.GetMouseButtonDown(0) && firstclick == empty){
+       if (camerastate != CameraStates.None)
+       {
+           //if the gui is showing avoid picking object within user gui
+           Vector3 _mouseposition = Input.mousePosition;
+           _mouseposition.y = Screen.height - Input.mousePosition.y;
+           //TODO CREATE CONSTANT
+           if (_mouseposition.y >= Screen.height - 100)
+           {
+               return;
+           }
+
+       }
+
+        if (Input.GetMouseButtonDown(0) &&
+            //todo temporal solution
+            !unitsGui.HasOptionSelected() &&
+            firstclick == empty)
+        {
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         }
         else if (Input.GetMouseButtonUp(0))
         {
+
+
             if (firstclick != empty)
             {
                 //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
@@ -100,7 +123,11 @@ public class CameraScript : MonoBehaviour {
                 {
                     var _name = hit.transform.gameObject.name;
                     //TRANSATITION TO UnitsSelection OR BuildingsSelection
-                    currentSelected = hit.transform.gameObject;
+                    var hitselected = hit.transform.gameObject;
+
+                    SetSelectedGameObject(hitselected);
+                   
+
                     //TODO CREATE SOMETHING LIKE INSTANCE OF BY CHECKING ITS COMPONENTS
 
                     switch (_name)
@@ -141,6 +168,23 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    private void SetSelectedGameObject(GameObject hitselected)
+    {
+        if (hitselected != null)
+        {
+            var auxst = hitselected.GetComponent<TrackingStatus>();
+            if (auxst != null)
+                auxst.IsSelected = true;
+
+            if (currentSelected != null)
+            {
+                auxst = currentSelected.GetComponent<TrackingStatus>();
+                if (auxst != null)
+                    auxst.IsSelected = false;
+            }
+            currentSelected = hitselected;
+        }
+    }
 
     private void printStatus(Transform transform)
     {
@@ -218,9 +262,9 @@ public class CameraScript : MonoBehaviour {
                         break;
                 }
 
-                  
 
-                }
+
+            }
 
 
         }
@@ -233,9 +277,10 @@ public class CameraScript : MonoBehaviour {
     //    Transform objectHit = hit.transform;
     //}
 
-    public bool HasScript<T>(){
+    public bool HasScript<T>()
+    {
 
-        return currentSelected != null && currentSelected.GetComponent<T>()!= null;
+        return currentSelected != null && currentSelected.GetComponent<T>() != null;
     }
 
 
@@ -244,21 +289,21 @@ public class CameraScript : MonoBehaviour {
         switch (camerastate)
         {
             case CameraStates.None:
-                if(firstclick!= empty)
+                if (firstclick != empty)
                 {
                     //if (Input.GetMouseButtonDown(0))
                     {
-                         secondclick  = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
+                        secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
 
 
-                        GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x,     (Screen.height - secondclick.y)- (Screen.height - firstclick.y)),""); // -
+                        GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), ""); // -
                     }
 
                 }
 
                 break;
             case CameraStates.UnitsSelection:
-                selectedGui.ShowGUI();
+                unitsGui.ShowGUI();
 
                 break;
             case CameraStates.BuildingsSelection:
@@ -269,6 +314,6 @@ public class CameraScript : MonoBehaviour {
 
     private void ButtonActionsUnits()
     {
-       
+
     }
 }

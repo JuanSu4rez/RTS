@@ -52,7 +52,7 @@ public enum CameraStates
 /// Taken from
 /// http://ageofempires.wikia.com/wiki/Buildings_(Age_of_Empires_II)
 /// </summary>
-public enum BuildingType
+public enum Buildings
 {
     ArcheryRange,
     Barracks,
@@ -87,11 +87,40 @@ public enum BuildingType
     Wonder
 }
 
+public enum BuldingTypes
+{
+    Civilian,
+    Military
+}
 
-public enum UnitType {
+
+public enum Units {
     Citizen,
     SwordMan
 }
+
+public enum Ages
+{
+    CERO,
+    I,
+    II,
+    III,
+    IV,
+    VI,
+    VII,
+    VIII,
+
+}
+
+
+
+public enum AssetTypes
+{
+    NONE,
+    TWOD,
+    THREED
+}
+
 
 
 public static class ExtensionMethods

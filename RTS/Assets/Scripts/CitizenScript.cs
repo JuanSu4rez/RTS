@@ -203,20 +203,21 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                     if (resourceTemp.HasResource() && CurrentAmountResouce < ResourceCapacity)
                     {
 
-                        //TODO Descontar del recurso con el que se colisiona
+                        //TODO Discount the resource
                         CurrentAmountResouce += resourceTemp.DiscountAmount(CalculateGatheringSpeed());
 
                     }
                     else if (!resourceTemp.HasResource())
                     {
                         SetState(CitizenStates.Idle);
-                        //TODO buscar recurso CERCANO del mapa explorado y construido
+                        //TODO Find the near resource to gather
                     }
                     else
                     {
                         citizenState = CitizenStates.Walking;
                         citizenLabor = CitizenStates.Gathering;
-                        //TODO CALCULAR EL PUNTO MAS CERCANO A DEPOSITAR
+                        //TODO Find the near point to deposit
+                        //just do one time by assining to the labor
                         pointToMove = new Vector3(0, 1, 0);
                     }
                 }

@@ -12,24 +12,32 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
     public float CurrentBuiltAmount { get ; set ; }
     public float TotalBuiltAmount {get;set;}
 
-    [SerializeField]
-    public BuildingStates State { get; set; }
-    [SerializeField]
-    public BuildingType Type { get; set; }
 
     [SerializeField]
-    private List<Cost> Costs;
+    private BuildingStates _State;
+
+    [SerializeField]
+    public BuildingStates State { get { return _State; } set { _State = value; } }
+
+    [SerializeField]
+    private Buildings _building;
+
+    public Buildings Building { get { return _building; } set { _building = value; } }
+
+
 
 
 
 
     // Use this for initialization
     void Start () {
-        State = BuildingStates.Building;
-        Type = BuildingType.House;
+        State = BuildingStates.Fundational;
+     
         CurrentBuiltAmount = 5;
         TotalBuiltAmount = 200;
         Resistence = 0.3f;
+
+
     }
 	
 	// Update is called once per frame
@@ -100,6 +108,12 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
         LastCurrentBuiltAmount = CurrentBuiltAmount;
     }
 
+    public void InitBuilding()
+    {
+        if(State == BuildingStates.Fundational)
+        State = BuildingStates.Building;
+    }
+
     private void EnabledTrackingStatus()
     {
         var status = this.gameObject.GetComponent<TrackingStatus>();
@@ -158,10 +172,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
         return State == _state;
     }
 
-    public List<Cost> GetCosts()
-    {
-        return Costs;
-    }
+   
 
     public string GetStatus()
     {

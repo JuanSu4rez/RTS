@@ -10,30 +10,30 @@ public class BuildingGui : ScriptableObject {
             return;
 
         string buildingName = selectedBuilding.name;
-        BuildingType buildingType = (BuildingType) System.Enum.Parse(typeof(BuildingType), buildingName);
+        Buildings buildingType = (Buildings) System.Enum.Parse(typeof(Buildings), buildingName);
 
         switch (buildingType)
         {
-            case BuildingType.Barracks:
-                if (GUI.Button(new Rect(0, Screen.height - 100, 100, 100), "Crear Soldado")){
+            case Buildings.Barracks:
+                if (GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height-( Screen.height-100)), "Crear Soldado")){
                     var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
                     if (behaviour != null){
                         //TODO validate resources 
                         //Debug.log("aca llego esta mierda");
-                        behaviour.addUnitToQueue(UnitType.SwordMan);
+                        behaviour.addUnitToQueue(Units.SwordMan);
                     }                    
                 }
                 break;
 
-            case BuildingType.UrbanCenter:
-                if (GUI.Button(new Rect(0, Screen.height - 100, 100, 100), "Crear Aldeano"))
+            case Buildings.UrbanCenter:
+                if (GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Aldeano"))
                 {
                     var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
                     if (behaviour != null)
                     {
                         //TODO validate resources 
                         //Debug.log("aca llego esta mierda");
-                        behaviour.addUnitToQueue(UnitType.Citizen);
+                        behaviour.addUnitToQueue(Units.Citizen);
                     }
                 }
                 break;
@@ -44,7 +44,7 @@ public class BuildingGui : ScriptableObject {
 
     }
 
-    public void renderButtons(BuildingType buildingType) {
+    public void renderButtons(Buildings buildingType) {
         
     }
 }

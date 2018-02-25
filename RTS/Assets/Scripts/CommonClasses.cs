@@ -25,15 +25,3 @@ public class Cost
     }
 }
 
-public class BuildingCostInfo
-{
-
-    public  Cost cost { get; set; }
-
-    public BuildingType Type { get; set; }
-
-    public BuildingCostInfo()
-    {
-        
-    }
-}

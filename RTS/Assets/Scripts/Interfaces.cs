@@ -25,9 +25,8 @@ public interface IBulding
     float Resistence { get; set; }
     float TotalBuiltAmount { get; set; }
     float CurrentBuiltAmount { get; }
-    List<Cost> GetCosts();
     BuildingStates State { get; set; }
-    BuildingType Type { get; set; }
+    Buildings Building { get; set; }
 
 }
 
@@ -38,3 +37,5 @@ public interface IResource {
 public interface IStatus {
     string GetStatus();
 }
+
+

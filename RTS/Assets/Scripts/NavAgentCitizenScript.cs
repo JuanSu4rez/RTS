@@ -112,6 +112,10 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                     if (citizenLabor == CitizenStates.Building)
                     {
                         building = collision.gameObject.GetComponent<BuildingBehaviour>();
+                        //THIS SHOULD BE DONE BY TASK? BY THE FACADE?
+                        if(building!= null)
+                        building.InitBuilding();
+
                         navMeshAgent.enabled = false;
                         citizenState = citizenLabor;
                         

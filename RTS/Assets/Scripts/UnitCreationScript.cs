@@ -7,7 +7,7 @@ public class UnitCreationScript : MonoBehaviour {
 
     public float durationCreationUnitTime { get; set; }
     public float CreationUnitTime { get; set; }
-    public Queue<UnitType> creationQueue;
+    public Queue<Units> creationQueue;
 
     int deltaPosition = 1;
 
@@ -15,7 +15,7 @@ public class UnitCreationScript : MonoBehaviour {
     void Start () {
         durationCreationUnitTime = 5;
         CreationUnitTime = 0;
-        creationQueue = new Queue<UnitType>();
+        creationQueue = new Queue<Units>();
     }
 	
 	// Update is called once per frame
@@ -29,14 +29,14 @@ public class UnitCreationScript : MonoBehaviour {
 	}
     
     //solo se llama si los costes de la unidad estan disponibles
-    public void addUnitToQueue(UnitType unitType) {       
+    public void addUnitToQueue(Units unitType) {       
         creationQueue.Enqueue(unitType);
         if (creationQueue.Count == 1){
             CreationUnitTime = Time.time;
         }
     }
 
-    private void createUnit(UnitType unitType) {
+    private void createUnit(Units unitType) {
         GameObject unitToCreate = UnityEngine.Resources.Load(unitType.ToString(), typeof(GameObject)) as GameObject;
         GameObject newUnit = Instantiate(unitToCreate, calculateUnitOrigin(), Quaternion.identity);
         newUnit.name = unitType.ToString();

@@ -6,7 +6,7 @@ public class TrackingStatus : MonoBehaviour {
 
     private IStatus status;
     private IWorker worker;
-
+    public bool IsSelected{ get; set; }
 
     // Use this for initialization
     void Start () {
@@ -46,8 +46,12 @@ public class TrackingStatus : MonoBehaviour {
         //if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button "+status.GetStatus()))
         //    print("You clicked the button!");
         ////Debug.log("ongui");
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
-        GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
+        if (IsSelected)
+        {
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
+        }
+       
       
     }
 
