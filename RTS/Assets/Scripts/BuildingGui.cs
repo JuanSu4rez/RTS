@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingGui : ScriptableObject {
-    	
-    public void ShowGUI(GameObject selectedBuilding) {
 
+    private IGameFacade gameFacade;
+
+    public BuildingGui() {
+        gameFacade = GameScript.GetFacade();
+    }
+
+    public void ShowGUI(GameObject selectedBuilding) {
+        gameFacade = GameScript.GetFacade();
         if (selectedBuilding == null)
             return;
 
@@ -18,9 +24,13 @@ public class BuildingGui : ScriptableObject {
                 if (GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height-( Screen.height-100)), "Crear Soldado")){
                     var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
                     if (behaviour != null){
-                        //TODO validate resources 
-                        //Debug.log("aca llego esta mierda");
-                        behaviour.addUnitToQueue(Units.SwordMan);
+                        if (gameFacade.HasRequiredResources(Units.SwordMan)) {
+                            behaviour.addUnitToQueue(Units.SwordMan);
+                            gameFacade.DiscountResources(Units.SwordMan);
+                        }
+                        else{
+                            Debug.Log("No hay recursos suficientes");
+                        }
                     }                    
                 }
                 break;
@@ -29,11 +39,14 @@ public class BuildingGui : ScriptableObject {
                 if (GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Aldeano"))
                 {
                     var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
-                    if (behaviour != null)
-                    {
-                        //TODO validate resources 
-                        //Debug.log("aca llego esta mierda");
-                        behaviour.addUnitToQueue(Units.Citizen);
+                    if (behaviour != null){
+                        if (gameFacade.HasRequiredResources(Units.Citizen)) {
+                            behaviour.addUnitToQueue(Units.Citizen);
+                            gameFacade.DiscountResources(Units.Citizen);                            
+                        }
+                        else{
+                            Debug.Log("No hay recursos suficientes");
+                        }
                     }
                 }
                 break;

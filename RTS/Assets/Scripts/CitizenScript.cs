@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Obsolete]
 public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
 {
+    private IGameFacade gameFacade;
 
     private Collider citizenCollider;
     private CitizenStates citizenState;
@@ -22,6 +23,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     public Resources CurrentResource { get; set; }
     public float Life { get; set; }
     public float CurrentAmountResouce { get; set; }
+    
 
     // Use this for initialization
     void Start()
@@ -37,7 +39,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
         DefensePower = 0.1F;
         BuildingSpeed = 0.1F;
         citizenLabor = CitizenStates.None;
-
+        gameFacade = GameScript.GetFacade();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -156,15 +158,12 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
                     //Debug.log("Collisionstay  UrbanCenter");
-                    if (citizenLabor != CitizenStates.None)
-                    {
-                        //TODO  ahumentar recursos al jugador
-                        if (CurrentAmountResouce > 0)
-                        {
+                    if (citizenLabor != CitizenStates.None){
+                        gameFacade.AddResources(CurrentResource, CurrentAmountResouce);
+                        if (CurrentAmountResouce > 0) {
                             CurrentAmountResouce = 0;
                         }
                         pointToMove = pointResource;
-
                     }
 
                 }

@@ -8,22 +8,24 @@ public class GameScript : MonoBehaviour
     [SerializeField]
     private Player player;
     [SerializeField]
-    public BuldingsInfo buldingsInfo;
+    public BuildingsInfo buldingsInfo;
+
+    public UnitsInfo unitsInfo;
 
     private static IGameFacade facade;
     // Use this for initialization
     void Start()
-    {
-    
-        assettype = AssetTypes.NONE;
-       
+    {    
+        assettype = AssetTypes.NONE;      
 
 
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>() ;
         gameFacade.Player = player;
-        gameFacade.BuldingsInfo = buldingsInfo;
+        gameFacade.BuildingsInfo = buldingsInfo;
+        gameFacade.UnitsInfo = unitsInfo;
 
         facade = gameFacade;
+        
     }
 
     public static IGameFacade GetFacade()
@@ -37,10 +39,12 @@ public class GameScript : MonoBehaviour
 
     }
 
-     void OnGUI()
-    {
-        //dibu
-        GUI.Label(new Rect(0, 100, 100, 50), "Oro " + player.GetResourceAmount(Resources.Gold).Amount);
+     void OnGUI(){
+        GUI.contentColor = Color.black;
+        GUI.Label(new Rect(10, 10, 100, 50), "Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
+        GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
+        GUI.Label(new Rect(210, 10, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);
+        GUI.Label(new Rect(310, 10, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
     }
 
   

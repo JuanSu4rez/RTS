@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 
 [CreateAssetMenu(fileName ="New Bulding info", menuName = "Buldings info")]
-public class BuldingsInfo : ScriptableObject
+public class BuildingsInfo : ScriptableObject
 {
     [SerializeField]
-    private BuldingInfo[] _BuldingInformation;
+    private BuildingInfo[] _BuldingInformation;
 
-    public BuldingInfo[] BuldingInformation
+    public BuildingInfo[] BuldingInformation
     {
         get
         {
@@ -21,20 +21,20 @@ public class BuldingsInfo : ScriptableObject
         }
     }
 
-    public BuldingsInfo()
+    public BuildingsInfo()
     {
         var myEnumMemberCount = System.Enum.GetNames(typeof(Buildings)).Length;
-        _BuldingInformation = new BuldingInfo[myEnumMemberCount];
+        _BuldingInformation = new BuildingInfo[myEnumMemberCount];
         for (int i =0;i< _BuldingInformation.Length;i++)
         {
             Debug.Log(((Buildings)i).ToString());
 
-            _BuldingInformation[i] = new BuldingInfo((Buildings)i);
+            _BuldingInformation[i] = new BuildingInfo((Buildings)i);
         }
     }
 
 
-    public BuldingInfo GetBuldingInfo(Buildings type)
+    public BuildingInfo GetBuldingInfo(Buildings type)
     {
         return _BuldingInformation[(int)type];
     }
@@ -42,7 +42,7 @@ public class BuldingsInfo : ScriptableObject
 
 }
 [System.Serializable]
-public class BuldingInfo
+public class BuildingInfo
 {
     [SerializeField]
     private  Buildings _bulding;
@@ -77,8 +77,11 @@ public class BuldingInfo
     [SerializeField]
     private List<Cost> Cost;
 
+    public List<Cost> Costs{
+        get { return Cost; }        
+    }
 
-    public BuldingInfo(Buildings _building)
+    public BuildingInfo(Buildings _building)
     {
 
         this._bulding = _building;

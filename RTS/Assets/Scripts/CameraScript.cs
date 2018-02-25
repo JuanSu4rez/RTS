@@ -213,6 +213,7 @@ public class CameraScript : MonoBehaviour
                             pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                             citizenTemp.SetPointToMove(pointtomove.transform.position);
                             citizenTemp.SetState(CitizenStates.Walking);
+
                         }
 
                         break;

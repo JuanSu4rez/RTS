@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
 {
+    private IGameFacade gameFacade;
 
     private Collider citizenCollider;
     private CitizenStates citizenState;
@@ -44,7 +45,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         citizenLabor = CitizenStates.None;
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
-
+        gameFacade = GameScript.GetFacade();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -75,10 +76,11 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                 //TODO THE VALIDATION MUST BE AGAINST THE MATERIAL TO CRAFT
                 if (name.Equals("GoldMine") || name.Equals("Forest"))
                 {
+                  
                     navMeshAgent.enabled = false;
                     if (citizenLabor ==  CitizenStates.Gathering)
                     {
-
+                     
                         citizenState = citizenLabor;
                         resourceTemp = collision.gameObject.GetComponent<ResourceScript>();
                     }
@@ -86,18 +88,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                 }
                 else if (name.Equals("UrbanCenter"))
                 {
-
                     //Debug.log("Collision enter UrbanCenter");
                    
-                    if (citizenLabor != CitizenStates.None)
-                    {
-
-                        if (CurrentAmountResouce > 0)
-                        {
-                            //TODO add resources to the player
+                    if (citizenLabor != CitizenStates.None){
+                        if (CurrentAmountResouce > 0){
+                            GameScript.GetFacade().AddResources(CurrentResource, CurrentAmountResouce);
                             CurrentAmountResouce = 0;
                         }
-
 
                         // pointToMove = pointResource;
                         SetPointToMove(pointResource);
@@ -169,8 +166,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                     if (citizenLabor != CitizenStates.None)
                     {
                         //TODO  ahumentar recursos al jugador
-                        if (CurrentAmountResouce > 0)
-                        {
+                        if (CurrentAmountResouce > 0){
                             CurrentAmountResouce = 0;
                         }
                         //pointToMove = pointResource;
