@@ -21,7 +21,7 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
     public float BuildingSpeed { get; set; }
     public float GatheringSpeed { get; set; }
     public Resources CurrentResource { get; set; }
-    public float Life { get; set; }
+    public int Health { get; set; }
     public float CurrentAmountResouce { get; set; }
     
 
@@ -279,5 +279,25 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
             result = leftquantity;
 
         return result;
+    }
+
+    bool IAliveBeing.IsAlive()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public int GetCurrentHealth()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public int GetHealth()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public float GetHealthReason()
+    {
+        throw new System.NotImplementedException();
     }
 }

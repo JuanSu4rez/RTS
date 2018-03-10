@@ -16,13 +16,13 @@ public class GameScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {    
-        assettype = AssetTypes.NONE;      
-
+        
 
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>() ;
         gameFacade.Player = player;
         gameFacade.BuildingsInfo = buldingsInfo;
         gameFacade.UnitsInfo = unitsInfo;
+        gameFacade.AssetType = assettype;
 
         facade = gameFacade;
         

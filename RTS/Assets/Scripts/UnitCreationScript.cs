@@ -9,7 +9,7 @@ public class UnitCreationScript : MonoBehaviour {
     public float CreationUnitTime { get; set; }
     public Queue<Units> creationQueue;
 
-    int deltaPosition = 1;
+    int deltaPosition = -5;
 
     // Use this for initialization
     void Start () {

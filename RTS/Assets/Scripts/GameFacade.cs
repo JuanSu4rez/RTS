@@ -27,11 +27,15 @@ public interface IGameFacade
     GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource);
 
     BuildingInfo GetBuldingInfo(Buildings type);
+
+    AssetTypes AssetType { get; set; }
 }
 
 
 public class GameFacade : ScriptableObject, IGameFacade
 {
+    public AssetTypes AssetType { get; set; }
+
     public Player Player { get; set; }
 
     public BuildingsInfo BuildingsInfo { get; set; }
@@ -129,6 +133,11 @@ public class GameFacade : ScriptableObject, IGameFacade
             DiscountResources(unitCosts[i].Resource, unitCosts[i].Amount);
         }
     }
+
+  //  public override string ToString()
+  //  {
+  //    return " AssetType =" +  AssetType + " "  ;
+  //  }
 }
 
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface IAliveBeing {
-    bool IsAlive { get; set; }
-    float Life { get; set; }
+    bool IsAlive();    
+    int GetCurrentHealth();
+    int GetHealth();
+    float GetHealthReason();
 }
 
 public interface IFigther{
@@ -37,5 +39,3 @@ public interface IResource {
 public interface IStatus {
     string GetStatus();
 }
-
-

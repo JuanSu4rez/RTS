@@ -151,7 +151,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
 
     public void AddDamage(float damage)
     {
-        var aux = CurrentBuiltAmount-  damage;
+        var aux = CurrentBuiltAmount - damage;
         if (aux <= 0)
             aux = 0;
         CurrentBuiltAmount = aux;
