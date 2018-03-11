@@ -197,6 +197,7 @@ public class CameraScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
+            //when a citizen is selected
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))

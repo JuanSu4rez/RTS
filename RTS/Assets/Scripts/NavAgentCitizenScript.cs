@@ -29,7 +29,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
     public NavMeshAgent navMeshAgent;
 
-    // Use this for initialization
+    void Awake()
+    {
+
+    }
+
+        // Use this for initialization
     void Start()
     {
         //Debug.log("citizenCollider " + citizenCollider != null);
@@ -47,6 +52,9 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
         gameFacade = GameScript.GetFacade();
     }
+
+
+
 
     void OnCollisionEnter(Collision collision)
     {

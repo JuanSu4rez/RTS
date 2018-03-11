@@ -9,22 +9,24 @@ public class GameScript : MonoBehaviour
     private Player player;
     [SerializeField]
     public BuildingsInfo buldingsInfo;
-
+    [SerializeField]
     public UnitsInfo unitsInfo;
 
     private static IGameFacade facade;
     // Use this for initialization
-    void Start()
-    {    
-        assettype = AssetTypes.NONE;      
 
-
-        var gameFacade = ScriptableObject.CreateInstance<GameFacade>() ;
+     void Awake()
+    {
+        var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
         gameFacade.Player = player;
         gameFacade.BuildingsInfo = buldingsInfo;
         gameFacade.UnitsInfo = unitsInfo;
-
         facade = gameFacade;
+    }
+
+    void Start()
+    {    
+        
         
     }
 
