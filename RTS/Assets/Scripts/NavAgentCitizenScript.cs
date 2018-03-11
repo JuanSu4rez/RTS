@@ -22,8 +22,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     public float BuildingSpeed { get; set; }
     public float GatheringSpeed { get; set; }
     public Resources CurrentResource { get; set; }
-    private int Health;
-    private int CurrentHealth;
+    private float Health;
+    private float CurrentHealth;
     public float CurrentAmountResouce { get; set; }
 
     public NavMeshAgent navMeshAgent;
@@ -53,12 +53,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         Debug.Log("0 ");
         Debug.Log("1 " + this.GetType().FullName + " FACDE " + gameFacade != null );
 
-        // if (gameFacade.AssetType == AssetTypes.THREED )lll
-        // {
-        //     Debug.Log(this.gameObject.transform.childCount);
-        //     Debug.Log(this.transform.GetChild(2).name);
-        //     this.transform.GetChild(2).gameObject.SetActive(false);           
-        // }
+         if (gameFacade.AssetType == AssetTypes.THREED )
+         {
+             Debug.Log(this.gameObject.transform.childCount);
+             Debug.Log(this.transform.GetChild(2).name);
+             this.transform.GetChild(2).gameObject.SetActive(false);           
+         }
 
     }
 
@@ -339,11 +339,11 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         }
     }
 
-    public int GetCurrentHealth(){
+    public float GetCurrentHealth(){
         return CurrentHealth;        
     }
 
-    public int GetHealth(){
+    public float GetHealth(){
         return Health;
     }
 
@@ -369,6 +369,6 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
     public float GetHealthReason()
     {
-        return GetCurrentHealth() / GetHealth();
+        return   CurrentHealth /  Health;
     }
 }

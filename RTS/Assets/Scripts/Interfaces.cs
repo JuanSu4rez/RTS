@@ -4,8 +4,8 @@ using UnityEngine;
 
 public interface IAliveBeing {
     bool IsAlive();    
-    int GetCurrentHealth();
-    int GetHealth();
+    float GetCurrentHealth();
+    float GetHealth();
     float GetHealthReason();
 }
 

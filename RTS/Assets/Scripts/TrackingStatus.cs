@@ -48,7 +48,9 @@ public class TrackingStatus : MonoBehaviour {
                 healthBar.enabled = true;
                     
                 healthBar.transform.forward = -Camera.main.transform.forward;
-                setHealthBarValue();               
+                setHealthBarValue();  
+                
+           
             }             
         }
     }
@@ -58,7 +60,7 @@ public class TrackingStatus : MonoBehaviour {
             healthBar.value = building.CurrentBuiltAmount / building.TotalBuiltAmount;
         if (IsAliveBeing)
         {
-            healthBar.value = aliveBeing.GetHealthReason();
+  
             float HealthReason = aliveBeing.GetHealthReason();
             if (!float.IsNaN(HealthReason))
             {
@@ -69,12 +71,12 @@ public class TrackingStatus : MonoBehaviour {
     }
     
 
-    //void Update() {
-    //    if (IsSelected)
-    //    {
-    //        drawHealthBar();
-    //    }
-    //}
+    void Update() {
+        if (IsSelected)
+        {
+            drawHealthBar();
+        }
+    }
 
 	// Update is called once per frame
 	void OnGUI()
@@ -86,7 +88,7 @@ public class TrackingStatus : MonoBehaviour {
         {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
             GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
-            drawHealthBar();
+          
         }
        
       
@@ -111,5 +113,11 @@ public class TrackingStatus : MonoBehaviour {
             setHealthBarValue();           
             healthBar.transform.forward = -Camera.main.transform.forward;
         }
+    }
+
+
+    public void drawHealthGUIBar()
+    {
+       
     }
 }

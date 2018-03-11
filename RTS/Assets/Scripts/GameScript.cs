@@ -14,7 +14,7 @@ public class GameScript : MonoBehaviour
 
     private static IGameFacade facade;
     // Use this for initialization
-    void Start()
+    void Awake()
     {    
         
 
