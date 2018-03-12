@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAliveBeing {
-    bool IsAlive { get; set; }
-    float Life { get; set; }
+public interface IAliveBeing
+{
+    bool IsAlive();
+    float GetCurrentHealth();
+    float GetHealth();
+    float GetHealthReason();
 }
 
 public interface IFigther{

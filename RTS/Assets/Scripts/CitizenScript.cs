@@ -280,4 +280,24 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
 
         return result;
     }
+
+    bool IAliveBeing.IsAlive()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public float GetCurrentHealth()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public float GetHealth()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public float GetHealthReason()
+    {
+        throw new System.NotImplementedException();
+    }
 }

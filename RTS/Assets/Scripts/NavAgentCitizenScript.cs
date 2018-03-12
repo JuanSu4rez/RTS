@@ -17,15 +17,19 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     private Vector3 pointResource;
     private float speedWalk;
     private ResourceScript resourceTemp = null;
-    public bool IsAlive { get; set; }
+    
     public float AttackPower { get; set; }
     public float ResourceCapacity { get; set; }
     public float DefensePower { get; set; }
     public float BuildingSpeed { get; set; }
     public float GatheringSpeed { get; set; }
     public Resources CurrentResource { get; set; }
-    public float Life { get; set; }
     public float CurrentAmountResouce { get; set; }
+
+
+    private float Health;
+    private float CurrentHealth;
+
 
     public NavMeshAgent navMeshAgent;
 
@@ -50,6 +54,10 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         citizenLabor = CitizenStates.None;
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
+
+        Health= 9999;
+        CurrentHealth =Health;
+
         gameFacade = GameScript.GetFacade();
     }
 
@@ -248,11 +256,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
             default:
                 break;
         }
+
+        AddDamage(10);
     }
 
     public string GetStatus()
     {
-        return citizenState.ToString() + " " + citizenLabor.ToString() + " " + pointToMove;
+        return citizenState.ToString() + " "+GetHealthReason()  +" "+ citizenLabor.ToString() + " " + pointToMove;
     }
 
     public void SetState(CitizenStates _citizenStates)
@@ -314,4 +324,45 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
             }
         }
     }
+
+ 
+
+    public float GetCurrentHealth()
+    {
+        return CurrentHealth;
+    }
+
+    public float GetHealth()
+    {
+        return Health;
+    }
+
+    public float GetHealthReason()
+    {
+        return CurrentHealth / Health;
+    }
+
+    public bool IsAlive()
+    {
+        return CurrentHealth > 0;
+    }
+
+    public void AddDamage(float damage)
+    {
+        if (IsAlive())
+        {
+            if (damage > CurrentHealth)
+            {
+                CurrentHealth = 0;
+            }
+            else
+                CurrentHealth = (int)(CurrentHealth - damage);
+        }
+        if (CurrentHealth <= 0)
+        {
+            citizenState = CitizenStates.Died;
+            Destroy(gameObject, 1);
+        }
+    }
+
 }
