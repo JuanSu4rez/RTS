@@ -170,6 +170,8 @@ public class CameraScript : MonoBehaviour
 
     private void SetSelectedGameObject(GameObject hitselected)
     {
+  
+
         if (hitselected != null)
         {
             var auxst = hitselected.GetComponent<TrackingStatus>();
@@ -195,6 +197,9 @@ public class CameraScript : MonoBehaviour
 
     private void ClickActionsUnits()
     {
+        if (currentSelected == null)
+            return;
+
         if (Input.GetMouseButtonDown(1))
         {
             //when a citizen is selected
@@ -298,6 +303,8 @@ public class CameraScript : MonoBehaviour
                         secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
 
                         Debug.Log("Second click " + secondclick.x + " " + secondclick.y);
+                        //Default color to render the selection square
+                        GUI.contentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                         GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), ""); // -
                     }
 

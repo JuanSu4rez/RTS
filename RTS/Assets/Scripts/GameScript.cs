@@ -42,7 +42,7 @@ public class GameScript : MonoBehaviour
     }
 
      void OnGUI(){
-        //GUI.contentColor = Color.black;
+        GUI.contentColor = Color.black;
         GUI.Label(new Rect(10, 10, 100, 50), "Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
         GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
         GUI.Label(new Rect(210, 10, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);

@@ -75,7 +75,7 @@ public class TrackingStatus : MonoBehaviour {
          //  style.normal.textColor = Color.cyan;
           Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
             GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
-          //  drawHealthGUIBar();
+            drawHealthGUIBar();
         }
        
       
