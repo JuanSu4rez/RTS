@@ -37,6 +37,7 @@ public class UnitCreationScript : MonoBehaviour {
     }
 
     private void createUnit(Units unitType) {
+        //TODO Implement flyweight  pattern , Implement Wrapper class to define the path of the resource
         GameObject unitToCreate = UnityEngine.Resources.Load(unitType.ToString(), typeof(GameObject)) as GameObject;
         GameObject newUnit = Instantiate(unitToCreate, calculateUnitOrigin(), Quaternion.identity);
         newUnit.name = unitType.ToString();

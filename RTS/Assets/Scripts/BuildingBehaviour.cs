@@ -3,14 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
+public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable
 {
+
+    [SerializeField]
+    private Team team;
+
+    public Team Team { get { return team; } set { team = value; } }
+
 
     private float LastCurrentBuiltAmount;
 
-    public float Resistence {get;set;}
-    public float CurrentBuiltAmount { get ; set ; }
-    public float TotalBuiltAmount {get;set;}
+    [SerializeField]
+    private float resistence;
+
+    public float Resistence { get { return resistence; } set { resistence = value; } }
+
+    [SerializeField]
+    private float currentBuiltAmount;
+
+    [SerializeField]
+    public float CurrentBuiltAmount { get { return currentBuiltAmount; } set { currentBuiltAmount = value; } }
+
+    [SerializeField]
+    private float totalBuiltAmount;
+
+    [SerializeField]
+    public float TotalBuiltAmount { get { return totalBuiltAmount; } set { totalBuiltAmount = value; } }
 
 
     [SerializeField]
@@ -26,28 +45,37 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
 
 
 
+    public bool IsSelected { get; set; }
+
+
+
 
 
 
     // Use this for initialization
-    void Start () {
-        State = BuildingStates.Fundational;
-     
-        CurrentBuiltAmount = 5;
-        TotalBuiltAmount = 200;
-        Resistence = 0.3f;
+    void Start()
+    {
+      
 
+        if (State == BuildingStates._Fundational)
+        {
+
+            CurrentBuiltAmount = 5;
+            LastCurrentBuiltAmount = CurrentBuiltAmount;
+            TotalBuiltAmount = 200;
+            Resistence = 0.3f;
+        }
 
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
-       
+
         switch (State)
         {
             case BuildingStates.Building:
-                if(CurrentBuiltAmount >= TotalBuiltAmount)
+                if (CurrentBuiltAmount >= TotalBuiltAmount)
                 {
                     State = BuildingStates.Built;
                     //TODO send a notification indicating that a building has been Built
@@ -62,15 +90,15 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
                 break;
             case BuildingStates.Built:
 
-                if (CurrentBuiltAmount < TotalBuiltAmount )
+                if (CurrentBuiltAmount < TotalBuiltAmount)
                 {
-                   
+
                     State = BuildingStates.Destroying;
                     //TODO send a notification indicating that a building has been Built
                 }
 
                 break;
-           
+
             case BuildingStates.Destroying:
 
 
@@ -80,7 +108,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
                     //TODO send a notification indicating that a building has been Destroyed
                 }
 
-                if(CurrentBuiltAmount >= LastCurrentBuiltAmount)
+                if (CurrentBuiltAmount >= LastCurrentBuiltAmount)
                 {
                     State = BuildingStates.Repairing;
                 }
@@ -88,10 +116,10 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
 
                 break;
             case BuildingStates.Destroyed:
-            
+
                 Destroy(this.gameObject);
                 break;
-            case BuildingStates.Fundational:
+            case BuildingStates._Fundational:
                 //this state represents the Building fundations 
 
                 break;
@@ -110,15 +138,15 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
 
     public void InitBuilding()
     {
-        if(State == BuildingStates.Fundational)
-        State = BuildingStates.Building;
+        if (State == BuildingStates._Fundational)
+            State = BuildingStates.Building;
     }
 
     private void EnabledTrackingStatus()
     {
         var status = this.gameObject.GetComponent<TrackingStatus>();
         if (status != null && !status.enabled)
-            status.enabled = true; 
+            status.enabled = true;
     }
 
     private void DisabledTrackingStatus()
@@ -133,14 +161,14 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
         //change sprite or model
         //So far just increase the primitive
         this.gameObject.transform.localScale = new Vector3(5, 5, 5);
-        
 
-       
+
+
     }
 
 
 
-    public void AddCurrentBuiltAmount(float BuiltAmount )
+    public void AddCurrentBuiltAmount(float BuiltAmount)
     {
         var aux = CurrentBuiltAmount + BuiltAmount;
         if (aux >= TotalBuiltAmount)
@@ -151,10 +179,9 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
 
     public void AddDamage(float damage)
     {
-        var aux = CurrentBuiltAmount-  damage;
-        if (aux <= 0)
-            aux = 0;
-        CurrentBuiltAmount = aux;
+        var aux = CurrentBuiltAmount - damage;
+        
+        CurrentBuiltAmount = aux <= 0?0 : aux;
     }
 
     public bool IsOk()
@@ -167,12 +194,12 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus
         return State == BuildingStates.Building || State == BuildingStates.Repairing;
     }
 
-    public bool CheckState(BuildingStates _state )
+    public bool CheckState(BuildingStates _state)
     {
         return State == _state;
     }
 
-   
+
 
     public string GetStatus()
     {

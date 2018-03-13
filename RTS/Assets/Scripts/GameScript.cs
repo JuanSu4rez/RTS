@@ -3,24 +3,33 @@ using System.Collections;
 
 public class GameScript : MonoBehaviour
 {
-    public AssetTypes assettype;
+    [SerializeField]
+    private AssetTypes assettype;
+ 
+    [SerializeField]
+    private BuildingsInfo buldingsInfo;
 
     [SerializeField]
     private Player player;
+
     [SerializeField]
-    public BuildingsInfo buldingsInfo;
+    private UnitsInfo unitsInfo;
+    
     [SerializeField]
-    public UnitsInfo unitsInfo;
+    private Team team;
 
     private static IGameFacade facade;
     // Use this for initialization
 
-     void Awake()
+    void Awake()
     {
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
         gameFacade.Player = player;
         gameFacade.BuildingsInfo = buldingsInfo;
         gameFacade.UnitsInfo = unitsInfo;
+        gameFacade.Assettype = assettype;
+        gameFacade.Team = team;
+
         facade = gameFacade;
     }
 

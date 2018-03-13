@@ -25,13 +25,20 @@ public enum CitizenStates
     Walking
 }
 
+public enum MilitaryTaskType
+{
+    Attack,
+    Patroll,
+}
+
 public enum BuildingStates
 {
+    //INDICATES DEFAULT STATUS
+    _Fundational,
     Built,
     Building,
     Destroying,
     Destroyed,
-    Fundational,
     Repairing
 }
 

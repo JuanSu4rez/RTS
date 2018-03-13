@@ -8,7 +8,8 @@ public class TrackingStatus : MonoBehaviour {
     private IWorker worker;
     private IBulding building;
     private IAliveBeing aliveBeing;
-    public bool IsSelected { get; set; }
+    private ISelectable selectable;
+   
 
     private bool IsAliveBeing;
 
@@ -36,6 +37,7 @@ public class TrackingStatus : MonoBehaviour {
             status = aux as IStatus;
             worker = aux as IWorker;
             aliveBeing = aux as IAliveBeing;
+            selectable = aux as ISelectable;
         }
 
         aux = this.gameObject.GetComponent<BuildingBehaviour>();
@@ -44,9 +46,12 @@ public class TrackingStatus : MonoBehaviour {
             status = aux as IStatus;
             worker = aux as IWorker;
             building = aux as IBulding;
+            selectable = aux as ISelectable;
         }
 
         IsAliveBeing = aliveBeing != null;
+
+    
 
         //aux = this.gameObject.GetComponent<IStatus>();
         //if (aux != null)
@@ -69,16 +74,22 @@ public class TrackingStatus : MonoBehaviour {
         //if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button "+status.GetStatus()))
         //    print("You clicked the button!");
         ////Debug.log("ongui");
-        if (IsSelected)
+        if (IsSelected())
         {//
          //  GUIStyle style = new GUIStyle();
          //  style.normal.textColor = Color.cyan;
-          Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            GUI.contentColor = Color.cyan;
             GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
             drawHealthGUIBar();
         }
        
       
+    }
+
+    private bool IsSelected()
+    {
+        return selectable != null && selectable.IsSelected;
     }
 
     private string printMessage()

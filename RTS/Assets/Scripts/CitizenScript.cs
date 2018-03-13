@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * This class was used at the begining 
+ * So far is Obsolete
 [System.Obsolete]
 public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
 {
@@ -301,3 +303,4 @@ public class CitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, ISta
         throw new System.NotImplementedException();
     }
 }
+*/

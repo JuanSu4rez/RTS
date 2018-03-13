@@ -22,7 +22,7 @@ public interface IGameFacade
 
     void DiscountResources(Buildings building);
 
-    GameObject FindNearResource(Vector3 player);
+    GameObject FindNearResource(Vector3 player, Resources resource);
 
     GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource);
 
@@ -32,9 +32,13 @@ public interface IGameFacade
 
 public class GameFacade : ScriptableObject, IGameFacade
 {
-    public Player Player { get; set; }
+    public AssetTypes Assettype { get; internal set; }
 
     public BuildingsInfo BuildingsInfo { get; set; }
+
+    public Player Player { get; set; }
+
+    public Team Team { get; internal set; }
 
     public UnitsInfo UnitsInfo { get; set; }
 
@@ -46,11 +50,11 @@ public class GameFacade : ScriptableObject, IGameFacade
 
     public void DiscountResources(Resources type, float amount)
     {
-        
+
         ResourceAmount resourceAmount = Player.GetResourceAmount(type);
-        if(resourceAmount.Amount >= amount)            
+        if (resourceAmount.Amount >= amount)
             resourceAmount.DiscountResource(amount);
-        Debug.Log(" - START DiscountResources - tipo : " + type + " Amount jugador " + resourceAmount.Amount);
+        //Debug.Log(" - START DiscountResources - tipo : " + type + " Amount jugador " + resourceAmount.Amount);
     }
 
     public GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource)
@@ -58,32 +62,38 @@ public class GameFacade : ScriptableObject, IGameFacade
         throw new System.NotImplementedException();
     }
 
-    public GameObject FindNearResource(Vector3 player)
+    public GameObject FindNearResource(Vector3 player, Resources resource)
     {
         throw new System.NotImplementedException();
     }
 
 
-    public bool HasRequiredResources(Units type){
+    public bool HasRequiredResources(Units type)
+    {
         UnitInfo unitInfo = UnitsInfo.GetUnitInfo(type);
         var UnitCosts = unitInfo.Costs;
 
-        for (int i = 0; i < UnitCosts.Count; i++){
+        for (int i = 0; i < UnitCosts.Count; i++)
+        {
             ResourceAmount resourceAmount = Player.GetResourceAmount(UnitCosts[i].Resource);
-            if (resourceAmount.Amount < UnitCosts[i].Amount) {
+            if (resourceAmount.Amount < UnitCosts[i].Amount)
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public bool HasRequiredResources(Buildings type){
+    public bool HasRequiredResources(Buildings type)
+    {
         BuildingInfo buildingInfo = BuildingsInfo.GetBuldingInfo(type);
         var Costs = buildingInfo.Costs;
 
-        for (int i = 0; i < Costs.Count; i++){
+        for (int i = 0; i < Costs.Count; i++)
+        {
             ResourceAmount resourceAmount = Player.GetResourceAmount(Costs[i].Resource);
-            if (resourceAmount.Amount < Costs[i].Amount){
+            if (resourceAmount.Amount < Costs[i].Amount)
+            {
                 return false;
             }
         }
@@ -93,7 +103,7 @@ public class GameFacade : ScriptableObject, IGameFacade
 
     public BuildingInfo GetBuldingInfo(Buildings type)
     {
-      return   BuildingsInfo.GetBuldingInfo(type);
+        return BuildingsInfo.GetBuldingInfo(type);
     }
 
     public bool HasRequiredResourcesToRepair(BuildingBehaviour buildingBehaviour)
@@ -111,11 +121,13 @@ public class GameFacade : ScriptableObject, IGameFacade
         return Player.CurrentAge;
     }
 
-    public void DiscountResources(Units Unit){
+    public void DiscountResources(Units Unit)
+    {
         UnitInfo unitInfo = UnitsInfo.GetUnitInfo(Unit);
         var unitCosts = unitInfo.Costs;
 
-        for (int i = 0; i < unitCosts.Count; i++){            
+        for (int i = 0; i < unitCosts.Count; i++)
+        {
             DiscountResources(unitCosts[i].Resource, unitCosts[i].Amount);
         }
     }
@@ -125,7 +137,8 @@ public class GameFacade : ScriptableObject, IGameFacade
         BuildingInfo buildingInfo = BuildingsInfo.GetBuldingInfo(building);
         var unitCosts = buildingInfo.Costs;
 
-        for (int i = 0; i < unitCosts.Count; i++) {
+        for (int i = 0; i < unitCosts.Count; i++)
+        {
             DiscountResources(unitCosts[i].Resource, unitCosts[i].Amount);
         }
     }
@@ -174,13 +187,13 @@ public class Player : ScriptableObject
         ResourceAmount result = null;
         switch (resource)
         {
-            case  Resources.Food:
+            case Resources.Food:
                 result = FoodAmount;
                 break;
-            case  Resources.Gold:
+            case Resources.Gold:
                 result = GoldAmount;
                 break;
-            case  Resources.Rock:
+            case Resources.Rock:
                 result = RockAmount;
                 break;
             case Resources.Wood:
@@ -204,7 +217,7 @@ public class ResourceAmount
     [SerializeField]
     public float Amount;
 
-  
+
 
     public ResourceAmount(Resources _resource, float _amount)
     {
@@ -215,12 +228,49 @@ public class ResourceAmount
     public void AddResource(float _amount)
     {
         //if(_amount>0)
-            Amount += _amount;
+        Amount += _amount;
     }
 
     public void DiscountResource(float _amount)
     {
         //if (_amount < 0)
-            Amount -= _amount;
+        Amount -= _amount;
+    }
+}
+
+[CreateAssetMenu(fileName = "New Team", menuName = "Team")]
+public class Team : ScriptableObject
+{
+    [SerializeField]
+    private int Id;
+
+    [SerializeField]
+    private string Name;
+
+    [SerializeField]
+    private Color Color;
+
+
+    public Team()
+    {
+
+        this.Id = 0;
+
+        this.Name = "";
+
+        this.Color = Color.black;
+
+    }
+
+
+    public Team(int Id, string Name, Color color)
+    {
+
+        this.Id = Id;
+
+        this.Name = Name;
+
+        this.Color = color;
+
     }
 }

@@ -61,6 +61,10 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //Debug.Log("Camera state " + camerastate.ToString() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
+
+        //Debug.Log("unitsGui HasOptionSelected " + unitsGui.HasOptionSelected() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
         userClick();
 
         switch (camerastate)
@@ -174,13 +178,13 @@ public class CameraScript : MonoBehaviour
 
         if (hitselected != null)
         {
-            var auxst = hitselected.GetComponent<TrackingStatus>();
+            var auxst = hitselected.GetComponent<ISelectable>();
             if (auxst != null)
                 auxst.IsSelected = true;
 
             if (currentSelected != null)
             {
-                auxst = currentSelected.GetComponent<TrackingStatus>();
+                auxst = currentSelected.GetComponent<ISelectable>();
                 if (auxst != null)
                     auxst.IsSelected = false;
             }
@@ -293,6 +297,7 @@ public class CameraScript : MonoBehaviour
 
     private void OnGUI()
     {
+
         switch (camerastate)
         {
             case CameraStates.None:
@@ -302,7 +307,7 @@ public class CameraScript : MonoBehaviour
                     {
                         secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
 
-                        Debug.Log("Second click " + secondclick.x + " " + secondclick.y);
+                        //Debug.Log("Second click " + secondclick.x + " " + secondclick.y);
                         //Default color to render the selection square
                         GUI.contentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                         GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), ""); // -

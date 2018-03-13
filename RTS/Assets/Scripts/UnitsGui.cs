@@ -18,10 +18,10 @@ public class UnitsGui : ScriptableObject
     // Update is called once per frame
     public void Update()
     {
-
+        //Debug.Log(" UnitsGui Update " + HasOptionSelected());
         if (HasOptionSelected())
         {
-
+            
          
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -91,13 +91,15 @@ public class UnitsGui : ScriptableObject
 
     public void ShowGUI()
     {
-
+  
 
         var selected = false;
-        if (createdObject == null)
+        if (!HasOptionSelected())
         {
             selected = GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Casa");
         }
+        else
+            return;
 
         if (selected)
         {
@@ -108,7 +110,14 @@ public class UnitsGui : ScriptableObject
             _mouseposition.z = Screen.height - _mouseposition.z;
             Vector3 mouseposition = Camera.main.ScreenToWorldPoint(_mouseposition);
             mouseposition.y = 1;
-            objectToCreate = UnityEngine.Resources.Load("House", typeof(GameObject)) as GameObject;
+            //TODO Implement flyweight  pattern
+            if (objectToCreate == null)
+            {
+                //TODO Implement Wrapper class to define the path of the resource
+                objectToCreate = UnityEngine.Resources.Load("House", typeof(GameObject)) as GameObject;
+                //set default state
+                objectToCreate.GetComponent<BuildingBehaviour>().State = BuildingStates._Fundational;
+            }
             createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
             createdObject.name = "House";
 

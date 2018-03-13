@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus
+public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus, ISelectable
 {
     private IGameFacade gameFacade;
 
@@ -12,6 +12,22 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     private CitizenStates citizenState;
     private CitizenStates citizenLabor;
     private BuildingBehaviour building;
+
+    [SerializeField]
+    private Team team;
+
+    public Team Team {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
+
+    public bool IsSelected { get; set; }
 
     private Vector3 pointToMove;
     private Vector3 pointResource;
@@ -25,6 +41,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
     public float GatheringSpeed { get; set; }
     public Resources CurrentResource { get; set; }
     public float CurrentAmountResouce { get; set; }
+
 
 
     private float Health;
@@ -257,7 +274,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                 break;
         }
 
-        AddDamage(10);
+        //AddDamage(10);
     }
 
     public string GetStatus()
