@@ -27,6 +27,8 @@ public interface IGameFacade
     GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource);
 
     BuildingInfo GetBuldingInfo(Buildings type);
+
+    Team Team { get;}
 }
 
 
@@ -242,21 +244,25 @@ public class ResourceAmount
 public class Team : ScriptableObject
 {
     [SerializeField]
-    private int Id;
+    private int id;
 
     [SerializeField]
-    private string Name;
+    private string name;
 
     [SerializeField]
     private Color Color;
+
+    public string Name { get { return this.name; } }
+
+    public int Id { get { return this.id; } }
 
 
     public Team()
     {
 
-        this.Id = 0;
+        this.id = 0;
 
-        this.Name = "";
+        this.name = "";
 
         this.Color = Color.black;
 
@@ -266,9 +272,9 @@ public class Team : ScriptableObject
     public Team(int Id, string Name, Color color)
     {
 
-        this.Id = Id;
+        this.id = Id;
 
-        this.Name = Name;
+        this.name = Name;
 
         this.Color = color;
 

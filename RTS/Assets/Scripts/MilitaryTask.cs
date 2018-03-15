@@ -9,9 +9,7 @@ public class MilitaryTask// : ScriptableObject
 
   
     public GameObject Gameobject { get { return gameobject; } }
-
     private MilitaryTaskType militarTaskType;
-
     private Vector3[] positions = new Vector3[] { };
 
     public MilitaryTask(  GameObject _gameobject, MilitaryTaskType _militarTaskType)
@@ -26,5 +24,9 @@ public class MilitaryTask// : ScriptableObject
         positions = _positions;
         militarTaskType = MilitaryTaskType.Patroll;
 
+    }
+
+    public bool IscompletedTask() {
+        return gameobject == null;
     }
 }

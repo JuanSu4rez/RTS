@@ -25,6 +25,15 @@ public enum CitizenStates
     Walking
 }
 
+public enum SoldierStates
+{
+    _None,
+    Attacking,
+    Died,
+    Idle,    
+    Walking
+}
+
 public enum MilitaryTaskType
 {
     Attack,

@@ -19,6 +19,7 @@ public interface IAliveBeing
 
 public interface IFigther{
     float AttackPower { get; set; }
+    float AttackRange { get; set; }
     float DefensePower { get; set; }
 }
 
@@ -46,6 +47,14 @@ public interface IResource {
 
 public interface IStatus {
     string GetStatus();
+}
+
+public interface ITeamable {
+    Team Team { get; set; }
+}
+
+public interface IDamagable {
+    void AddDamage(float damage);
 }
 
 
