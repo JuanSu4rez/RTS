@@ -39,6 +39,9 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
     private float Health;
     private float CurrentHealth;
 
+    //Cooldown
+    private float coolDown;
+    private float lastShoot;
 
     public NavMeshAgent navMeshAgent;
 
@@ -61,6 +64,10 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
         AttackRange = 900;
+
+        coolDown = 2f;
+        lastShoot = 0f;
+
         changeColor();
     }
 
@@ -86,12 +93,10 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
             if (team != null)
             {
                 if (this.Team.Id != team.Team.Id)
-                {
-                    //soldierState = SoldierStates.Attacking;
+                {                    
                     militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
                     Vector3 targetDistance = getTargetDistance();
-                    if (targetDistance.sqrMagnitude > AttackRange)
-                    {
+                    if (targetDistance.sqrMagnitude > AttackRange){
                         soldierState = SoldierStates.Walking;
                         SetPointToMove(collider.gameObject.transform.position);
                     }
@@ -182,7 +187,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
                     var damagable = militaryTask.Gameobject.GetComponent<IDamagable>();
                     if (damagable != null) {
                         //TODO calc damage depending on the distance and the attack Range
-                        damagable.AddDamage(AttackPower);
+                        //damagable.AddDamage(AttackPower);
                         if (militaryTask.IscompletedTask())
                             soldierState = SoldierStates.Idle;
                         else
@@ -191,11 +196,17 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
                             {
                                 soldierState = SoldierStates.Attacking;
                                 navMeshAgent.enabled = false;
-                               // SetPointToMove(militaryTask.Gameobject.transform.position);
+                                gameObject.transform.LookAt(militaryTask.Gameobject.transform);
+                                //Cooldwon
+                                if (Time.time > lastShoot + coolDown)
+                                {
+                                    shootArrow();
+                                    damagable.AddDamage(AttackPower);
+                                    lastShoot = Time.time;
+                                }                                
                             }
                             else
-                            {                                
-                                //navMeshAgent.enabled = true;
+                            {   
                                 soldierState = SoldierStates.Walking;
                                 SetPointToMove(militaryTask.Gameobject.transform.position);
                             }
