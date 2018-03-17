@@ -73,13 +73,18 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
 
     public virtual void changeColor()
     {
-        gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;
+        Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
     }
 
     public void shootArrow(){
         //ArrowPoint
-        Vector3 arrowOrigin = gameObject.transform.Find("ArrowPoint").position;
+        Vector3 arrowOriginPosition = gameObject.transform.Find("ArrowPoint").position;
+        Quaternion arrowOriginRotation = gameObject.transform.Find("ArrowPoint").rotation;
+        GameObject newArrow = Instantiate(UnityEngine.Resources.Load("Arrow"), arrowOriginPosition, arrowOriginRotation) as GameObject;
 
+        newArrow.transform.GetComponent<Rigidbody>().AddForce(transform.forward * 3000);
+
+        Destroy(newArrow, 3f);
     }
 
     public void ModifyRangeAttack(float newRange) {
@@ -129,6 +134,30 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
                         soldierState = SoldierStates.Attacking;                   
                 }
                 break;
+        }
+    }
+
+    void OnTriggerStay(Collider collider)
+    {
+        if (soldierState == SoldierStates.Idle)
+        {
+            var team = collider.gameObject.GetComponent<ITeamable>();
+            if (team != null)
+            {
+                if (this.Team.Id != team.Team.Id)
+                {
+                    //soldierState = SoldierStates.Attacking;
+                    militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
+                    Vector3 targetDistance = getTargetDistance();
+                    if (targetDistance.sqrMagnitude > AttackRange)
+                    {
+                        soldierState = SoldierStates.Walking;
+                        SetPointToMove(collider.gameObject.transform.position);
+                    }
+                    else
+                        soldierState = SoldierStates.Attacking;
+                }
+            }
         }
     }
 
@@ -232,14 +261,13 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
                         soldierState = SoldierStates.Attacking;
                         navMeshAgent.enabled = false;
                     }
-                else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
-                    {
+                else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination){
                         navMeshAgent.enabled = true;
                         SetPointToMove(militaryTask.Gameobject.transform.position);
-                    }
-                    
+                    }                    
                 }
-               
+                if (!navMeshAgent.hasPath)
+                    soldierState = SoldierStates.Idle;
                 break;
             default:
                 break;
@@ -257,6 +285,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
 
     public void SetState(SoldierStates _soldierStates)
     {
+        soldierState = _soldierStates;
 
         //if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
         //{

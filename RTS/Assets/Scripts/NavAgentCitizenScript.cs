@@ -81,8 +81,9 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         changeColor();
     }
 
-    public virtual void changeColor() {        
-        gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;        
+    public virtual void changeColor()
+    {
+        Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
     }
 
 
