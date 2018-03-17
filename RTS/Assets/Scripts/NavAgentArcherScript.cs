@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStatus, ISelectable, ITeamable, IDamagable
+public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatus, ISelectable, ITeamable, IDamagable
 {
     private IGameFacade gameFacade;
     private SoldierStates soldierState;
@@ -60,13 +60,19 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
         soldierState = SoldierStates.Idle;
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
-        AttackRange = 3;
+        AttackRange = 900;
         changeColor();
     }
 
     public virtual void changeColor()
     {
         gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;
+    }
+
+    public void shootArrow(){
+        //ArrowPoint
+        Vector3 arrowOrigin = gameObject.transform.Find("ArrowPoint").position;
+
     }
 
     public void ModifyRangeAttack(float newRange) {
@@ -181,8 +187,15 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                             soldierState = SoldierStates.Idle;
                         else
                         {
-                            if (getTargetDistance().sqrMagnitude > AttackRange)
+                            if (getTargetDistance().sqrMagnitude < AttackRange)
                             {
+                                soldierState = SoldierStates.Attacking;
+                                navMeshAgent.enabled = false;
+                               // SetPointToMove(militaryTask.Gameobject.transform.position);
+                            }
+                            else
+                            {                                
+                                //navMeshAgent.enabled = true;
                                 soldierState = SoldierStates.Walking;
                                 SetPointToMove(militaryTask.Gameobject.transform.position);
                             }
@@ -201,12 +214,19 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
             case SoldierStates._None:
                 break;
             case SoldierStates.Walking:
-                if (militaryTask != null) {
+                if (militaryTask != null)
+                {
                     Vector3 targetDistance = getTargetDistance();
-                    if (targetDistance.sqrMagnitude <= AttackRange)
+                    if (targetDistance.sqrMagnitude <= AttackRange) { 
                         soldierState = SoldierStates.Attacking;
-                    else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
+                        navMeshAgent.enabled = false;
+                    }
+                else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
+                    {
+                        navMeshAgent.enabled = true;
                         SetPointToMove(militaryTask.Gameobject.transform.position);
+                    }
+                    
                 }
                
                 break;

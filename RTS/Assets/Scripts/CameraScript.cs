@@ -125,6 +125,9 @@ public class CameraScript : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit))
                 {
+                    var sphere = hit.transform.gameObject.GetComponent<SphereCollider>();
+                    var capsule = hit.transform.gameObject.GetComponent<CapsuleCollider>();
+
                     var _name = hit.transform.gameObject.name;
                     //TRANSATITION TO UnitsSelection OR BuildingsSelection
                     var hitselected = hit.transform.gameObject;
@@ -216,14 +219,25 @@ public class CameraScript : MonoBehaviour
                 {
                     case "Land":
                         var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
-
-
-                        // if (hit.rigidbody != null)
+                        var soldierTemp = currentSelected.gameObject.GetComponent<NavAgentSoldierScript>();
+                        var archerTemp = currentSelected.gameObject.GetComponent<NavAgentArcherScript>();
+                        if (citizenTemp != null)
                         {
                             pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                             citizenTemp.SetPointToMove(pointtomove.transform.position);
                             citizenTemp.SetState(CitizenStates.Walking);
-
+                        }
+                        if (soldierTemp != null)
+                        {
+                            pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+                            soldierTemp.SetPointToMove(pointtomove.transform.position);
+                            soldierTemp.SetState(SoldierStates.Walking);
+                        }
+                        if (archerTemp != null)
+                        {
+                            pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+                            archerTemp.SetPointToMove(pointtomove.transform.position);
+                            archerTemp.SetState(SoldierStates.Walking);
                         }
 
                         break;
@@ -256,7 +270,8 @@ public class CameraScript : MonoBehaviour
 
                     default:
                         break;
-                }
+                
+            }
 
                 string rightclickedtag = hit.transform.gameObject.tag;
                 switch (rightclickedtag)

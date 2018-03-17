@@ -76,8 +76,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         CurrentHealth =Health;
 
         gameFacade = GameScript.GetFacade();
+
+
+        changeColor();
     }
 
+    public virtual void changeColor() {        
+        gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;        
+    }
 
 
 

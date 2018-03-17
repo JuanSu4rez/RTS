@@ -250,11 +250,13 @@ public class Team : ScriptableObject
     private string name;
 
     [SerializeField]
-    private Color Color;
+    private Color color;
 
     public string Name { get { return this.name; } }
 
     public int Id { get { return this.id; } }
+
+    public Color Color { get { return this.color; } }
 
 
     public Team()
@@ -264,7 +266,7 @@ public class Team : ScriptableObject
 
         this.name = "";
 
-        this.Color = Color.black;
+        this.color = Color.black;
 
     }
 
@@ -276,7 +278,7 @@ public class Team : ScriptableObject
 
         this.name = Name;
 
-        this.Color = color;
+        this.color = color;
 
     }
 }
