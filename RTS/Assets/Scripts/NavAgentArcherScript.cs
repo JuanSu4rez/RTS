@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStatus, ISelectable, ITeamable, IDamagable
+public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatus, ISelectable, ITeamable, IDamagable
 {
     private IGameFacade gameFacade;
     private SoldierStates soldierState;
@@ -63,15 +63,23 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
         soldierState = SoldierStates.Idle;
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
-        AttackRange = 5;
+        AttackRange = 900;
+
         coolDown = 2f;
         lastShoot = 0f;
+
         changeColor();
     }
 
     public virtual void changeColor()
     {
         gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;
+    }
+
+    public void shootArrow(){
+        //ArrowPoint
+        Vector3 arrowOrigin = gameObject.transform.Find("ArrowPoint").position;
+
     }
 
     public void ModifyRangeAttack(float newRange) {
@@ -85,12 +93,10 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
             if (team != null)
             {
                 if (this.Team.Id != team.Team.Id)
-                {
-                    //soldierState = SoldierStates.Attacking;
+                {                    
                     militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
                     Vector3 targetDistance = getTargetDistance();
-                    if (targetDistance.sqrMagnitude > AttackRange)
-                    {
+                    if (targetDistance.sqrMagnitude > AttackRange){
                         soldierState = SoldierStates.Walking;
                         SetPointToMove(collider.gameObject.transform.position);
                     }
@@ -193,7 +199,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
                                 if (Time.time > lastShoot + coolDown)
-                                {                                    
+                                {
+                                    shootArrow();
                                     damagable.AddDamage(AttackPower);
                                     lastShoot = Time.time;
                                 }                                
@@ -230,6 +237,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                         navMeshAgent.enabled = true;
                         SetPointToMove(militaryTask.Gameobject.transform.position);
                     }
+                    
                 }
                
                 break;

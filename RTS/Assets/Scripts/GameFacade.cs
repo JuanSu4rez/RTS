@@ -314,29 +314,32 @@ public class Team : ScriptableObject
     [SerializeField]
     private int id;
 
-    [SerializeField]
-    private string name;
-
-    [SerializeField]
-    private Color Color;
-
-    public string Name { get { return this.name; } }
-
     public int Id { get { return this.id; } }
+
+    [SerializeField]
+    private string teamname;
+
+    public string TeamName { get { return this.teamname; } }
+
+    [SerializeField]
+    private Color color;
+
+    public Color Color { get { return this.color; } }
 
     [SerializeField]
     private TeamData initialteamdata;
 
     public TeamData InitalTeamData { get { return initialteamdata; } }
 
+
     public Team()
     {
 
         this.id = 0;
 
-        this.name = "";
+        this.teamname = "";
 
-        this.Color = Color.black;
+        this.color = Color.black;
 
         initialteamdata = new TeamData();
 
@@ -348,9 +351,11 @@ public class Team : ScriptableObject
 
         this.id = Id;
 
-        this.name = Name;
+        this.teamname = Name;
 
-        this.Color = color;
+        this.color = color;
+
+        initialteamdata = new TeamData();
 
     }
 }
