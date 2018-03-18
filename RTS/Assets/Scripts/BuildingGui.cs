@@ -7,16 +7,23 @@ public class BuildingGui : ScriptableObject {
     private IGameFacade gameFacade;
 
     public BuildingGui() {
-        gameFacade = GameScript.GetFacade();
+      
     }
 
     public void ShowGUI(GameObject selectedBuilding) {
-        gameFacade = GameScript.GetFacade();
+     
         if (selectedBuilding == null)
             return;
 
-        string buildingName = selectedBuilding.name;
-        Buildings buildingType = (Buildings) System.Enum.Parse(typeof(Buildings), buildingName);
+        var behavior = selectedBuilding.GetComponent<BuildingBehaviour>();
+        if (behavior == null)
+            return;
+
+        gameFacade = GameScript.GetFacade(behavior.Team);
+ 
+
+
+        Buildings buildingType = behavior.Building;
 
         switch (buildingType)
         {

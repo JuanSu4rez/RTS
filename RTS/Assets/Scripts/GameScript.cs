@@ -99,14 +99,21 @@ public class GameScript : MonoBehaviour
         
     }
 
-    public static IGameFacade GetFacade()
-    {
-        return facades[0];
-    }
-
     public static IGameFacade GetFacade(Team team)
     {
-        return facades[team.Id];
+        if (team != null)
+            return facades[team.Id];
+        else
+            return null;
+    }
+
+
+    public static IGameFacade GetFacade(ITeamable team)
+    {
+        if (team != null)
+            return GetFacade(team.Team);
+        else
+            return null;
     }
 
 

@@ -4,7 +4,7 @@ using System;
 
 public class UnitsGui : ScriptableObject
 {
-    private CameraScript cameraScript;
+
 
     private GameObject objectToCreate;
 
@@ -21,8 +21,8 @@ public class UnitsGui : ScriptableObject
         //Debug.Log(" UnitsGui Update " + HasOptionSelected());
         if (HasOptionSelected())
         {
-            
-         
+
+
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -88,39 +88,41 @@ public class UnitsGui : ScriptableObject
     }
 
 
-    public void ShowGUI()
+    public void ShowGUI(GameObject game)
     {
-  
+
+        if (HasOptionSelected())
+            return;
+
+        if (game == null)
+            return;
+
+        var behavior = game.GetComponent<NavAgentCitizenScript>();
+        if (behavior == null)
+            return;
+
+        var facade = GameScript.GetFacade(behavior.Team);
 
         var selected = false;
-        if (!HasOptionSelected())
-        {
-            selected = GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Casa");
-        }
-        else
-            return;
+
+        selected = GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height - (Screen.height - 100)), "Crear Casa");
 
         if (selected)
         {
             //TODO ON MOUSE MOVING SHOW THE BUILDING PREFAB
             //
-
-            Vector3 _mouseposition = Input.mousePosition;
-            _mouseposition.z = Screen.height - _mouseposition.z;
-            Vector3 mouseposition = Camera.main.ScreenToWorldPoint(_mouseposition);
-            mouseposition.y = 1;
-            //TODO Implement flyweight  pattern
-            if (objectToCreate == null)
+            if (facade.CanCreateBuilding(Buildings.House))
             {
-                //TODO Implement Wrapper class to define the path of the resource
-                //TODO you must know the team 
-                objectToCreate = UnityEngine.Resources.Load("House", typeof(GameObject)) as GameObject;
-                //set default state
-                objectToCreate.GetComponent<BuildingBehaviour>().State = BuildingStates._Fundational;
-            }
-            createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
-            createdObject.name = "House";
+                Vector3 _mouseposition = Input.mousePosition;
+                _mouseposition.z = Screen.height - _mouseposition.z;
+                Vector3 mouseposition = Camera.main.ScreenToWorldPoint(_mouseposition);
+                mouseposition.y = 1;
 
+
+                objectToCreate = facade.GameResource.Load<GameObject>(Buildings.House.ToString());
+                createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
+                createdObject.name = Buildings.House.ToString();
+            }
 
         }
 

@@ -332,7 +332,7 @@ public class CameraScript : MonoBehaviour
 
                 break;
             case CameraStates.UnitsSelection:
-                unitsGui.ShowGUI();
+                unitsGui.ShowGUI(currentSelected);
 
                 break;
             case CameraStates.BuildingsSelection:

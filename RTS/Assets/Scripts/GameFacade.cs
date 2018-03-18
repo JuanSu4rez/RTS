@@ -28,6 +28,12 @@ public interface IGameFacade
 
     BuildingInfo GetBuldingInfo(Buildings type);
 
+
+    bool CanCreateBuilding(Buildings building);
+
+
+    bool CanCreateUnit(Units unit);
+
     Team Team { get;}
 
     AssetTypes Assettype { get;}
@@ -161,6 +167,28 @@ public class GameFacade : ScriptableObject, IGameFacade
         {
             DiscountResources(unitCosts[i].Resource, unitCosts[i].Amount);
         }
+    }
+
+    public bool CanCreateBuilding(Buildings building)
+    {
+        var result = HasRequiredResources(building);
+        if (result)
+        {
+           DiscountResources(building);
+        }
+
+        return result;
+    }
+
+    public bool CanCreateUnit(Units unit)
+    {
+        var result = HasRequiredResources(unit);
+        if (result)
+        {
+            DiscountResources(unit);
+        }
+
+        return result;
     }
 }
 

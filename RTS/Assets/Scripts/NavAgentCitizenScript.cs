@@ -24,8 +24,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         set
         {
             team = value;
+            gameFacade = GameScript.GetFacade(team);
         }
     }
+
+
+
 
     public bool IsSelected { get; set; }
 
@@ -75,8 +79,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         Health= 9999;
         CurrentHealth =Health;
 
-        gameFacade = GameScript.GetFacade();
-
+        if(gameFacade == null)
+        gameFacade = GameScript.GetFacade(team);
 
         changeColor();
     }
@@ -131,7 +135,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                    
                     if (citizenLabor != CitizenStates.None){
                         if (CurrentAmountResouce > 0){
-                            GameScript.GetFacade().AddResources(CurrentResource, CurrentAmountResouce);
+                            GameScript.GetFacade(this).AddResources(CurrentResource, CurrentAmountResouce);
                             CurrentAmountResouce = 0;
                         }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, IDamagable
+public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, IDamagable,ITeamable
 {
 
     [SerializeField]

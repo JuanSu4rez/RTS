@@ -59,7 +59,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IFigther, IStatu
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
         Health= 9999;
         CurrentHealth =Health;
-        gameFacade = GameScript.GetFacade();
+        gameFacade = GameScript.GetFacade(team);
         soldierState = SoldierStates.Idle;
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
