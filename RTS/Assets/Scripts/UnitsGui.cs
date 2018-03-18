@@ -35,7 +35,6 @@ public class UnitsGui : ScriptableObject
                     createdObject.transform.position = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
                 }
 
-
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -114,6 +113,7 @@ public class UnitsGui : ScriptableObject
             if (objectToCreate == null)
             {
                 //TODO Implement Wrapper class to define the path of the resource
+                //TODO you must know the team 
                 objectToCreate = UnityEngine.Resources.Load("House", typeof(GameObject)) as GameObject;
                 //set default state
                 objectToCreate.GetComponent<BuildingBehaviour>().State = BuildingStates._Fundational;

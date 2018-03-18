@@ -8,7 +8,7 @@ public class UnitCreationScript : MonoBehaviour {
     public float durationCreationUnitTime { get; set; }
     public float CreationUnitTime { get; set; }
     public Queue<Units> creationQueue;
-
+    private ITeamable team;
     int deltaPosition = 1;
 
     // Use this for initialization
@@ -16,6 +16,8 @@ public class UnitCreationScript : MonoBehaviour {
         durationCreationUnitTime = 5;
         CreationUnitTime = 0;
         creationQueue = new Queue<Units>();
+
+        team = this.GetComponent<ITeamable>();
     }
 	
 	// Update is called once per frame
@@ -38,6 +40,7 @@ public class UnitCreationScript : MonoBehaviour {
 
     private void createUnit(Units unitType) {
         //TODO Implement flyweight  pattern , Implement Wrapper class to define the path of the resource
+        //TODO you must know the team 
         GameObject unitToCreate = UnityEngine.Resources.Load(unitType.ToString(), typeof(GameObject)) as GameObject;
         GameObject newUnit = Instantiate(unitToCreate, calculateUnitOrigin(), Quaternion.identity);
         newUnit.name = unitType.ToString();

@@ -29,12 +29,29 @@ public interface IGameFacade
     BuildingInfo GetBuldingInfo(Buildings type);
 
     Team Team { get;}
+
+    AssetTypes Assettype { get;}
+
+    GameResource GameResource { get; }
 }
 
 
 public class GameFacade : ScriptableObject, IGameFacade
 {
     public AssetTypes Assettype { get; internal set; }
+
+    private GameResource gameResource = null;
+    public GameResource GameResource {
+
+        get
+        {
+            if(gameResource == null)
+            {
+                gameResource = new GameResource(Assettype);
+            }
+            return gameResource;
+        }
+    }
 
     public BuildingsInfo BuildingsInfo { get; set; }
 
@@ -43,6 +60,8 @@ public class GameFacade : ScriptableObject, IGameFacade
     public Team Team { get; internal set; }
 
     public UnitsInfo UnitsInfo { get; set; }
+ 
+    public Diplomacy[] Diplomacies { get; set; }
 
     public void AddResources(Resources type, float amount)
     {
@@ -52,7 +71,6 @@ public class GameFacade : ScriptableObject, IGameFacade
 
     public void DiscountResources(Resources type, float amount)
     {
-
         ResourceAmount resourceAmount = Player.GetResourceAmount(type);
         if (resourceAmount.Amount >= amount)
             resourceAmount.DiscountResource(amount);
@@ -163,12 +181,15 @@ public class Player : ScriptableObject
     public ResourceAmount WoodAmount;
 
     public ResourceAmount FoodAmount;
+
     [SerializeField]
     private int _NumberofCitizens;
 
     public int NumberofCitizens { get { return _NumberofCitizens; } set { _NumberofCitizens = value; } }
 
     public Ages CurrentAge { get; set; }
+
+
 
     public Player()
     {
@@ -181,7 +202,25 @@ public class Player : ScriptableObject
         FoodAmount = new ResourceAmount(Resources.Food, 0);
 
         CurrentAge = Ages.I;
+
+        _NumberofCitizens = 3;
     }
+
+    public void SetData(TeamData data)
+    {
+        GoldAmount = new ResourceAmount(data.GoldAmount);
+
+        RockAmount = new ResourceAmount(data.RockAmount);
+
+        WoodAmount = new ResourceAmount(data.WoodAmount);
+
+        FoodAmount = new ResourceAmount(data.FoodAmount);
+
+        CurrentAge = data.CurrentAge;
+
+        _NumberofCitizens = data.NumberofCitizens;
+    }
+
 
 
     public ResourceAmount GetResourceAmount(Resources resource)
@@ -211,6 +250,25 @@ public class Player : ScriptableObject
 
 }
 [System.Serializable]
+public class Diplomacy
+{
+    [SerializeField]
+    private Postures posture;
+    public Postures Posture { get { return posture; }  }
+    [SerializeField]
+    public Team team;
+    [SerializeField]
+    public Team Team { get { return team; } }
+
+
+    public Diplomacy(Team team , Postures posture)
+    {
+        this.team = team;
+        this.posture = posture;
+    }
+}
+
+[System.Serializable]
 public class ResourceAmount
 {
     [SerializeField]
@@ -220,11 +278,21 @@ public class ResourceAmount
     public float Amount;
 
 
-
+    public ResourceAmount(Resources _resource)
+    {
+        Resource = _resource;
+        Amount = 100;
+    }
     public ResourceAmount(Resources _resource, float _amount)
     {
         Resource = _resource;
         Amount = _amount;
+    }
+
+    public ResourceAmount(ResourceAmount resourceAmount)
+    {
+        Resource = resourceAmount.Resource;
+        Amount = resourceAmount.Amount;
     }
 
     public void AddResource(float _amount)
@@ -256,6 +324,10 @@ public class Team : ScriptableObject
 
     public int Id { get { return this.id; } }
 
+    [SerializeField]
+    private TeamData initialteamdata;
+
+    public TeamData InitalTeamData { get { return initialteamdata; } }
 
     public Team()
     {
@@ -265,6 +337,8 @@ public class Team : ScriptableObject
         this.name = "";
 
         this.Color = Color.black;
+
+        initialteamdata = new TeamData();
 
     }
 
@@ -280,3 +354,38 @@ public class Team : ScriptableObject
 
     }
 }
+
+[System.Serializable]
+public class TeamData
+{
+    public ResourceAmount GoldAmount;
+
+    public ResourceAmount RockAmount;
+
+    public ResourceAmount WoodAmount;
+
+    public ResourceAmount FoodAmount;
+
+    [SerializeField]
+    private int _NumberofCitizens;
+
+    public int NumberofCitizens { get { return _NumberofCitizens; } set { _NumberofCitizens = value; } }
+
+    public Ages CurrentAge { get; set; }
+
+    public TeamData()
+    {
+        GoldAmount = new ResourceAmount(Resources.Gold);
+
+         RockAmount= new ResourceAmount(Resources.Rock);
+      
+         WoodAmount= new ResourceAmount(Resources.Wood);
+       
+         FoodAmount= new ResourceAmount(Resources.Food);
+
+        _NumberofCitizens = 3;
+
+        CurrentAge = Ages.I;
+    }
+}
+

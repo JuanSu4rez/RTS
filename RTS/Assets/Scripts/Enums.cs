@@ -138,8 +138,18 @@ public enum AssetTypes
 }
 
 
+public enum Postures
+{
+    Ally,
+    Enemy,
+    Neutral
 
-public static class ExtensionMethods
+}
+
+
+
+
+    public static class ExtensionMethodsResources
 {
 
     public static Resources GetResource(this Resources rec, string param)
@@ -162,6 +172,24 @@ public static class ExtensionMethods
             return Resources.Food;
         }
         return Resources.None;
+    }
+
+
+    public static string GetPath(this AssetTypes AssetType)
+    {
+        var result = "";
+        switch (AssetType)
+        {
+            case AssetTypes.THREED:
+                result = "3d"+ System.IO.Path.DirectorySeparatorChar;
+                break;
+            case AssetTypes.TWOD:
+                result = "2d" + System.IO.Path.DirectorySeparatorChar;
+                break;
+        }
+
+
+        return result;
     }
 
 

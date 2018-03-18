@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameScript : MonoBehaviour
 {
@@ -10,28 +11,87 @@ public class GameScript : MonoBehaviour
     private BuildingsInfo buldingsInfo;
 
     [SerializeField]
+    private UnitsInfo unitsInfo;
+
+ 
     private Player player;
 
     [SerializeField]
-    private UnitsInfo unitsInfo;
-    
-    [SerializeField]
-    private Team team;
+    private Team Playerteam;
 
-    private static IGameFacade facade;
+
+    [SerializeField]
+    private Team[] teams;
+
+    public Team[] Teams
+    {
+        get { return teams; }
+        set
+        {
+            teams = value;
+            this.diplomacies = new Diplomacy[teams.Length];
+            for(int i = 0;i< diplomacies.Length; i++)
+            {
+                diplomacies[i] = new Diplomacy(teams[i],Postures.Enemy);
+            }
+        }
+
+    }
+
+    [SerializeField]
+    private Diplomacy[] diplomacies;
+
+  
+    public Diplomacy[] Diplomacies
+    {
+        get { return diplomacies; }
+        set { diplomacies = value; }
+
+    }
+
+    //private static IGameFacade facade;
     // Use this for initialization
+    private static IGameFacade[] facades;
+
 
     void Awake()
     {
+        if(teams == null || teams.Length == 0)
+        {
+            throw new UnityException("Debe asignar los respectivos equipos.");
+        }
+
+
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
-        gameFacade.Player = player;
+        gameFacade.Team = Playerteam;
+        gameFacade.Player = ScriptableObject.CreateInstance<Player>();
+        gameFacade.Player.SetData(gameFacade.Team.InitalTeamData);
         gameFacade.BuildingsInfo = buldingsInfo;
         gameFacade.UnitsInfo = unitsInfo;
         gameFacade.Assettype = assettype;
-        gameFacade.Team = team;
+        gameFacade.Diplomacies = diplomacies;
+        player = gameFacade.Player;
 
-        facade = gameFacade;
+        facades = new IGameFacade[teams.Length+1];
+        facades[0] = gameFacade;
+
+        for (int i = 0; i< teams.Length; i++)
+        {
+            var gameFacadei = ScriptableObject.CreateInstance<GameFacade>();
+            gameFacadei.Team = teams[i];
+            gameFacadei.Player = ScriptableObject.CreateInstance<Player>();
+            gameFacadei.Player.SetData(teams[i].InitalTeamData);
+            gameFacadei.BuildingsInfo = buldingsInfo;
+            gameFacadei.UnitsInfo = unitsInfo;
+            gameFacadei.Assettype = assettype;
+            gameFacadei.Diplomacies = diplomacies;
+            facades[i+1] = gameFacadei;
+        }
+
     }
+
+   
+
 
     void Start()
     {    
@@ -41,8 +101,14 @@ public class GameScript : MonoBehaviour
 
     public static IGameFacade GetFacade()
     {
-        return facade;
+        return facades[0];
     }
+
+    public static IGameFacade GetFacade(Team team)
+    {
+        return facades[team.Id];
+    }
+
 
     // Update is called once per frame
     void Update()
