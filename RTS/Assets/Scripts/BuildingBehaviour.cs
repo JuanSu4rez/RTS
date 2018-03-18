@@ -55,17 +55,17 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     // Use this for initialization
     void Start()
     {
-      
-
-        if (State == BuildingStates._Fundational)
-        {
-
+        if (State == BuildingStates._Fundational){
             CurrentBuiltAmount = 5;
             LastCurrentBuiltAmount = CurrentBuiltAmount;
             TotalBuiltAmount = 200;
             Resistence = 0.3f;
         }
+        changeColor();
+    }
 
+    public virtual void changeColor() {
+        Utils.ChangeColorBuildingWB(gameObject, team);
     }
 
     // Update is called once per frame

@@ -66,12 +66,12 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
         AttackRange = 5;
         coolDown = 2f;
         lastShoot = 0f;
+
         changeColor();
     }
 
-    public virtual void changeColor()
-    {
-        gameObject.GetComponent<MeshRenderer>().material.color = Team.Color;
+    public virtual void changeColor() {
+        Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
     }
 
     public void ModifyRangeAttack(float newRange) {
@@ -98,6 +98,26 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                         soldierState = SoldierStates.Attacking;
                 }
 
+            }
+        }
+    }
+
+    void OnTriggerStay(Collider collider)
+    {
+        if (soldierState == SoldierStates.Idle){
+            var team = collider.gameObject.GetComponent<ITeamable>();
+            if (team != null){
+                if (this.Team.Id != team.Team.Id){
+                    //soldierState = SoldierStates.Attacking;
+                    militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
+                    Vector3 targetDistance = getTargetDistance();
+                    if (targetDistance.sqrMagnitude > AttackRange){
+                        soldierState = SoldierStates.Walking;
+                        SetPointToMove(collider.gameObject.transform.position);
+                    }
+                    else
+                        soldierState = SoldierStates.Attacking;
+                }
             }
         }
     }
@@ -192,8 +212,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                                 navMeshAgent.enabled = false;
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
-                                if (Time.time > lastShoot + coolDown)
-                                {                                    
+                                if (Time.time > lastShoot + coolDown){                                    
                                     damagable.AddDamage(AttackPower);
                                     lastShoot = Time.time;
                                 }                                
@@ -231,7 +250,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
                         SetPointToMove(militaryTask.Gameobject.transform.position);
                     }
                 }
-               
+                if (!navMeshAgent.hasPath)
+                    soldierState = SoldierStates.Idle;
                 break;
             default:
                 break;
@@ -249,6 +269,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IFigther, IStat
 
     public void SetState(SoldierStates _soldierStates)
     {
+        soldierState = _soldierStates;
 
         //if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
         //{
