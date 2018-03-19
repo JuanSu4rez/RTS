@@ -66,7 +66,7 @@ public class BuildingInfo
     public  string Description;
 
     [SerializeField]
-    private BuldingTypes BuldingType;
+    private UnitsTypes BuldingType;
 
     [SerializeField]
     private Ages Initialage;

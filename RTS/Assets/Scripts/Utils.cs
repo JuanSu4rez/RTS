@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-public sealed class Utils : ScriptableObject
+public sealed class Utils
 {
     public static void ChangeColor(MeshRenderer meshRenderer, Team team) {
         meshRenderer.material.color = team.Color;

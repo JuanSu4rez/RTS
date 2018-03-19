@@ -9,7 +9,7 @@ public class TrackingStatus : MonoBehaviour {
     private IBulding building;
     private IAliveBeing aliveBeing;
     private ISelectable selectable;
-   
+
 
     private bool IsAliveBeing;
 
@@ -17,6 +17,15 @@ public class TrackingStatus : MonoBehaviour {
     private Texture2D textureHealt;
 
     private Texture2D textureCurrentHealt;
+
+
+    private string[] a = new string[]{
+    "NavAgentCitizenScript",
+
+    };
+
+
+   
  
 
     // Use this for initialization
@@ -31,42 +40,57 @@ public class TrackingStatus : MonoBehaviour {
         textureCurrentHealt.SetPixel(0, 0, Color.green);
         textureCurrentHealt.Apply();
 
-        object aux = this.gameObject.GetComponent<NavAgentCitizenScript>();
+        var result = setInterfacesByBuilding();
+        if (result)
+            goto end;
+
+        result = setInterfacesByAliveBeing();
+       
+
+   
+
+        end:
+        IsAliveBeing = aliveBeing != null;
+
+    
+
+      
+    }
+
+    private bool setInterfacesByAliveBeing()
+    {
+        bool result = false;
+        
+        object aux = this.gameObject.GetComponent<IAliveBeing>();
         if (aux != null)
         {
+            result = true;
             status = aux as IStatus;
             worker = aux as IWorker;
             aliveBeing = aux as IAliveBeing;
             selectable = aux as ISelectable;
         }
+        return result;
+    }
 
-        aux = this.gameObject.GetComponent<BuildingBehaviour>();
+    private bool setInterfacesByBuilding() 
+    {
+        bool result = false;
+
+        object aux = this.gameObject.GetComponent<IBulding>();
         if (aux != null)
         {
+            result = true;
             status = aux as IStatus;
             worker = aux as IWorker;
             building = aux as IBulding;
             selectable = aux as ISelectable;
         }
-
-        IsAliveBeing = aliveBeing != null;
-
-    
-
-        //aux = this.gameObject.GetComponent<IStatus>();
-        //if (aux != null)
-        //{
-        //   // status = aux as IStatus;
-        //}
-
-        //aux = this.gameObject.GetComponent<IWorker>();
-        //if (aux != null)
-        //{
-        //   // worker = aux as IWorker;
-        //}
-
-        //Debug.log("Status " + status);
+        return result;
     }
+
+
+
 
     // Update is called once per frame
     void OnGUI()

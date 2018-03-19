@@ -95,7 +95,7 @@ public class UnitCreationScript : MonoBehaviour {
     void OnDrawGizmos()
     {
 
-        Gizmos.color = myteam.Team.Color;
+        Gizmos.color = myteam!= null && myteam.Team != null? myteam.Team.Color: Color.gray;
         Gizmos.DrawCube(calculateUnitOrigin(), new Vector3(1, 1, 1));
 
         Gizmos.DrawLine(this.transform.position, calculateUnitOrigin());

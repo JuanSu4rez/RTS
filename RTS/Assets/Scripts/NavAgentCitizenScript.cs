@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable
+public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable
 {
     private IGameFacade gameFacade;
 
@@ -391,7 +391,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
             citizenState = CitizenStates.Died;
             Destroy(gameObject, 1);
         }
-        Debug.Log("Salud " + CurrentHealth);
+    
+    }
+
+    public void ReleaseTask()
+    {
+         
     }
 
 }

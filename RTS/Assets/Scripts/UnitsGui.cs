@@ -2,11 +2,11 @@
 using System.Collections;
 using System;
 
-public class UnitsGui : ScriptableObject
+public class UnitsGui : ScriptableObject,IGui
 {
 
 
-    private GameObject objectToCreate;
+  
 
     private GameObject createdObject;
 
@@ -16,13 +16,15 @@ public class UnitsGui : ScriptableObject
     }
 
     // Update is called once per frame
-    public void Update()
+    public void UpdateGui(GameObject selectedGameObject)
     {
         //Debug.Log(" UnitsGui Update " + HasOptionSelected());
         if (HasOptionSelected())
         {
 
-
+            var navagentcitizen = selectedGameObject.GetComponent<NavAgentCitizenScript>();
+            if (navagentcitizen == null)
+                return;
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
@@ -50,7 +52,11 @@ public class UnitsGui : ScriptableObject
                     // var arrayCollisionsByCollider =   Physics.SphereCastAll(ray, createdObject.gameObject.GetComponent<SphereCollider>().radius);
                     // if(arrayCollisionsByCollider.Length == 1 && arrayCollisionsByCollider[0].collider.gameObject.name.Equals("Land"))
                     if (ValidateCollitionsToPutCreatedObject(ref arrayCollisions))
+                    {
+                        createdObject.GetComponent<BuildingBehaviour>().Team = navagentcitizen.Team;
                         createdObject = null;
+                    }
+                       
                 }
             }
         }
@@ -88,20 +94,20 @@ public class UnitsGui : ScriptableObject
     }
 
 
-    public void ShowGUI(GameObject game)
+    public void ShowGUI(GameObject  selectedGameObject)
     {
 
         if (HasOptionSelected())
             return;
 
-        if (game == null)
+        if (selectedGameObject == null)
             return;
 
-        var behavior = game.GetComponent<NavAgentCitizenScript>();
-        if (behavior == null)
+        var navagentcitizen = selectedGameObject.GetComponent<NavAgentCitizenScript>();
+        if (navagentcitizen == null)
             return;
 
-        var facade = GameScript.GetFacade(behavior.Team);
+        var facade = GameScript.GetFacade(navagentcitizen.Team);
 
         var selected = false;
 
@@ -119,9 +125,16 @@ public class UnitsGui : ScriptableObject
                 mouseposition.y = 1;
 
 
-                objectToCreate = facade.GameResource.Load<GameObject>(Buildings.House.ToString());
+                var objectToCreate = facade.GameResource.Load<GameObject>(Buildings.House.ToString());
+                var BuildingBehaviour =  objectToCreate.GetComponent<BuildingBehaviour>();
+                if (BuildingBehaviour != null)
+                {
+                    BuildingBehaviour.State = BuildingStates._Fundational;
+                }
+
                 createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
                 createdObject.name = Buildings.House.ToString();
+               
             }
 
         }

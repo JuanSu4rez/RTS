@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public interface IGameFacade
 {
@@ -34,24 +35,30 @@ public interface IGameFacade
 
     bool CanCreateUnit(Units unit);
 
-    Team Team { get;}
+    Team Team { get; }
 
-    AssetTypes Assettype { get;}
+    AssetTypes Assettype { get; }
 
     GameResource GameResource { get; }
+    String FacadeName { get; }
+
+    bool ValidateDiplomacy(Team team, Postures posture);
 }
 
 
 public class GameFacade : ScriptableObject, IGameFacade
 {
     public AssetTypes Assettype { get; internal set; }
+    public String FacadeName { get; internal set; }
+
 
     private GameResource gameResource = null;
-    public GameResource GameResource {
+    public GameResource GameResource
+    {
 
         get
         {
-            if(gameResource == null)
+            if (gameResource == null)
             {
                 gameResource = new GameResource(Assettype);
             }
@@ -66,7 +73,7 @@ public class GameFacade : ScriptableObject, IGameFacade
     public Team Team { get; internal set; }
 
     public UnitsInfo UnitsInfo { get; set; }
- 
+
     public Diplomacy[] Diplomacies { get; set; }
 
     public void AddResources(Resources type, float amount)
@@ -174,7 +181,7 @@ public class GameFacade : ScriptableObject, IGameFacade
         var result = HasRequiredResources(building);
         if (result)
         {
-           DiscountResources(building);
+            DiscountResources(building);
         }
 
         return result;
@@ -189,6 +196,30 @@ public class GameFacade : ScriptableObject, IGameFacade
         }
 
         return result;
+    }
+
+    public bool ValidateDiplomacy(Team team, Postures posture)
+    {
+        try
+        {
+
+
+            if (team.Id != this.Team.Id)
+                return Diplomacies[team.Id].Posture == posture;
+            else
+                return false;
+        }
+        catch (UnityException ex)
+        {
+            Debug.Log("ERROR ValidateDiplomacy" +ex.Message + " " + FacadeName);
+          
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
+
+        }
+        return false;
     }
 }
 
@@ -282,14 +313,14 @@ public class Diplomacy
 {
     [SerializeField]
     private Postures posture;
-    public Postures Posture { get { return posture; }  }
+    public Postures Posture { get { return posture; } }
     [SerializeField]
     public Team team;
     [SerializeField]
     public Team Team { get { return team; } }
 
 
-    public Diplomacy(Team team , Postures posture)
+    public Diplomacy(Team team, Postures posture)
     {
         this.team = team;
         this.posture = posture;
@@ -410,11 +441,11 @@ public class TeamData
     {
         GoldAmount = new ResourceAmount(Resources.Gold);
 
-         RockAmount= new ResourceAmount(Resources.Rock);
-      
-         WoodAmount= new ResourceAmount(Resources.Wood);
-       
-         FoodAmount= new ResourceAmount(Resources.Food);
+        RockAmount = new ResourceAmount(Resources.Rock);
+
+        WoodAmount = new ResourceAmount(Resources.Wood);
+
+        FoodAmount = new ResourceAmount(Resources.Food);
 
         _NumberofCitizens = 3;
 

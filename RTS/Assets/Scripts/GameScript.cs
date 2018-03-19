@@ -71,11 +71,12 @@ public class GameScript : MonoBehaviour
         gameFacade.Assettype = assettype;
         gameFacade.Diplomacies = diplomacies;
         player = gameFacade.Player;
-
+        gameFacade.FacadeName = "Player";
         facades = new IGameFacade[teams.Length+1];
+
         facades[0] = gameFacade;
 
-        for (int i = 0; i< teams.Length; i++)
+        for (int i = 0; i < teams.Length; i++)
         {
             var gameFacadei = ScriptableObject.CreateInstance<GameFacade>();
             gameFacadei.Team = teams[i];
@@ -85,12 +86,18 @@ public class GameScript : MonoBehaviour
             gameFacadei.UnitsInfo = unitsInfo;
             gameFacadei.Assettype = assettype;
             gameFacadei.Diplomacies = diplomacies;
-            facades[i+1] = gameFacadei;
+            gameFacadei.FacadeName = "Player ["+(i+1)+"]";
+            facades[i + 1] = gameFacadei;
+            if (gameFacadei.Team == null ||
+                gameFacadei.Player == null ||
+                gameFacadei.BuildingsInfo == null ||
+                gameFacadei.UnitsInfo == null ||
+            
+                gameFacadei.Diplomacies == null)
+               throw new UnityException("Invalid Team Index "+i);
         }
 
-    }
-
-   
+    }           
 
 
     void Start()

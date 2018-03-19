@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingGui : ScriptableObject {
+public class BuildingGui : ScriptableObject, IGui
+{
 
     private IGameFacade gameFacade;
 
     public BuildingGui() {
       
+    }
+
+    public void UpdateGui(GameObject selectedBuilding)
+    {
+
     }
 
     public void ShowGUI(GameObject selectedBuilding) {
@@ -66,5 +72,10 @@ public class BuildingGui : ScriptableObject {
 
     public void renderButtons(Buildings buildingType) {
         
+    }
+
+    public bool HasOptionSelected()
+    {
+        return false;
     }
 }

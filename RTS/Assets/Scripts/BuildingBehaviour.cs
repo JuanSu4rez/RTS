@@ -182,6 +182,12 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
         var aux = CurrentBuiltAmount - damage;
         
         CurrentBuiltAmount = aux <= 0?0 : aux;
+
+        if (CurrentBuiltAmount <= 0)
+        {
+            State = BuildingStates.Destroying;
+          
+        }
     }
 
     public bool IsOk()

@@ -48,8 +48,12 @@ public class UnitInfo
     [SerializeField]
     public string Description;
 
-    //[SerializeField]
-    //private BuldingTypes BuldingType;
+    [SerializeField]
+    private Buildings DevelopedBuilding;
+
+
+    [SerializeField]
+    private UnitsTypes UnitType;
 
     [SerializeField]
     private Ages Initialage;

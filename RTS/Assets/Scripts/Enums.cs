@@ -103,10 +103,23 @@ public enum Buildings
     Wonder
 }
 
-public enum BuldingTypes
+public enum UnitsTypes
 {
     Civilian,
     Military
+}
+
+public enum CameraSelectionTypes
+{
+    _None,
+    //onlycitizens
+    Citizen,
+    //onlymilitar
+    Military,
+    //both citizens and people
+    People,
+    //only buldings
+    Bulding
 }
 
 

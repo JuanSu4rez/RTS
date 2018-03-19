@@ -17,6 +17,13 @@ public interface IAliveBeing
     float GetHealthReason();
 }
 
+public interface IControlable<T> where T : struct
+{
+    void SetPointToMove(Vector3 newPointToMove);
+    void SetState(T newState);
+    void ReleaseTask();
+}
+
 public interface IFigther{
     float AttackPower { get; set; }
     float AttackRange { get; set; }
@@ -56,5 +63,16 @@ public interface ITeamable {
 public interface IDamagable {
     void AddDamage(float damage);
 }
+
+
+public interface IGui
+{
+     void UpdateGui(GameObject selectedGameObject );
+
+     void ShowGUI(GameObject selectedGameObject);
+
+     bool HasOptionSelected();
+}
+
 
 
