@@ -34,7 +34,7 @@ public class BuildingGui : ScriptableObject, IGui
         switch (buildingType)
         {
             case Buildings.Barracks:
-                if (GUI.Button(new Rect(0, Screen.height - 100, Screen.width, Screen.height-( Screen.height-100)), "Crear Soldado")){
+                if (GUI.Button(new Rect(0, Screen.height - 100, 100, Screen.height-( Screen.height-100)), "Crear Soldado")){
                     var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
                     if (behaviour != null){
                         if (gameFacade.HasRequiredResources(Units.SwordMan)) {
@@ -45,6 +45,22 @@ public class BuildingGui : ScriptableObject, IGui
                             Debug.Log("No hay recursos suficientes");
                         }
                     }                    
+                }
+                if (GUI.Button(new Rect(100, Screen.height - 100, 100, Screen.height - (Screen.height - 100)), "Crear Arquero"))
+                {
+                    var behaviour = selectedBuilding.GetComponent<UnitCreationScript>();
+                    if (behaviour != null)
+                    {
+                        if (gameFacade.HasRequiredResources(Units.Archer))
+                        {
+                            behaviour.addUnitToQueue(Units.Archer);
+                            gameFacade.DiscountResources(Units.Archer);
+                        }
+                        else
+                        {
+                            Debug.Log("No hay recursos suficientes");
+                        }
+                    }
                 }
                 break;
 

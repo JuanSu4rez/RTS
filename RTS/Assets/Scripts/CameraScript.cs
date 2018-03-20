@@ -2,10 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 public class CameraScript : MonoBehaviour
 {
+
+    //BoxSelection
+    public Texture2D selectionTexture = null;
+    public Texture2D selectionBorder = null;
+    public static Rect selection = new Rect(0, 0, 0, 0);
 
     private readonly Vector2 empty = new Vector2(-10, -10);
 
@@ -45,6 +50,14 @@ public class CameraScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        selectionTexture = new Texture2D(1, 1);
+        selectionTexture.SetPixels32(new Color32[] { new Color32(10, 195, 28, 30) });
+        selectionTexture.alphaIsTransparency = true;
+        selectionTexture.Apply();
+
+        selectionBorder = new Texture2D(1, 1);
+        selectionBorder.SetPixels32(new Color32[] { new Color32(255, 255, 255, 85) });
+        selectionBorder.Apply();
 
         camerastate = CameraStates.None;
         firstclick = empty;
@@ -67,7 +80,6 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         //Debug.Log("Camera state " + camerastate.ToString() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
 
         //Debug.Log("unitsGui HasOptionSelected " + unitsGui.HasOptionSelected() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
@@ -75,33 +87,23 @@ public class CameraScript : MonoBehaviour
 
         if (currentGui == null)
             return;
-
         switch (camerastate)
         {
             case CameraStates.None:
-
                 break;
             case CameraStates.UnitsSelection:
-
                 if (!currentGui.HasOptionSelected())
                     ClickActionsUnits();
                 else
                     currentGui.UpdateGui(currentSelected);
-
-
                 break;
             case CameraStates.BuildingsSelection:
-
                 break;
         }
-
-
-
     }
 
     private void userClick()
     {
-
         if (camerastate != CameraStates.None)
         {
             //if the gui is showing avoid picking object within user gui
@@ -112,80 +114,81 @@ public class CameraScript : MonoBehaviour
             {
                 return;
             }
-
         }
 
         if (Input.GetMouseButtonDown(0) &&
             //todo temporal solution
-            !unitsGui.HasOptionSelected() &&
-            firstclick == empty)
-        {
+            !unitsGui.HasOptionSelected() && firstclick == empty){
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
         else if (Input.GetMouseButtonUp(0))
-        {
-
-
+        {            
             if (firstclick != empty)
-            {
-                //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
-                //then count each type citizen and militaries or bulginds
-
-                //In the mean time keep the same logic
+            {   
                 RaycastHit hit;
-
                 Ray ray = Camera.main.ScreenPointToRay(firstclick);
 
-                if (Physics.Raycast(ray, out hit))
-                {
-
+                if (Physics.Raycast(ray, out hit)) {
                     var _name = hit.transform.gameObject.name;
                     //TRANSATITION TO UnitsSelection OR BuildingsSelection
                     var hitselected = hit.transform.gameObject;
-
                     SetSelectedGameObject(hitselected);
-
-                    if (currentSelected != null)
-                    {
-
-
+                    if (currentSelected != null){
                         var _tag = currentSelected.tag;
-
-
                         switch (_tag)
                         {
-                            case "Citizen":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Citizen;
-                                currentGui = this.unitsGui;
-                                break;
-                            case "Military":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Military;
-                                currentGui = this.militaryGui;
-                                break;
-                            case "Building":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Bulding;
-                                currentGui = this.buildingGui;
-                                break;
-                            default:
-                                camerastate = CameraStates.None;
-                                currentGui = null;
-                                break;
+                        case "Citizen":
+                            camerastate = CameraStates.UnitsSelection;
+                            cameraSelectionType = CameraSelectionTypes.Citizen;
+                            currentGui = this.unitsGui;
+                            break;
+                        case "Military":
+                            camerastate = CameraStates.UnitsSelection;
+                            cameraSelectionType = CameraSelectionTypes.Military;
+                            currentGui = this.militaryGui;
+                            break;
+                        case "Building":
+                            camerastate = CameraStates.UnitsSelection;
+                            cameraSelectionType = CameraSelectionTypes.Bulding;
+                            currentGui = this.buildingGui;
+                            break;
+                        default:
+                            camerastate = CameraStates.None;
+                            currentGui = null;
+                            break;
                         }
                     }
-
                 }
                 firstclick = empty;
             }
         }
+
+        if (Input.GetMouseButton(0)){
+            secondclick = Input.mousePosition;
+            selection = new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y));
+
+            RaycastHit[] raycastHits =  Physics.BoxCastAll(Camera.main.ScreenToWorldPoint( firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick/2 - secondclick/2), Camera.main.transform.forward);
+            Debug.Log(raycastHits.Length);
+            //Debug.Log(raycastHits[0]);
+
+            //Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        
+
+        //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+    }
+    }
+
+    void OnDrawGizmos()
+    {
+        //Gizmos.DrawCube(Camera.main.ScreenToWorldPoint(firstclick - secondclick), new Vector3(1, 1, 1));
+        //Gizmos.DrawCube(new Vector3( selection.x/2,0, selection.y/2), new Vector3(50, 50, 50));
+        //Gizmos.DrawWireCube(new Vector3(selection.x / 2, 0, selection.y / 2), new Vector3(50, 50, 50));
+        
     }
 
     private void SetSelectedGameObject(GameObject hitselected)
     {
-
-
         if (hitselected != null)
         {
             var auxst = hitselected.GetComponent<ISelectable>();
@@ -215,7 +218,6 @@ public class CameraScript : MonoBehaviour
             case CameraSelectionTypes.People:
                 PeopleAction();
                 break;
-
             case CameraSelectionTypes.Military:
                 MilitaryAction();
                 break;
@@ -223,7 +225,6 @@ public class CameraScript : MonoBehaviour
                 BuldingAction();
                 break;
         }
-
     }
 
     private void PeopleAction()
@@ -262,7 +263,6 @@ public class CameraScript : MonoBehaviour
                   
                         soldierTemp.ReleaseTask();
                         break;
-
                 }
 
                 string rightclickedtag = hit.transform.gameObject.tag;
@@ -278,8 +278,6 @@ public class CameraScript : MonoBehaviour
                 //}
 
             }
-
-
         }
     }
 
@@ -292,7 +290,6 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
-
         if (Input.GetMouseButtonDown(1))
         {
             //when a citizen is selected
@@ -304,14 +301,9 @@ public class CameraScript : MonoBehaviour
                 switch (rightclickedObj)
                 {
                     case "Land":
-
-
-
                         pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         citizenTemp.SetPointToMove(pointtomove.transform.position);
                         citizenTemp.SetState(CitizenStates.Walking);
-
-
                         break;
                     case "GoldMine":
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
@@ -342,7 +334,6 @@ public class CameraScript : MonoBehaviour
 
                     default:
                         break;
-
                 }
 
                 string rightclickedtag = hit.transform.gameObject.tag;
@@ -359,37 +350,29 @@ public class CameraScript : MonoBehaviour
                         citizenTemp.SetState(CitizenStates.Building);
                         break;
                 }
-
-
-
             }
-
-
         }
     }
 
 
-
-
     private void OnGUI()
     {
-
+        if (Input.GetMouseButton(0)) {
+            GUI.DrawTexture(selection, selectionTexture);
+            GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
+            GUI.DrawTexture(new Rect(selection.x, selection.y, 1, selection.height), selectionBorder);
+            GUI.DrawTexture(new Rect(selection.x + selection.width, selection.y, 1, selection.height), selectionBorder);
+            GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
+        }
+        
         switch (camerastate)
         {
             case CameraStates.None:
-                if (firstclick != empty)
-                {
-
-                    secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
-
-                    //Debug.Log("Second click " + secondclick.x + " " + secondclick.y);
-                    //Default color to render the selection square
-                    GUI.contentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), ""); // -
-
-
+                if (firstclick != empty){
+                    //secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+                    //GUI.DrawTexture(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), highLight); 
+                    //GUI.DrawTexture(selection, highLight);
                 }
-
                 break;
             //case CameraStates.UnitsSelection:
             //
@@ -415,6 +398,4 @@ public class CameraScript : MonoBehaviour
                 break;
         }
     }
-
-
 }

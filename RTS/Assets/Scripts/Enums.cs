@@ -124,6 +124,7 @@ public enum CameraSelectionTypes
 
 
 public enum Units {
+    Archer,
     Citizen,
     SwordMan
 }
@@ -146,6 +147,7 @@ public enum Ages
 public enum AssetTypes
 {
     NONE,
+    MINIMAL,
     TWOD,
     THREED
 }
@@ -199,8 +201,10 @@ public enum Postures
             case AssetTypes.TWOD:
                 result = "2d" + System.IO.Path.DirectorySeparatorChar;
                 break;
+            case AssetTypes.MINIMAL:
+                result = "Minimal" + System.IO.Path.DirectorySeparatorChar;
+                break;
         }
-
 
         return result;
     }
