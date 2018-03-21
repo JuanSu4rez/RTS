@@ -62,6 +62,13 @@ public class GameScript : MonoBehaviour
         }
 
 
+        for(int i = 0;i< unitsInfo.UnitInformation.Length; i++)
+        {
+            var unit = unitsInfo.UnitInformation[i];
+            if(unit.Costs!= null  && unit.Costs.Count >0 )
+            buldingsInfo.BuldingInformation[(int)unit.DevelopedBuilding].AddUnitToCreate(unitsInfo.UnitInformation[i]);
+        }
+
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
         gameFacade.Team = Playerteam;
         gameFacade.Player = ScriptableObject.CreateInstance<Player>();

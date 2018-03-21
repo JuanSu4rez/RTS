@@ -13,6 +13,10 @@ public class CameraScript : MonoBehaviour
 
     private Vector2 secondclick;
 
+    private Vector3 firstclick3d;
+                  
+    private Vector3 secondclick3d;
+
     private CameraSelectionTypes cameraSelectionType = CameraSelectionTypes._None;
 
 
@@ -121,6 +125,10 @@ public class CameraScript : MonoBehaviour
             firstclick == empty)
         {
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            firstclick3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+   
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -373,7 +381,8 @@ public class CameraScript : MonoBehaviour
 
     private void OnGUI()
     {
-
+        cubeposition = Vector3.zero;
+        cubesize = Vector3.zero;
         switch (camerastate)
         {
             case CameraStates.None:
@@ -381,12 +390,17 @@ public class CameraScript : MonoBehaviour
                 {
 
                     secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y); //; new Vector2(firstclick.x+100, firstclick.y+100);// Input.mousePosition;
-
+                    secondclick3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     //Debug.Log("Second click " + secondclick.x + " " + secondclick.y);
                     //Default color to render the selection square
                     GUI.contentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                     GUI.Box(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), ""); // -
 
+                    firstclick3d.y = 0;
+                    secondclick3d.y = 0;
+
+                    cubeposition  = new Vector3(0,3.5f,0);// firstclick3d +( firstclick3d- secondclick3d)/2;
+                    cubesize = new Vector3(10, 10, 10);//new Vector3(Mathf.Abs( firstclick3d.x-secondclick3d.x) , 10, Mathf.Abs(firstclick3d.z - secondclick3d.z));
 
                 }
 
@@ -414,6 +428,23 @@ public class CameraScript : MonoBehaviour
                     currentGui.ShowGUI(currentSelected);
                 break;
         }
+    }
+
+    Vector3 cubeposition = Vector3.zero;
+    Vector3 cubesize = Vector3.zero;
+    void OnDrawGizmos()
+    {
+        if(cubeposition != Vector3.zero)
+        {
+
+       
+             Gizmos.color = Color.gray;
+             Gizmos.DrawCube(cubeposition, cubesize);
+
+             
+        }
+
+
     }
 
 

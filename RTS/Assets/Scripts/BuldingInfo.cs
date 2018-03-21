@@ -81,6 +81,30 @@ public class BuildingInfo
         get { return Cost; }        
     }
 
+    [SerializeField]
+    private Texture2D icon;
+
+
+    
+    public  Texture2D Icon
+    {
+        get
+        {
+            return icon;
+        }
+    }
+
+    private List< UnitInfo> unitstocreate;
+
+
+    public List<UnitInfo> Unitstocreate
+    {
+        get
+        {
+            return unitstocreate;
+        }
+    }
+
     public BuildingInfo(Buildings _building)
     {
 
@@ -93,5 +117,23 @@ public class BuildingInfo
         Initialage = Ages.CERO;
 
         Enabled = true;
+
+        unitstocreate = new List<UnitInfo>();
+    }
+
+    public void AddUnitToCreate(UnitInfo newUnit)
+    {
+        unitstocreate.Add(newUnit);
+    }
+
+    public void SetUnitsToCreate( List<UnitInfo> newList)
+    {
+        unitstocreate = newList;
+    }
+
+
+    public bool IsEnabled()
+    {
+        return Enabled && !UtilsCollections.IsNullOrEmpty(Cost);
     }
 }

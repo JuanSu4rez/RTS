@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
+
 [System.Serializable]
 public class MilitaryTask// : ScriptableObject
 {
@@ -28,5 +30,26 @@ public class MilitaryTask// : ScriptableObject
 
     public bool IscompletedTask() {
         return gameobject == null;
+    }
+
+    public bool GetTargetDistance(GameObject gameobject, out Vector3 targetDistance)
+    {
+        targetDistance = Vector3.zero;
+        if (gameobject != null && gameobject.transform != null)
+            return GetTargetDistance(gameobject.transform, out targetDistance);
+        else
+            return false;
+    }
+
+    public bool GetTargetDistance(Transform transform, out Vector3 targetDistance)
+    {
+       targetDistance = Vector3.zero;
+       var result = false;
+       if(gameobject!= null)
+        {
+            result = true;
+            targetDistance = transform.position - gameobject.transform.position;
+        }
+        return result;
     }
 }

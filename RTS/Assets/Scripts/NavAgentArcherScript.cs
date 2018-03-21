@@ -62,7 +62,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         Health = 9999;
         CurrentHealth = Health;
         gameFacade = GameScript.GetFacade(team);
-        soldierState = SoldierStates.Idle;
+        SetState( SoldierStates.Idle);
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
         AttackRange = 900;
@@ -106,14 +106,15 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
             {
                 militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = getTargetDistance();
-                if (targetDistance.sqrMagnitude > AttackRange)
+                Vector3 targetDistance = Vector3.zero;
+                var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                if (distance && targetDistance.sqrMagnitude > AttackRange)
                 {
-                    soldierState = SoldierStates.Walking;
+                    SetState(SoldierStates.Walking);
                     SetPointToMove(collider.gameObject.transform.position);
                 }
                 else
-                    soldierState = SoldierStates.Attacking;
+                    SetState( SoldierStates.Attacking);
             }
 
 
@@ -139,7 +140,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                 if (militaryTask != null)
                 {
                     if (militaryTask.Gameobject == collision.gameObject)
-                        soldierState = SoldierStates.Attacking;
+                        SetState(SoldierStates.Attacking);
                 }
                 break;
         }
@@ -151,7 +152,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         {
             var team = collider.gameObject.GetComponent<ITeamable>();
 
-            if (team == null || team.Team == null)
+            if (team == null || team.Team == null || gameFacade == null)
                 return;
     
 
@@ -159,14 +160,16 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             {
                 //soldierState = SoldierStates.Attacking;
                 militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = getTargetDistance();
-                if (targetDistance.sqrMagnitude > AttackRange)
+                Vector3 targetDistance = Vector3.zero;
+                var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                if (distance && targetDistance.sqrMagnitude > AttackRange)
                 {
-                    soldierState = SoldierStates.Walking;
+
+                    SetState(SoldierStates.Walking);
                     SetPointToMove(collider.gameObject.transform.position);
                 }
                 else
-                    soldierState = SoldierStates.Attacking;
+                    SetState(SoldierStates.Attacking);
             }
 
         }
@@ -230,12 +233,14 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                         //TODO calc damage depending on the distance and the attack Range
                         //damagable.AddDamage(AttackPower);
                         if (militaryTask.IscompletedTask())
-                            soldierState = SoldierStates.Idle;
+                            SetState(SoldierStates.Idle);
                         else
                         {
-                            if (getTargetDistance().sqrMagnitude < AttackRange)
+                            Vector3 targetDistance = Vector3.zero;
+                            var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                            if (distance && targetDistance.sqrMagnitude < AttackRange)
                             {
-                                soldierState = SoldierStates.Attacking;
+                                SetState( SoldierStates.Attacking);
                                 navMeshAgent.enabled = false;
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
@@ -248,7 +253,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                             }
                             else
                             {
-                                soldierState = SoldierStates.Walking;
+                                SetState(SoldierStates.Walking);
                                 SetPointToMove(militaryTask.Gameobject.transform.position);
                             }
                         }
@@ -256,7 +261,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                 }
                 else
                 {
-                    soldierState = SoldierStates.Idle;
+                    SetState(SoldierStates.Idle);
                 }
 
                 break;
@@ -269,10 +274,11 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             case SoldierStates.Walking:
                 if (militaryTask != null)
                 {
-                    Vector3 targetDistance = getTargetDistance();
-                    if (targetDistance.sqrMagnitude <= AttackRange)
+                    Vector3 targetDistance = Vector3.zero;
+                    var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                    if (distance && targetDistance.sqrMagnitude < AttackRange)
                     {
-                        soldierState = SoldierStates.Attacking;
+                        SetState( SoldierStates.Attacking);
                         navMeshAgent.enabled = false;
                     }
                     else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
@@ -286,17 +292,17 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                      //||
                      (this.transform.position - navMeshAgent.destination) == Vector3.up
                        )
-                    soldierState = SoldierStates.Idle;
+                    SetState(SoldierStates.Idle);
                 break;
             default:
                 break;
         }
     }
 
-    public Vector3 getTargetDistance()
-    {
-        return transform.position - militaryTask.Gameobject.transform.position;
-    }
+   //public Vector3 getTargetDistance()
+   //{
+   //    return transform.position - militaryTask.Gameobject.transform.position;
+   //}
 
     public string GetStatus()
     {
@@ -305,18 +311,21 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     public void SetState(SoldierStates _soldierStates)
     {
+      
+        if (_soldierStates == SoldierStates.Idle)
+        {
+
+            if (attackCollider!= null)
+            attackCollider.enabled = true;
+          }
+        else
+        {
+             if(attackCollider!= null)
+            attackCollider.enabled = false;
+        }
         soldierState = _soldierStates;
 
-        //if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
-        //{
-        //    this.soldierState = CitizenStates.Walking;
-        //    this.citizenLabor = _citizenStates;
-        //}
-        //else
-        //{
-        //    this.citizenState = _citizenStates;
-        //    this.citizenLabor = CitizenStates.None;
-        //}
+      
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
@@ -368,7 +377,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         }
         if (CurrentHealth <= 0)
         {
-            soldierState = SoldierStates.Died;
+            SetState(SoldierStates.Died);
             Destroy(gameObject, 1);
         }
     }

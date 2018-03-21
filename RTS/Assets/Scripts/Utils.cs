@@ -20,3 +20,17 @@ public sealed class Utils
         }
     }
 }
+
+
+public sealed class UtilsCollections
+{
+    public static bool IsNullOrEmpty<T>(T collection)where T: ICollection
+    {
+        return collection == null || collection.Count == 0;
+    }
+
+    public static bool IsNullOrEmpty<T>(T[] Array) 
+    {
+        return Array == null || Array.Length == 0;
+    }
+}
