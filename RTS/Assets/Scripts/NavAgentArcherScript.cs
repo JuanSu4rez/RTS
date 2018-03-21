@@ -65,7 +65,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         SetState( SoldierStates.Idle);
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
-        AttackRange = 900;
+        AttackRange = 1200;
 
         coolDown = 2f;
         lastShoot = 0f;
@@ -81,13 +81,41 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
     public void shootArrow()
     {
         //ArrowPoint
+        //Vector3 arrowOriginPosition = gameObject.transform.Find("ArrowPoint").position;
+        //Quaternion arrowOriginRotation = gameObject.transform.Find("ArrowPoint").rotation;
+        //GameObject newArrow = Instantiate(UnityEngine.Resources.Load("Arrow"), arrowOriginPosition, arrowOriginRotation) as GameObject;
+
+        //newArrow.transform.GetComponent<Rigidbody>().AddForce(transform.forward * 2000);
+        //newArrow.transform.rotation = Quaternion.LookRotation(newArrow.transform.gameObject.GetComponent<Rigidbody>().velocity) * arrowOriginRotation;
+        //Destroy(newArrow, 3f);
+        Launch();
+    }
+
+    void Launch()
+    {
+        // rotate the object to face the target
+        //transform.LookAt(TargetObject.position);
+
         Vector3 arrowOriginPosition = gameObject.transform.Find("ArrowPoint").position;
         Quaternion arrowOriginRotation = gameObject.transform.Find("ArrowPoint").rotation;
         GameObject newArrow = Instantiate(UnityEngine.Resources.Load("Arrow"), arrowOriginPosition, arrowOriginRotation) as GameObject;
 
-        newArrow.transform.GetComponent<Rigidbody>().AddForce(transform.forward * 3000);
+        // shorthands for the formula
+        float R = Vector3.Distance(transform.position, militaryTask.Gameobject.transform.position);
+        float G = Physics.gravity.y;
+        float alpha = 45 * Mathf.Deg2Rad;  // in radians
 
-        Destroy(newArrow, 3f);
+        // calculate initial speed required to land the projectile on target object using the formula (9)
+        float V0 = Mathf.Sqrt(-R * G / Mathf.Sin(2 * alpha));    // initial speed
+        float Vy = V0 * Mathf.Sin(alpha); // velocity component in upward  direction of local space
+        float Vz = V0 * Mathf.Cos(alpha); // velocity component in forward direction of local space
+
+        // create the velocity vector in local space and get it in global space
+        Vector3 localVelocity = new Vector3(0f, Vy, Vz);
+        Vector3 globalVelocity = transform.TransformDirection(localVelocity);
+
+        // launch the object by setting its initial velocity and flipping its state
+        newArrow.gameObject.GetComponent<Rigidbody>().velocity = globalVelocity;
     }
 
     public void ModifyRangeAttack(float newRange)
