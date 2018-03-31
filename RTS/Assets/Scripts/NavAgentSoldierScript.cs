@@ -278,10 +278,9 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
 
                 if (
-                    //navMeshAgent.destination == this.transform.position
-                    //||
-                  (this.transform.position - navMeshAgent.destination) == Vector3.up
-                    )
+                  //navMeshAgent.destination == this.transform.position
+                  //||
+                  (this.transform.position - navMeshAgent.destination) == new Vector3(0, 2, 0))
                     soldierState = SoldierStates.Idle;
                 break;
             default:
