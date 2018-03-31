@@ -49,7 +49,15 @@ public class UnitInfo
     public string Description;
 
     [SerializeField]
-    private Buildings DevelopedBuilding;
+    private Buildings developedBuilding;
+
+    public Buildings DevelopedBuilding
+    {
+        get
+        {
+            return developedBuilding;
+        }
+    }
 
 
     [SerializeField]
@@ -68,6 +76,13 @@ public class UnitInfo
     {
         get { return Cost; }
     }
+
+    [SerializeField]
+    private Texture2D  icon;
+
+
+    [SerializeField]
+    private UnitsTypes BuldingType;
 
     public UnitInfo(Units _units)
     {

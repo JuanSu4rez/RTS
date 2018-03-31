@@ -43,6 +43,10 @@ public interface IGameFacade
     String FacadeName { get; }
 
     bool ValidateDiplomacy(Team team, Postures posture);
+
+    BuildingsInfo BuildingsInfo { get;  }
+
+
 }
 
 
@@ -221,6 +225,7 @@ public class GameFacade : ScriptableObject, IGameFacade
         }
         return false;
     }
+
 }
 
 

@@ -10,13 +10,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     private SoldierStates soldierState;
     private MilitaryTask militaryTask;
 
-    private MilitaryTask MilitaryTask
-    {
-        set
-        {
-            militaryTask = value;
-        }
-    }
+  
 
     private SphereCollider attackCollider;
 
@@ -69,7 +63,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         Health = 9999;
         CurrentHealth = Health;
         gameFacade = GameScript.GetFacade(this.team);
-        soldierState = SoldierStates.Idle;
+        SetState( SoldierStates.Idle);
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
         AttackRange = 5;
@@ -99,16 +93,16 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
             if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
             {
-                //soldierState = SoldierStates.Attacking;
-                MilitaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = getTargetDistance();
-                if (targetDistance.sqrMagnitude > AttackRange)
+                militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
+                Vector3 targetDistance = Vector3.zero;
+                 var distance  = militaryTask.GetTargetDistance(this.gameObject,out targetDistance);
+                if (distance && targetDistance.sqrMagnitude > AttackRange)
                 {
-                    soldierState = SoldierStates.Walking;
+                   SetState( SoldierStates.Walking);
                     SetPointToMove(collider.gameObject.transform.position);
                 }
                 else
-                    soldierState = SoldierStates.Attacking;
+                    SetState(SoldierStates.Attacking); 
             }
 
 
@@ -129,16 +123,17 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
             if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
             {
-                //soldierState = SoldierStates.Attacking;
-                MilitaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = getTargetDistance();
-                if (targetDistance.sqrMagnitude > AttackRange)
+                militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
+                Vector3 targetDistance = Vector3.zero;
+                var _distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+
+                if (_distance && targetDistance.sqrMagnitude > AttackRange)
                 {
-                    soldierState = SoldierStates.Walking;
+                    SetState(SoldierStates.Walking);
                     SetPointToMove(collider.gameObject.transform.position);
                 }
                 else
-                    soldierState = SoldierStates.Attacking;
+                    SetState(SoldierStates.Attacking);
             }
 
         }
@@ -163,7 +158,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 if (militaryTask != null)
                 {
                     if (militaryTask.Gameobject == collision.gameObject)
-                        soldierState = SoldierStates.Attacking;
+                        SetState( SoldierStates.Attacking);
                 }
                 break;
         }
@@ -227,12 +222,17 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                         //TODO calc damage depending on the distance and the attack Range
                         //damagable.AddDamage(AttackPower);
                         if (militaryTask.IscompletedTask())
-                            soldierState = SoldierStates.Idle;
+                            SetState( SoldierStates.Idle);
                         else
                         {
-                            if (getTargetDistance().sqrMagnitude < AttackRange)
+
+                           Vector3 targetDistance = Vector3.zero;
+                            var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                            
+
+                             if (distance  && targetDistance.sqrMagnitude < AttackRange)
                             {
-                                soldierState = SoldierStates.Attacking;
+                                SetState( SoldierStates.Attacking);
                                 navMeshAgent.enabled = false;
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
@@ -244,7 +244,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                             }
                             else
                             {
-                                soldierState = SoldierStates.Walking;
+                                SetState(SoldierStates.Walking);
                                 SetPointToMove(militaryTask.Gameobject.transform.position);
                             }
                         }
@@ -252,7 +252,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
                 else
                 {
-                    soldierState = SoldierStates.Idle;
+                    SetState( SoldierStates.Idle);
                 }
 
                 break;
@@ -265,10 +265,14 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
             case SoldierStates.Walking:
                 if (militaryTask != null)
                 {
-                    Vector3 targetDistance = getTargetDistance();
-                    if (targetDistance.sqrMagnitude <= AttackRange)
+                    Vector3 targetDistance = Vector3.zero;
+
+                    var _distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+
+
+                    if (_distance && targetDistance.sqrMagnitude <= AttackRange)
                     {
-                        soldierState = SoldierStates.Attacking;
+                        SetState(SoldierStates.Attacking);
                         navMeshAgent.enabled = false;
                     }
                     else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
@@ -278,40 +282,45 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
 
                 if (
+<<<<<<< HEAD
                   //navMeshAgent.destination == this.transform.position
                   //||
                   (this.transform.position - navMeshAgent.destination) == new Vector3(0, 2, 0))
                     soldierState = SoldierStates.Idle;
+=======
+                    //navMeshAgent.destination == this.transform.position
+                    //||
+                  (this.transform.position - navMeshAgent.destination) == Vector3.up
+                    )
+                    SetState(SoldierStates.Idle);
+>>>>>>> cccc23283c8809f8ccff133b5d81cf7be95a4f9b
                 break;
             default:
                 break;
         }
     }
 
-    public Vector3 getTargetDistance()
-    {
-        return transform.position - militaryTask.Gameobject.transform.position;
-    }
+  
 
     public string GetStatus()
     {
         return "Military task [" + (militaryTask == null ? "null" : militaryTask.ToString()) + "]" + soldierState.ToString() + " " + GetHealthReason() + " " + soldierState.ToString() + " " + pointToMove;
     }
 
-    public void SetState(SoldierStates soldierState)
+    public void SetState(SoldierStates _soldierStates)
     {
-        this.soldierState = soldierState;
 
-        //if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
-        //{
-        //    this.soldierState = CitizenStates.Walking;
-        //    this.citizenLabor = _citizenStates;
-        //}
-        //else
-        //{
-        //    this.citizenState = _citizenStates;
-        //    this.citizenLabor = CitizenStates.None;
-        //}
+        if (_soldierStates == SoldierStates.Idle)
+        {
+            if(attackCollider!= null)
+            attackCollider.enabled = true;
+        }
+        else
+        {
+            if (attackCollider != null)
+                attackCollider.enabled = false;
+        }
+        soldierState = _soldierStates;
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
@@ -364,14 +373,14 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         }
         if (CurrentHealth <= 0)
         {
-            soldierState = SoldierStates.Died;
+            SetState(SoldierStates.Died);
             Destroy(gameObject, 1);
         }
     }
 
     public void ReleaseTask()
     {
-        MilitaryTask = null;
+        militaryTask = null;
     }
 
 }

@@ -140,14 +140,16 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) &&
             //todo temporal solution
-            !unitsGui.HasOptionSelected() && firstclick == empty){
+            !unitsGui.HasOptionSelected() && firstclick == empty)
+        {
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
         else if (Input.GetMouseButtonUp(0))
-        {            
+        {
             if (firstclick != empty)
             {
+<<<<<<< HEAD
                 if (currentSelecteds.Count > 0)
                 {
                     Debug.Log("Camera state " + camerastate);
@@ -173,6 +175,22 @@ public class CameraScript : MonoBehaviour
                             var _tag = currentSelected.tag;
                             switch (_tag)
                             {
+=======
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(firstclick);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    var _name = hit.transform.gameObject.name;
+                    //TRANSATITION TO UnitsSelection OR BuildingsSelection
+                    var hitselected = hit.transform.gameObject;
+                    SetSelectedGameObject(hitselected);
+                    if (currentSelected != null)
+                    {
+                        var _tag = currentSelected.tag;
+                        switch (_tag)
+                        {
+>>>>>>> cccc23283c8809f8ccff133b5d81cf7be95a4f9b
                             case "Citizen":
                                 camerastate = CameraStates.UnitsSelection;
                                 cameraSelectionType = CameraSelectionTypes.Citizen;
@@ -192,7 +210,10 @@ public class CameraScript : MonoBehaviour
                                 camerastate = CameraStates.None;
                                 currentGui = null;
                                 break;
+<<<<<<< HEAD
                             }
+=======
+>>>>>>> cccc23283c8809f8ccff133b5d81cf7be95a4f9b
                         }
                     }
                 }
@@ -201,9 +222,11 @@ public class CameraScript : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0)){
+        if (Input.GetMouseButton(0))
+        {
             secondclick = Input.mousePosition;
 
+<<<<<<< HEAD
             Vector2 selectionStart = new Vector2();
             Vector2 selectionEnd = selectionStart;
 
@@ -236,6 +259,16 @@ public class CameraScript : MonoBehaviour
                 }
             }
 
+=======
+            RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
+            Debug.Log(raycastHits.Length);
+            //Debug.Log(raycastHits[0]);
+
+            //Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+
+            //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+>>>>>>> cccc23283c8809f8ccff133b5d81cf7be95a4f9b
         }
     }
 
@@ -244,7 +277,7 @@ public class CameraScript : MonoBehaviour
         //Gizmos.DrawCube(Camera.main.ScreenToWorldPoint(firstclick - secondclick), new Vector3(1, 1, 1));
         //Gizmos.DrawCube(new Vector3( selection.x/2,0, selection.y/2), new Vector3(50, 50, 50));
         //Gizmos.DrawWireCube(new Vector3(selection.x / 2, 0, selection.y / 2), new Vector3(50, 50, 50));
-        
+
     }
 
     private void SetSelectedGameObject(GameObject hitselected)
@@ -320,7 +353,7 @@ public class CameraScript : MonoBehaviour
                         pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         soldierTemp.SetState(SoldierStates.Walking);
                         soldierTemp.SetPointToMove(pointtomove.transform.position);
-                  
+
                         soldierTemp.ReleaseTask();
                         break;
                 }
@@ -416,6 +449,7 @@ public class CameraScript : MonoBehaviour
 
 
     private void OnGUI()
+<<<<<<< HEAD
     {        
         if (Input.GetMouseButton(0)) {
             GUI.DrawTexture(selection, selectionTexture);
@@ -426,33 +460,26 @@ public class CameraScript : MonoBehaviour
             Debug.Log("ancho " + selection.width + " alto " + selection.height);
         }
         
+=======
+    {
+      
+>>>>>>> cccc23283c8809f8ccff133b5d81cf7be95a4f9b
         switch (camerastate)
         { 
             case CameraStates.None:
-                if (firstclick != empty){
-                    //secondclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-                    //GUI.DrawTexture(new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y)), highLight); 
-                    //GUI.DrawTexture(selection, highLight);
-                }
-                break;
-            //case CameraStates.UnitsSelection:
-            //
-            //    switch (cameraSelectionType)
-            //    {
-            //        case CameraSelectionTypes.Citizen:
-            //            unitsGui.ShowGUI(currentSelected);
-            //            break;
-            //    }
-            //
-            //
-            //       
-            //  
-            //
-            //    break;
-            //case CameraStates.BuildingsSelection:
-            //    buildingGui.ShowGUI(currentSelected);
-            //    break;
 
+                if (Input.GetMouseButton(0))
+                {
+                    GUI.DrawTexture(selection, selectionTexture);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y, 1, selection.height), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x + selection.width, selection.y, 1, selection.height), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
+                }
+
+
+                break;
+          
             default:
                 if (currentGui != null)
                     currentGui.ShowGUI(currentSelected);

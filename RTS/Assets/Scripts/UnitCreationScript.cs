@@ -37,6 +37,9 @@ public class UnitCreationScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (creationQueue == null)
+            return;
+
         if (creationQueue.Count > 0){
             if (Time.time >= CreationUnitTime + durationCreationUnitTime){              
                 createUnit(creationQueue.Dequeue());
