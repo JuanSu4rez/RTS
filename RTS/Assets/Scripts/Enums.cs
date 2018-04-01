@@ -126,6 +126,7 @@ public enum CameraSelectionTypes
 public enum Units {
     Archer,
     Citizen,
+    Knight,
     SwordMan
 }
 

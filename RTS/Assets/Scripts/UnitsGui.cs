@@ -45,6 +45,7 @@ public class UnitsGui : ScriptableObject, IGui
                 {
                     DisabledBuildingValidator();
                     var buildingBehaviour = createdObject.GetComponent<BuildingBehaviour>();
+                    buildingBehaviour.State = BuildingStates._Fundational;
                     buildingBehaviour.Team = navagentcitizen.Team;
                     buildingBehaviour.SetFundationalBuildingData();
                     createdObject = null;
@@ -185,7 +186,7 @@ public class UnitsGui : ScriptableObject, IGui
 
                         if (BuildingBehaviour != null)
                         {
-                            BuildingBehaviour.State = BuildingStates._Fundational;
+                           
                             BuildingBehaviour.Team = navagentcitizen.Team;
                         }
 

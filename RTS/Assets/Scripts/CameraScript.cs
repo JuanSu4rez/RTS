@@ -7,10 +7,12 @@ using UnityEngine.EventSystems;
 public class CameraScript : MonoBehaviour
 {
 
+    public ArrayList objectsInScene;
+
     //BoxSelection
-    public Texture2D selectionTexture = null;
-    public Texture2D selectionBorder = null;
-    public static Rect selection = new Rect(0, 0, 0, 0);
+    private Texture2D selectionTexture = null;
+    private Texture2D selectionBorder = null;
+    private static Rect selection = new Rect(0, 0, 0, 0);
 
     private readonly Vector2 empty = new Vector2(-10, -10);
 
@@ -21,7 +23,7 @@ public class CameraScript : MonoBehaviour
     private CameraSelectionTypes cameraSelectionType = CameraSelectionTypes._None;
 
 
-    private GameObject[] currentSelecteds;
+    private ArrayList currentSelecteds;
 
     private GameObject currentSelected;
 
@@ -81,14 +83,37 @@ public class CameraScript : MonoBehaviour
         pointtomove.name = "POINTTOMOVE";
         #endregion
 
+        objectsInScene = new ArrayList();
+        currentSelecteds = new ArrayList();
+        GetObjectsinScene();
+
+    }
+
+    public void GetObjectsinScene()
+    {
+
+        GameObject[] allSelectableObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+
+        for (int i = 0; i < allSelectableObjects.Length; i++)
+        {
+            ISelectable tempSel = allSelectableObjects[i].GetComponent<ISelectable>();
+            if (tempSel != null)
+            {
+                objectsInScene.Add(allSelectableObjects[i]);
+            }
+        }
+    }
+
+    public static Vector2 get2sCoordinates(GameObject selectable)
+    {
+        Transform transform = selectable.GetComponent<Transform>();
+        Vector3 v = Camera.main.WorldToScreenPoint(transform.position);
+        return new Vector2(v.x, Screen.height - v.y);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("Camera state " + camerastate.ToString() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
-
-        //Debug.Log("unitsGui HasOptionSelected " + unitsGui.HasOptionSelected() + " " + DateTime.Now.ToString("yyMMddHHmmss"));
         userClick();
 
         if (currentGui == null)
@@ -112,11 +137,11 @@ public class CameraScript : MonoBehaviour
     {
         if (camerastate != CameraStates.None)
         {
-            //if the gui is showing avoid picking object within user gui
+            //check wether the clikc is inside of the button area
             Vector3 _mouseposition = Input.mousePosition;
             _mouseposition.y = Screen.height - Input.mousePosition.y;
-            //TODO CREATE CONSTANT
-            
+            //TODO CREATE CONSTANTS
+
             if (_mouseposition.y >= Screen.height - (Screen.height - Screen.width / 3.0f))
             {
                 return;
@@ -128,8 +153,8 @@ public class CameraScript : MonoBehaviour
             !unitsGui.HasOptionSelected() && firstclick == empty)
         {
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-             first3d = Input.mousePosition;
-          
+           
+
 
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
@@ -137,71 +162,110 @@ public class CameraScript : MonoBehaviour
         {
             if (firstclick != empty)
             {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(firstclick);
-
-                if (Physics.Raycast(ray, out hit))
+                if (currentSelecteds.Count > 0)
                 {
-                    var _name = hit.transform.gameObject.name;
-                    //TRANSATITION TO UnitsSelection OR BuildingsSelection
-                    var hitselected = hit.transform.gameObject;
-                    SetSelectedGameObject(hitselected);
-                    if (currentSelected != null)
+                    Debug.Log("Camera state " + camerastate);
+                    for (int i = 0; i < currentSelecteds.Count; i++)
                     {
-                        var _tag = currentSelected.tag;
-                        switch (_tag)
+                        ((GameObject)currentSelecteds[i]).gameObject.GetComponent<ISelectable>().IsSelected = true;
+                    }
+                    camerastate = CameraStates.UnitsSelection;
+                    cameraSelectionType = CameraSelectionTypes.Military;
+                }
+                else
+                {
+
+                    RaycastHit hit;
+                    Ray ray = Camera.main.ScreenPointToRay(firstclick);
+
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        var _name = hit.transform.gameObject.name;
+                        //TRANSATITION TO UnitsSelection OR BuildingsSelection
+                        var hitselected = hit.transform.gameObject;
+                        SetSelectedGameObject(hitselected);
+                        if (currentSelected != null)
                         {
-                            case "Citizen":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Citizen;
-                                currentGui = this.unitsGui;
-                                break;
-                            case "Military":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Military;
-                                currentGui = this.militaryGui;
-                                break;
-                            case "Building":
-                                camerastate = CameraStates.UnitsSelection;
-                                cameraSelectionType = CameraSelectionTypes.Bulding;
-                                currentGui = this.buildingGui;
-                                break;
-                            default:
-                                camerastate = CameraStates.None;
-                                currentGui = null;
-                                break;
+                            var _tag = currentSelected.tag;
+                            switch (_tag)
+                            {
+
+                                case "Citizen":
+                                    camerastate = CameraStates.UnitsSelection;
+                                    cameraSelectionType = CameraSelectionTypes.Citizen;
+                                    currentGui = this.unitsGui;
+                                    break;
+                                case "Military":
+                                    camerastate = CameraStates.UnitsSelection;
+                                    cameraSelectionType = CameraSelectionTypes.Military;
+                                    currentGui = this.militaryGui;
+                                    break;
+                                case "Building":
+                                    camerastate = CameraStates.UnitsSelection;
+                                    cameraSelectionType = CameraSelectionTypes.Bulding;
+                                    currentGui = this.buildingGui;
+                                    break;
+                                default:
+                                    camerastate = CameraStates.None;
+                                    currentGui = null;
+                                    break;
+
+                            }
+
                         }
                     }
                 }
+
                 firstclick = empty;
             }
         }
 
         if (Input.GetMouseButton(0))
         {
-            second3d = Input.mousePosition;
+ 
             secondclick = Input.mousePosition;
-            selection = new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y));
 
-           // RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
-            //Debug.Log(raycastHits.Length);
-            //Debug.Log(raycastHits[0]);
+            Vector2 selectionStart = new Vector2();
+            Vector2 selectionEnd = selectionStart;
 
-            //Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            selectionStart.x = firstclick.x <= secondclick.x ? firstclick.x : secondclick.x;
+            selectionStart.y = firstclick.y >= secondclick.y ? Screen.height - firstclick.y : Screen.height - secondclick.y;
+            selectionEnd.x = firstclick.x <= secondclick.x ? secondclick.x : firstclick.x;
+            selectionEnd.y = firstclick.y <= secondclick.y ? Screen.height - firstclick.y : Screen.height - secondclick.y;
 
+            float width = selectionEnd.x - selectionStart.x;
+            float heigth = selectionEnd.y - selectionStart.y;
+
+            //selection = new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y));
+
+            selection = new Rect(selectionStart.x, selectionStart.y, width, heigth);
 
             //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+            if (selection.width != 0 && selection.height != 0) {
+                currentSelecteds.RemoveRange(0, currentSelecteds.Count);
+                for (int index = 0; index < objectsInScene.Count; index++) {
+                    GameObject obj = ((GameObject)objectsInScene[index]);
+                    if (selection.Contains(get2sCoordinates(obj)))
+                    {
+                        currentSelecteds.Add(obj);
+                        obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
+                    }
+                    else {
+                        currentSelecteds.Remove(obj);
+                        obj.gameObject.GetComponent<ISelectable>().IsSelected = false;
+                    }
+                }
+            }
+            RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
+            Debug.Log(raycastHits.Length);
+
+            //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+
         }
     }
 
-    Vector3 first3d = Vector3.zero;
-    Vector3 second3d = Vector3.zero;
 
-    Vector3 p1 = Vector3.zero;
-    Vector3 p2 = Vector3.zero;
-    Vector3 center = Vector3.zero;
 
-   
 
     private void SetSelectedGameObject(GameObject hitselected)
     {
@@ -389,7 +453,7 @@ public class CameraScript : MonoBehaviour
 
 
                 break;
-          
+
             default:
                 if (currentGui != null)
                     currentGui.ShowGUI(currentSelected);

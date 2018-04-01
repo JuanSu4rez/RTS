@@ -121,8 +121,9 @@ public class TrackingStatus : MonoBehaviour {
          //  GUIStyle style = new GUIStyle();
          //  style.normal.textColor = Color.cyan;
             Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            Vector2 v2 = new Vector2(screenPos.x, Screen.height - screenPos.y);
             GUI.contentColor = Color.cyan;
-            GUI.Label(new Rect(screenPos.x, Screen.height - screenPos.y, 250, 100), printMessage());
+            GUI.Label(new Rect(v2.x, v2.y, 250, 100), printMessage(v2));
             drawHealthGUIBar();
         }
        
@@ -134,15 +135,20 @@ public class TrackingStatus : MonoBehaviour {
         return selectable != null && selectable.IsSelected;
     }
 
-    private string printMessage()
+    private string printMessage(Vector2 v2)
     {
-        string finalString = this.gameObject.name;
+      
+        
+
+        string finalString = this.gameObject.name +" 2d pos "+ v2.ToString();
         if (status != null){
-            finalString = string.Concat(" status ", status.GetStatus());
+            finalString += string.Concat(" status ", status.GetStatus());
         }
         if (worker != null){
-            finalString = string.Concat(finalString, "\n CurrentAmountResouce ", worker.CurrentAmountResouce);
+            finalString += string.Concat(finalString, "\n CurrentAmountResouce ", worker.CurrentAmountResouce);
         }
+        Vector2 v = CameraScript.get2sCoordinates(this.gameObject);
+        finalString += " 2d x " + v.x + " y " + v.y;
         return finalString;
     }
 

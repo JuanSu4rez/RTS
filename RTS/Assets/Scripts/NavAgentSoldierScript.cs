@@ -267,6 +267,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
             case SoldierStates._None:
                 break;
             case SoldierStates.Walking:
+
                 if (militaryTask != null)
                 {
                     Vector3 targetDistance = Vector3.zero;
@@ -286,8 +287,6 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
 
                 if (
-                    //navMeshAgent.destination == this.transform.position
-                    //||
                   (this.transform.position - navMeshAgent.destination) == Vector3.up
                     )
                     SetState(SoldierStates.Idle);
