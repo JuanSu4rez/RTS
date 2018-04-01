@@ -45,9 +45,13 @@ public class TrackingStatus : MonoBehaviour {
             goto end;
 
         result = setInterfacesByAliveBeing();
-       
+        if (result)
+            goto end;
 
-   
+        result = setInterfacesByIStatus();
+
+
+
 
         end:
         IsAliveBeing = aliveBeing != null;
@@ -90,6 +94,20 @@ public class TrackingStatus : MonoBehaviour {
     }
 
 
+    private bool setInterfacesByIStatus()
+    {
+        bool result = false;
+
+        object aux = this.gameObject.GetComponent<IStatus>();
+        if (aux != null)
+        {
+            result = true;
+            status = aux as IStatus;
+            selectable = aux as ISelectable;
+        }
+        return result;
+    }
+
 
 
     // Update is called once per frame
@@ -130,6 +148,9 @@ public class TrackingStatus : MonoBehaviour {
 
     public void drawHealthGUIBar()
     {
+        if (aliveBeing == null && building == null)
+            return;
+
         var sqwidth = 100;
         var sqheight = 10;
 

@@ -143,6 +143,8 @@ public class GameScript : MonoBehaviour
         GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
         GUI.Label(new Rect(210, 10, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);
         GUI.Label(new Rect(310, 10, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
+        GUI.Label(new Rect(10, 20, 100, 50), "NU " + (int)player.NumberofUnits);
+        GUI.Label(new Rect(110, 20, 100, 50), "CU " + (int)player.UnitsCapacity);
     }
 
   

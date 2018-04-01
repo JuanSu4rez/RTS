@@ -105,6 +105,18 @@ public class BuildingInfo
         }
     }
 
+    [SerializeField]
+    private int _HouseCapacity;
+
+    public int HouseCapacity
+    {
+        get
+        {
+            return _HouseCapacity;
+        }
+    }
+
+
     public BuildingInfo(Buildings _building)
     {
 
@@ -119,6 +131,8 @@ public class BuildingInfo
         Enabled = true;
 
         unitstocreate = new List<UnitInfo>();
+
+        _HouseCapacity = 0;
     }
 
     public void AddUnitToCreate(UnitInfo newUnit)

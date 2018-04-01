@@ -9,7 +9,9 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     [SerializeField]
     private Team team;
 
-    public Team Team { get { return team; } set { team = value; } }
+    public Team Team { get { return team; } set { team = value;
+            changeColor();
+        } }
 
 
     private float LastCurrentBuiltAmount;
@@ -47,21 +49,41 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
 
     public bool IsSelected { get; set; }
 
+    private IGameFacade facade = null;
 
+    private float yscale = 0;
 
-
-
+    private float fundationalyscale = 1;
 
     // Use this for initialization
     void Start()
     {
-        if (State == BuildingStates._Fundational){
+        
+        changeColor();
+
+        facade = GameScript.GetFacade(team);
+        if (facade != null)
+            facade.AddBuilding(this.gameObject, _building);
+       
+         
+    }
+    
+    void OnEnable()
+    {
+        SetFundationalBuildingData();
+    }
+
+    public void SetFundationalBuildingData()
+    {
+        if (State == BuildingStates._Fundational)
+        {
             CurrentBuiltAmount = 5;
             LastCurrentBuiltAmount = CurrentBuiltAmount;
             TotalBuiltAmount = 200;
             Resistence = 0.3f;
+            yscale = this.transform.localScale.y;
+            this.transform.localScale = new Vector3(this.transform.localScale.x, fundationalyscale, this.transform.localScale.z);
         }
-        changeColor();
     }
 
     public virtual void changeColor() {
@@ -117,6 +139,9 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
                 break;
             case BuildingStates.Destroyed:
 
+              
+                 facade.RemoveBuilding(this.gameObject, _building);
+
                 Destroy(this.gameObject);
                 break;
             case BuildingStates._Fundational:
@@ -160,9 +185,9 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     {
         //change sprite or model
         //So far just increase the primitive
-        this.gameObject.transform.localScale = new Vector3(5, 5, 5);
+        this.gameObject.transform.localScale = new Vector3(this.transform.localScale.x, yscale, this.transform.localScale.z);
 
-
+       
 
     }
 

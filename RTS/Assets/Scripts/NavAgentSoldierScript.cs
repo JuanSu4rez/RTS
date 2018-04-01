@@ -71,6 +71,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         lastShoot = 0f;
 
         changeColor();
+
+        gameFacade.AddUnity(this.gameObject, Units.Citizen);
     }
 
     public virtual void changeColor()
@@ -257,6 +259,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
                 break;
             case SoldierStates.Died:
+
+                gameFacade.RemoveUnity(this.gameObject, Units.Citizen);
                 break;
             case SoldierStates.Idle:
                 break;

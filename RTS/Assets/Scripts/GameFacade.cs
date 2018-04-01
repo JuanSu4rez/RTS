@@ -1,19 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public interface IGameFacade
 {
 
     Ages GetCurrentAge();
 
-    void AddNumberOfCitizens(int amount = 1);
 
     bool HasRequiredResources(Units type);
 
     bool HasRequiredResources(Buildings type);
-
-    //bool HasRequiredResourcesToRepair(BuildingBehaviour buildingBehaviour);
 
     void AddResources(Resources type, float amount);
 
@@ -40,11 +38,21 @@ public interface IGameFacade
     AssetTypes Assettype { get; }
 
     GameResource GameResource { get; }
+
     String FacadeName { get; }
 
     bool ValidateDiplomacy(Team team, Postures posture);
 
-    BuildingsInfo BuildingsInfo { get;  }
+    BuildingsInfo BuildingsInfo { get; }
+
+
+    void AddBuilding(GameObject obj, Buildings bulding);
+
+    void RemoveBuilding(GameObject obj, Buildings bulding);
+
+    bool AddUnity(GameObject obj, Units unit);
+
+    void RemoveUnity(GameObject obj, Units unit);
 
 
 }
@@ -52,14 +60,15 @@ public interface IGameFacade
 
 public class GameFacade : ScriptableObject, IGameFacade
 {
+    private string messageFacade;
+    public String MessageFacade { get { return messageFacade; } }
+
     public AssetTypes Assettype { get; internal set; }
     public String FacadeName { get; internal set; }
-
 
     private GameResource gameResource = null;
     public GameResource GameResource
     {
-
         get
         {
             if (gameResource == null)
@@ -79,6 +88,17 @@ public class GameFacade : ScriptableObject, IGameFacade
     public UnitsInfo UnitsInfo { get; set; }
 
     public Diplomacy[] Diplomacies { get; set; }
+
+    public List<GameObject> Units { get; set; }
+
+    public List<GameObject> Buldings { get; set; }
+
+    public GameFacade()
+    {
+        Units = new List<GameObject>(20);
+
+        Buldings = new List<GameObject>(20);
+    }
 
     public void AddResources(Resources type, float amount)
     {
@@ -148,10 +168,6 @@ public class GameFacade : ScriptableObject, IGameFacade
         throw new System.NotImplementedException();
     }
 
-    public void AddNumberOfCitizens(int amount = 1)
-    {
-        Player.NumberofCitizens += amount;
-    }
 
     public Ages GetCurrentAge()
     {
@@ -215,8 +231,8 @@ public class GameFacade : ScriptableObject, IGameFacade
         }
         catch (UnityException ex)
         {
-            Debug.Log("ERROR ValidateDiplomacy" +ex.Message + " " + FacadeName);
-          
+            Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
+
         }
         catch (Exception ex)
         {
@@ -226,6 +242,40 @@ public class GameFacade : ScriptableObject, IGameFacade
         return false;
     }
 
+    public void AddBuilding(GameObject obj, Buildings bulding)
+    {
+        var buldinginfo = BuildingsInfo.BuldingInformation[(int)bulding];
+        Buldings.Add(obj);
+        this.Player.UnitsCapacity += buldinginfo.HouseCapacity;
+    }
+
+    public void RemoveBuilding(GameObject obj, Buildings bulding)
+    {
+       var buldinginfo=  BuildingsInfo.BuldingInformation[(int)bulding];
+        Buldings.Remove(obj);
+        this.Player.UnitsCapacity -= buldinginfo.HouseCapacity;
+    }
+
+    public bool AddUnity(GameObject obj, Units unit)
+    {
+        bool result = false;
+        if (Player.UnitsCapacity < Units.Count)
+        {
+            Units.Add(obj);
+            var unitinfo = UnitsInfo.UnitInformation[(int)unit];
+            Player.NumberofUnits += unitinfo.AmountOfUnits;
+            result = true;
+        }
+        return result;
+    }
+
+    public void RemoveUnity(GameObject obj, Units unit)
+    {
+        Units.Remove(obj);
+        //
+        var unitinfo = UnitsInfo.UnitInformation[(int)unit];
+        Player.NumberofUnits -= unitinfo.AmountOfUnits;
+    }
 }
 
 
@@ -247,9 +297,15 @@ public class Player : ScriptableObject
     public ResourceAmount FoodAmount;
 
     [SerializeField]
-    private int _NumberofCitizens;
+    private int _NumberofUnits;
 
-    public int NumberofCitizens { get { return _NumberofCitizens; } set { _NumberofCitizens = value; } }
+    public int NumberofUnits { get { return _NumberofUnits; } set { _NumberofUnits = value; } }
+
+
+    [SerializeField]
+    private int _UnitsCapacity;
+
+    public int UnitsCapacity { get { return _UnitsCapacity; } set { _UnitsCapacity = value; } }
 
     public Ages CurrentAge { get; set; }
 
@@ -267,7 +323,9 @@ public class Player : ScriptableObject
 
         CurrentAge = Ages.I;
 
-        _NumberofCitizens = 3;
+        _NumberofUnits =0;
+
+        _UnitsCapacity = 0;
     }
 
     public void SetData(TeamData data)
@@ -282,7 +340,7 @@ public class Player : ScriptableObject
 
         CurrentAge = data.CurrentAge;
 
-        _NumberofCitizens = data.NumberofCitizens;
+       
     }
 
 
@@ -435,11 +493,7 @@ public class TeamData
 
     public ResourceAmount FoodAmount;
 
-    [SerializeField]
-    private int _NumberofCitizens;
-
-    public int NumberofCitizens { get { return _NumberofCitizens; } set { _NumberofCitizens = value; } }
-
+   
     public Ages CurrentAge { get; set; }
 
     public TeamData()
@@ -452,8 +506,7 @@ public class TeamData
 
         FoodAmount = new ResourceAmount(Resources.Food);
 
-        _NumberofCitizens = 3;
-
+      
         CurrentAge = Ages.I;
     }
 }

@@ -5,9 +5,9 @@ using System;
 public class UnitsGui : ScriptableObject, IGui
 {
 
+    private BuildingValidator buildingValidatorscript;
 
-
-
+  
     private GameObject createdObject;
 
     public bool HasOptionSelected()
@@ -41,23 +41,32 @@ public class UnitsGui : ScriptableObject, IGui
 
             if (Input.GetMouseButtonDown(0))
             {
-
-                if (
-                    ValidateCollitionsToPutCreatedObject(ref arrayCollisions)
-
-                    )
+                if (!IsColliding())
                 {
-
-                    arrayCollisions = Physics.BoxCastAll(createdObject.transform.position, createdObject.transform.localScale / 2.0f, Vector3.up);
-                    // var arrayCollisionsByCollider =   Physics.SphereCastAll(ray, createdObject.gameObject.GetComponent<SphereCollider>().radius);
-                    // if(arrayCollisionsByCollider.Length == 1 && arrayCollisionsByCollider[0].collider.gameObject.name.Equals("Land"))
-                    if (ValidateCollitionsToPutCreatedObject(ref arrayCollisions))
-                    {
-                        createdObject.GetComponent<BuildingBehaviour>().Team = navagentcitizen.Team;
-                        createdObject = null;
-                    }
-
+                    DisabledBuildingValidator();
+                    var buildingBehaviour = createdObject.GetComponent<BuildingBehaviour>();
+                    buildingBehaviour.Team = navagentcitizen.Team;
+                    buildingBehaviour.SetFundationalBuildingData();
+                    createdObject = null;
                 }
+
+                //if (
+                //    ValidateCollitionsToPutCreatedObject(ref arrayCollisions)
+
+                //    )
+                //{
+
+                //    arrayCollisions = Physics.BoxCastAll(createdObject.transform.position, createdObject.transform.localScale / 2.0f, Vector3.up);
+                //    // var arrayCollisionsByCollider =   Physics.SphereCastAll(ray, createdObject.gameObject.GetComponent<SphereCollider>().radius);
+                //    // if(arrayCollisionsByCollider.Length == 1 && arrayCollisionsByCollider[0].collider.gameObject.name.Equals("Land"))
+                //    if (ValidateCollitionsToPutCreatedObject(ref arrayCollisions))
+                //    {
+                //        createdObject.GetComponent<BuildingBehaviour>().Team = navagentcitizen.Team;
+                //        createdObject = null;
+
+                //    }
+
+                //}
             }
         }
 
@@ -169,15 +178,20 @@ public class UnitsGui : ScriptableObject, IGui
 
 
                         var objectToCreate = facade.GameResource.Load<GameObject>(buldingsinfo[i].Building.ToString());
-                        var BuildingBehaviour = objectToCreate.GetComponent<BuildingBehaviour>();
+                       
+                        createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
+                        var BuildingBehaviour = createdObject.GetComponent<BuildingBehaviour>();
+
+
                         if (BuildingBehaviour != null)
                         {
                             BuildingBehaviour.State = BuildingStates._Fundational;
+                            BuildingBehaviour.Team = navagentcitizen.Team;
                         }
 
-                        createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
-                        createdObject.name = buldingsinfo[i].Building.ToString();
 
+                        createdObject.name = buldingsinfo[i].Building.ToString();
+                        this.SetObjectToBuild(createdObject);
                     }
                 }
 
@@ -185,6 +199,8 @@ public class UnitsGui : ScriptableObject, IGui
 
             }
         }
+
+        
 
         /*
         var selected = false;
@@ -221,4 +237,39 @@ public class UnitsGui : ScriptableObject, IGui
         */
 
     }
+
+    public void SetBuildingValidator(GameObject gameObject)
+    {
+        if (gameObject != null)
+            this.buildingValidatorscript = gameObject.GetComponent<BuildingValidator>();
+
+    }
+
+
+    public void SetObjectToBuild(GameObject gameObject)
+    {
+        if (this.buildingValidatorscript != null)
+        {
+            this.buildingValidatorscript.SetEnabled(gameObject);
+        }
+    }
+
+
+    public void DisabledBuildingValidator()
+    {
+        if (this.buildingValidatorscript != null)
+        {
+            this.buildingValidatorscript.SetDisable();
+        }
+    }
+
+    public bool IsColliding()
+    {
+        var result = false;
+      
+       result = this.buildingValidatorscript != null && this.buildingValidatorscript.IsIlde() && this.buildingValidatorscript.NumberOfCollisions >0 ;
+       
+        return result;
+    }
+
 }

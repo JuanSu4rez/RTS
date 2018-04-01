@@ -29,6 +29,8 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         }
     }
 
+  
+
     public bool IsSelected { get; set; }
 
     private Vector3 pointToMove;
@@ -71,6 +73,12 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         lastShoot = 0f;
 
         changeColor();
+
+
+        gameFacade = GameScript.GetFacade(team);
+        if (gameFacade != null)
+          gameFacade.AddUnity(this.gameObject,Units.Archer);
+
     }
 
     public virtual void changeColor()
@@ -294,6 +302,9 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
                 break;
             case SoldierStates.Died:
+
+                gameFacade.RemoveUnity(this.gameObject, Units.Archer);
+
                 break;
             case SoldierStates.Idle:
                 break;

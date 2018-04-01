@@ -84,6 +84,15 @@ public class UnitInfo
     [SerializeField]
     private UnitsTypes BuldingType;
 
+
+    [SerializeField]
+    private int _AmountOfUnits = 1;
+
+    public int AmountOfUnits
+    {
+        get { return _AmountOfUnits; }
+    }
+
     public UnitInfo(Units _units)
     {
 
@@ -96,6 +105,8 @@ public class UnitInfo
         Initialage = Ages.CERO;
 
         Enabled = true;
+
+        _AmountOfUnits = 1;
     }
 }
 

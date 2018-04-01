@@ -47,6 +47,10 @@ public class CameraScript : MonoBehaviour
     private BuildingGui buildingGui;
     private MilitaryGui militaryGui;
     private UnitsGui unitsGui;
+
+    [SerializeField]
+    private GameObject buildingValidator;
+
     // Use this for initialization
     void Start()
     {
@@ -64,6 +68,8 @@ public class CameraScript : MonoBehaviour
         secondclick = empty;
 
         unitsGui = ScriptableObject.CreateInstance<UnitsGui>();
+        unitsGui.SetBuildingValidator(buildingValidator);
+
         buildingGui = ScriptableObject.CreateInstance<BuildingGui>();
         militaryGui = ScriptableObject.CreateInstance<MilitaryGui>();
 
@@ -110,7 +116,8 @@ public class CameraScript : MonoBehaviour
             Vector3 _mouseposition = Input.mousePosition;
             _mouseposition.y = Screen.height - Input.mousePosition.y;
             //TODO CREATE CONSTANT
-            if (_mouseposition.y >= Screen.height - 100)
+            
+            if (_mouseposition.y >= Screen.height - (Screen.height - Screen.width / 3.0f))
             {
                 return;
             }
@@ -121,6 +128,9 @@ public class CameraScript : MonoBehaviour
             !unitsGui.HasOptionSelected() && firstclick == empty)
         {
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+             first3d = Input.mousePosition;
+          
+
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
         else if (Input.GetMouseButtonUp(0))
@@ -169,11 +179,12 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
+            second3d = Input.mousePosition;
             secondclick = Input.mousePosition;
             selection = new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y));
 
-            RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
-            Debug.Log(raycastHits.Length);
+           // RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
+            //Debug.Log(raycastHits.Length);
             //Debug.Log(raycastHits[0]);
 
             //Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -183,13 +194,14 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
-    {
-        //Gizmos.DrawCube(Camera.main.ScreenToWorldPoint(firstclick - secondclick), new Vector3(1, 1, 1));
-        //Gizmos.DrawCube(new Vector3( selection.x/2,0, selection.y/2), new Vector3(50, 50, 50));
-        //Gizmos.DrawWireCube(new Vector3(selection.x / 2, 0, selection.y / 2), new Vector3(50, 50, 50));
+    Vector3 first3d = Vector3.zero;
+    Vector3 second3d = Vector3.zero;
 
-    }
+    Vector3 p1 = Vector3.zero;
+    Vector3 p2 = Vector3.zero;
+    Vector3 center = Vector3.zero;
+
+   
 
     private void SetSelectedGameObject(GameObject hitselected)
     {
@@ -384,4 +396,6 @@ public class CameraScript : MonoBehaviour
                 break;
         }
     }
+
+
 }

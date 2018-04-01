@@ -83,6 +83,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         gameFacade = GameScript.GetFacade(team);
 
         changeColor();
+
+        gameFacade.AddUnity(this.gameObject, Units.Citizen);
     }
 
     public virtual void changeColor()
@@ -244,6 +246,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 BuildProgress();
                 break;
             case CitizenStates.Died:
+
+                gameFacade.RemoveUnity(this.gameObject, Units.Citizen);
                 break;
             case CitizenStates.Escaping:
                 break;
