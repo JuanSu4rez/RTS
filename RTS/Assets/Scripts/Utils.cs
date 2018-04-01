@@ -34,3 +34,24 @@ public sealed class UtilsCollections
         return Array == null || Array.Length == 0;
     }
 }
+
+
+public sealed class UtilsMilitary
+{
+    public static bool ValidateGameObjectStateToAttackByTrigger(GameObject gameObject)
+    {
+        bool result = true;
+        var tag = gameObject.tag;
+        switch (tag)
+        {
+            case "Building":
+               var buildingBehaviour =  gameObject.GetComponent<BuildingBehaviour>();
+                result = buildingBehaviour != null && buildingBehaviour.State != BuildingStates.IsSettingOnScene;
+                break;
+
+        }
+
+
+        return result;
+    }
+}

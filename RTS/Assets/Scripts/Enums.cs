@@ -48,6 +48,7 @@ public enum BuildingStates
     Building,
     Destroying,
     Destroyed,
+    IsSettingOnScene,
     Repairing
 }
 

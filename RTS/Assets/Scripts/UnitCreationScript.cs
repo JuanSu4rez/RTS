@@ -83,7 +83,7 @@ public class UnitCreationScript : MonoBehaviour {
     private Vector3 calculateUnitOrigin() {
         Collider buildingCollider = this.gameObject.GetComponent<Collider>();
         Transform buildingPosition = this.gameObject.transform;
-       var result  = this.gameObject.GetComponents<BoxCollider>();
+  
         Vector3 unitPosition = new Vector3();
         var v = buildingCollider.bounds.size;// buildingCollider.bounds.size.sqrMagnitude > this.transform.localScale.sqrMagnitude ? buildingCollider.bounds.size: this.transform.localScale;
         v.x /= 2;

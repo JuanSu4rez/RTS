@@ -106,6 +106,9 @@ public class CameraScript : MonoBehaviour
 
     public static Vector2 get2sCoordinates(GameObject selectable)
     {
+        if (selectable == null)
+            return Vector2.zero;
+
         Transform transform = selectable.GetComponent<Transform>();
         Vector3 v = Camera.main.WorldToScreenPoint(transform.position);
         return new Vector2(v.x, Screen.height - v.y);

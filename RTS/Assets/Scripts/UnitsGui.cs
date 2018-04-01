@@ -34,7 +34,7 @@ public class UnitsGui : ScriptableObject, IGui
             {
                 if (SeekForaGameObjectByName(ref arrayCollisions, "Land", out hit))
                 {
-                    createdObject.transform.position = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+                    createdObject.transform.position = new Vector3(hit.point.x, hit.point.y + createdObject.transform.position.y , hit.point.z);
                 }
 
             }
@@ -175,11 +175,11 @@ public class UnitsGui : ScriptableObject, IGui
                         Vector3 _mouseposition = Input.mousePosition;
                         _mouseposition.z = Screen.height - _mouseposition.z;
                         Vector3 mouseposition = Camera.main.ScreenToWorldPoint(_mouseposition);
-                        mouseposition.y = 1;
+                        mouseposition.y = 0;
 
 
                         var objectToCreate = facade.GameResource.Load<GameObject>(buldingsinfo[i].Building.ToString());
-                       
+                        mouseposition.y = objectToCreate.transform.position.y;
                         createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
                         var BuildingBehaviour = createdObject.GetComponent<BuildingBehaviour>();
 
@@ -188,6 +188,7 @@ public class UnitsGui : ScriptableObject, IGui
                         {
                            
                             BuildingBehaviour.Team = navagentcitizen.Team;
+                            BuildingBehaviour.State = BuildingStates.IsSettingOnScene;
                         }
 
 

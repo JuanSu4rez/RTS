@@ -54,11 +54,24 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     private float yscale = 0;
 
     private float fundationalyscale = 1;
+    [SerializeField]
+    private float DefaultYposition = 0;
 
     // Use this for initialization
+
+    void Awake()
+    {
+     
+    }
+    void OnEnable()
+    {
+        SetFundationalBuildingData();
+    }
     void Start()
     {
-        
+      
+     
+
         changeColor();
 
         facade = GameScript.GetFacade(team);
@@ -68,10 +81,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
          
     }
     
-    void OnEnable()
-    {
-        SetFundationalBuildingData();
-    }
+  
 
     public void SetFundationalBuildingData()
     {

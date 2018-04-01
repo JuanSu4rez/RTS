@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -133,26 +134,44 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     void OnTriggerEnter(Collider collider)
     {
+        SetMilitaryTaskByTrigger(collider);
+    }
+
+
+    void OnTriggerStay(Collider collider)
+    {
+        SetMilitaryTaskByTrigger(collider);
+    }
+
+    private void SetMilitaryTaskByTrigger(Collider collider)
+    {
         if (soldierState == SoldierStates.Idle)
         {
+
+
             var team = collider.gameObject.GetComponent<ITeamable>();
-            if (team == null || team.Team == null)
+
+            if (team == null || team.Team == null || gameFacade == null)
+                return;
+
+            if (!UtilsMilitary.ValidateGameObjectStateToAttackByTrigger(collider.gameObject))
                 return;
 
             if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
             {
+                //soldierState = SoldierStates.Attacking;
                 militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
                 Vector3 targetDistance = Vector3.zero;
                 var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
                 if (distance && targetDistance.sqrMagnitude > AttackRange)
                 {
+
                     SetState(SoldierStates.Walking);
                     SetPointToMove(collider.gameObject.transform.position);
                 }
                 else
-                    SetState( SoldierStates.Attacking);
+                    SetState(SoldierStates.Attacking);
             }
-
 
         }
     }
@@ -182,34 +201,6 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         }
     }
 
-    void OnTriggerStay(Collider collider)
-    {
-        if (soldierState == SoldierStates.Idle)
-        {
-            var team = collider.gameObject.GetComponent<ITeamable>();
-
-            if (team == null || team.Team == null || gameFacade == null)
-                return;
-    
-
-            if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
-            {
-                //soldierState = SoldierStates.Attacking;
-                militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = Vector3.zero;
-                var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
-                if (distance && targetDistance.sqrMagnitude > AttackRange)
-                {
-
-                    SetState(SoldierStates.Walking);
-                    SetPointToMove(collider.gameObject.transform.position);
-                }
-                else
-                    SetState(SoldierStates.Attacking);
-            }
-
-        }
-    }
 
     void OnCollisionStay(Collision collision)
     {

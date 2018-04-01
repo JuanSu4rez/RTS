@@ -48,10 +48,12 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     private float lastShoot;
 
     public NavMeshAgent navMeshAgent;
+    [SerializeField]
+    private Vector3 vectorup = Vector3.up;
 
     void Awake()
     {
-
+        
     }
     // Use this for initialization
     void Start()
@@ -73,6 +75,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         changeColor();
 
         gameFacade.AddUnity(this.gameObject, Units.Citizen);
+        vectorup.x = 0;
+        vectorup.z = 0;
     }
 
     public virtual void changeColor()
@@ -87,39 +91,23 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     void OnTriggerEnter(Collider collider)
     {
-        if (soldierState == SoldierStates.Idle)
-        {
-            var team = collider.gameObject.GetComponent<ITeamable>();
-            if (team == null || team.Team == null)
-                return;
-
-            if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
-            {
-                militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
-                Vector3 targetDistance = Vector3.zero;
-                 var distance  = militaryTask.GetTargetDistance(this.gameObject,out targetDistance);
-                if (distance && targetDistance.sqrMagnitude > AttackRange)
-                {
-                   SetState( SoldierStates.Walking);
-                    SetPointToMove(collider.gameObject.transform.position);
-                }
-                else
-                    SetState(SoldierStates.Attacking); 
-            }
-
-
-        }
+        SetMilitaryTaskByTrigger(collider);
     }
 
     void OnTriggerStay(Collider collider)
     {
-
-
+        SetMilitaryTaskByTrigger(collider);
+    }
+    private void SetMilitaryTaskByTrigger(Collider collider)
+    {
         if (soldierState == SoldierStates.Idle)
         {
             var team = collider.gameObject.GetComponent<ITeamable>();
 
             if (team == null || team.Team == null)
+                return;
+
+            if (!UtilsMilitary.ValidateGameObjectStateToAttackByTrigger(collider.gameObject))
                 return;
 
 
@@ -139,7 +127,9 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
             }
 
         }
+
     }
+
 
     void OnCollisionEnter(Collision collision)
     {
@@ -287,7 +277,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
 
                 if (
-                  (this.transform.position - navMeshAgent.destination) == Vector3.up
+                  (this.transform.position - navMeshAgent.destination) == vectorup
                     )
                     SetState(SoldierStates.Idle);
                 break;
