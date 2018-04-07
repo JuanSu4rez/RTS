@@ -25,6 +25,17 @@ public enum CitizenStates
     Walking
 }
 
+
+public enum CitizenTaskStates
+{
+    _None,
+   Carrying,
+   Doing,
+   OnTheWay,
+   
+}
+
+
 public enum SoldierStates
 {
     _None,

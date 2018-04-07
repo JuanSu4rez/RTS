@@ -117,7 +117,9 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        userClick();
+        //if the player is not putting a building or something
+        if (currentGui == null || !currentGui.HasOptionSelected())
+            userClick();
 
         if (currentGui == null)
             return;
@@ -155,11 +157,10 @@ public class CameraScript : MonoBehaviour
             //todo temporal solution
             !unitsGui.HasOptionSelected() && firstclick == empty)
         {
+
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-           
-
-
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -259,10 +260,9 @@ public class CameraScript : MonoBehaviour
                     }
                 }
             }
-            RaycastHit[] raycastHits = Physics.BoxCastAll(Camera.main.ScreenToWorldPoint(firstclick - secondclick), Camera.main.ScreenToWorldPoint(firstclick / 2 - secondclick / 2), Camera.main.transform.forward);
-            Debug.Log(raycastHits.Length);
+          
 
-            //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
+           
 
         }
     }
@@ -380,7 +380,9 @@ public class CameraScript : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                string rightclickedObj = hit.transform.gameObject.name;
+                CitizenTask citizenTask = CitizenTask.Empty;
+
+                string rightclickedObj = hit.transform.gameObject.tag;
                 switch (rightclickedObj)
                 {
                     case "Land":
@@ -388,12 +390,14 @@ public class CameraScript : MonoBehaviour
                         citizenTemp.SetPointToMove(pointtomove.transform.position);
                         citizenTemp.SetState(CitizenStates.Walking);
                         break;
-                    case "GoldMine":
+                    case "Gold":
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetPointResource(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Gathering);
                         citizenTemp.CurrentResource = Resources.Gold;
+
+                        citizenTask = new CitizenTask(hit.transform.position, hit.transform.gameObject, CitizenStates.Gathering, Resources.Gold);
                         break;
                     case "Forest":
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
@@ -401,6 +405,20 @@ public class CameraScript : MonoBehaviour
                         citizenTemp.SetPointResource(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Gathering);
                         citizenTemp.CurrentResource = Resources.Wood;
+
+                        citizenTask = new CitizenTask(hit.transform.position, hit.transform.gameObject, CitizenStates.Gathering, Resources.Wood);
+
+                        break;
+
+                    case "Rock":
+                        citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
+                        citizenTemp.SetPointToMove(hit.transform.position);
+                        citizenTemp.SetPointResource(hit.transform.position);
+                        citizenTemp.SetState(CitizenStates.Gathering);
+                        citizenTemp.CurrentResource = Resources.Rock;
+
+                        citizenTask = new CitizenTask(hit.transform.position, hit.transform.gameObject, CitizenStates.Gathering, Resources.Rock);
+
                         break;
 
                     case "Building":
@@ -412,6 +430,8 @@ public class CameraScript : MonoBehaviour
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
                         citizenTemp.SetPointToMove(hit.transform.position);
                         citizenTemp.SetState(CitizenStates.Building);
+
+                        citizenTask = CitizenTask.CitizenTaskBulding(hit.transform.position, hit.transform.gameObject);
 
                         break;
 
@@ -419,20 +439,10 @@ public class CameraScript : MonoBehaviour
                         break;
                 }
 
-                string rightclickedtag = hit.transform.gameObject.tag;
-                switch (rightclickedtag)
-                {
-                    case "Building":
+                if(citizenTask != CitizenTask.Empty)
+                citizenTemp.SetCitizenTask(citizenTask);
 
-                        //TODO the player has selected a kind of bulding
-                        //TODO check if the player can afford to build the bulding
-                        //TODO create the gameobject depeding on the kind of bulding
 
-                        citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
-                        citizenTemp.SetPointToMove(hit.transform.position);
-                        citizenTemp.SetState(CitizenStates.Building);
-                        break;
-                }
             }
         }
     }

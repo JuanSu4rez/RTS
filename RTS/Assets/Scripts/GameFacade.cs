@@ -23,7 +23,7 @@ public interface IGameFacade
 
     GameObject FindNearResource(Vector3 player, Resources resource);
 
-    GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource);
+    GameObject FindNearBuldingToDeposit(Vector3 unitposition, Resources resource);
 
     BuildingInfo GetBuldingInfo(Buildings type);
 
@@ -53,6 +53,8 @@ public interface IGameFacade
     bool AddUnity(GameObject obj, Units unit);
 
     void RemoveUnity(GameObject obj, Units unit);
+
+    bool IsMemberOfMyTeam(ITeamable teamable);
 
 
 }
@@ -116,10 +118,18 @@ public class GameFacade : ScriptableObject, IGameFacade
 
     public GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource)
     {
-        throw new System.NotImplementedException();
+        GameObject obj = null;
+        for (int i = 0; i < Buldings.Count; i++)
+        {
+            if (Buldings[i].name == "UrbanCenter")
+                return Buldings[i];
+        }
+
+        return obj;
+      
     }
 
-    public GameObject FindNearResource(Vector3 player, Resources resource)
+    public GameObject FindNearResource(Vector3 unitposition, Resources resource)
     {
         throw new System.NotImplementedException();
     }
@@ -216,6 +226,11 @@ public class GameFacade : ScriptableObject, IGameFacade
         }
 
         return result;
+    }
+
+    public bool IsMemberOfMyTeam(ITeamable teamable)
+    {
+        return teamable != null && teamable.Team.Id == Team.Id;
     }
 
     public bool ValidateDiplomacy(Team team, Postures posture)

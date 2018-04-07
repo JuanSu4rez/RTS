@@ -120,6 +120,21 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
                     EnabledTrackingStatus();
                 }
                 break;
+            case BuildingStates._Fundational:
+                if (CurrentBuiltAmount >= TotalBuiltAmount)
+                {
+                    State = BuildingStates.Built;
+                    //TODO send a notification indicating that a building has been Built
+
+                    SetBulding();
+                    DisabledTrackingStatus();
+                }
+                else
+                {
+                    EnabledTrackingStatus();
+                }
+                break;
+
             case BuildingStates.Built:
 
                 if (CurrentBuiltAmount < TotalBuiltAmount)
@@ -154,10 +169,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
 
                 Destroy(this.gameObject);
                 break;
-            case BuildingStates._Fundational:
-                //this state represents the Building fundations 
-
-                break;
+         
             case BuildingStates.Repairing:
                 if (CurrentBuiltAmount >= TotalBuiltAmount)
                 {
@@ -232,7 +244,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
 
     public bool IsBulding()
     {
-        return State == BuildingStates.Building || State == BuildingStates.Repairing;
+        return State == BuildingStates._Fundational  || State == BuildingStates.Building || State == BuildingStates.Repairing;
     }
 
     public bool CheckState(BuildingStates _state)

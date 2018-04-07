@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,10 +9,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 {
     private IGameFacade gameFacade;
 
+    private CitizenTask citizenTask = CitizenTask.Empty;
+
     private Collider citizenCollider;
     private CitizenStates citizenState;
-    private CitizenStates citizenLabor;
-    private BuildingBehaviour building;
+
+  
+    public Resources CurrentResource { get; set; }
 
     [SerializeField]
     private Team team;
@@ -36,14 +40,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     private Vector3 pointToMove;
     private Vector3 pointResource;
     private float speedWalk;
-    private ResourceScript resourceTemp = null;
+  
     
     public float AttackPower { get; set; }
     public float ResourceCapacity { get; set; }
     public float DefensePower { get; set; }
     public float BuildingSpeed { get; set; }
     public float GatheringSpeed { get; set; }
-    public Resources CurrentResource { get; set; }
+   
     public float CurrentAmountResouce { get; set; }
 
     public float AttackRange { get; set; }    
@@ -72,14 +76,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         AttackPower = 0.1F;
         DefensePower = 0.1F;
         BuildingSpeed = 0.1F;
-        citizenLabor = CitizenStates.None;
+      
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
 
         Health= 9999;
         CurrentHealth =Health;
 
-        if(gameFacade == null)
+       
         gameFacade = GameScript.GetFacade(team);
 
         changeColor();
@@ -96,9 +100,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.log("Colision " + pointResource);
-        var name = collision.gameObject.name;
+        if (collision.collider.isTrigger)
+            return;
+     
+       
         var tag = collision.gameObject.tag;
+        var name = collision.gameObject.name;
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -118,52 +125,71 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 break;
             case CitizenStates.Walking:
                 //Debug.log("Collision enter");
-
-                //TODO THE VALIDATION MUST BE AGAINST THE MATERIAL TO CRAFT
-                if (name.Equals("GoldMine") || name.Equals("Forest"))
+             
+                if(CitizenTask.IsValidCitizenTask( citizenTask) && citizenTask.IsTaskOnPorgress())
                 {
-                  
-                    navMeshAgent.enabled = false;
-                    if (citizenLabor ==  CitizenStates.Gathering)
+                    if (citizenTask.CheckState(CitizenTaskStates.OnTheWay))
                     {
-                     
-                        citizenState = citizenLabor;
-                        resourceTemp = collision.gameObject.GetComponent<ResourceScript>();
-                    }
 
-                }
-                else if (name.Equals("UrbanCenter"))
-                {
-                    //Debug.log("Collision enter UrbanCenter");
-                   
-                    if (citizenLabor != CitizenStates.None){
-                        if (CurrentAmountResouce > 0){
-                            GameScript.GetFacade(this).AddResources(CurrentResource, CurrentAmountResouce);
-                            CurrentAmountResouce = 0;
+
+                        if (citizenTask.Gameobject == collision.transform.gameObject)
+                        {
+                            navMeshAgent.enabled = false;
+                            citizenState = citizenTask.CitizenLabor;
+                            citizenTask.SetDoingState();
                         }
+                    }
+                    else if (  citizenTask.CheckState(CitizenTaskStates.Carrying) )
+                    {
 
-                        // pointToMove = pointResource;
-                        SetPointToMove(pointResource);
+                        if (name.Equals("UrbanCenter") && gameFacade.IsMemberOfMyTeam(collision.gameObject.GetComponent<ITeamable>()))
+                        {
+                            //Debug.log("Collision enter UrbanCenter")
+                            if (CurrentAmountResouce > 0)
+                            {
+                                gameFacade.AddResources(CurrentResource, CurrentAmountResouce);
+                                CurrentAmountResouce = 0;
+                            }
 
+                          
+                                if (citizenTask.IsTaskOnPorgress())
+                                {
+                                    citizenTask.SetOnTheWayState();
+                                    SetState(CitizenStates.Walking);
+                                    SetPointToMove(citizenTask.Position);
+                                }
+                                else
+                                {
+                                    // todo 
+                                    SetState(CitizenStates.Idle);
+                                    ReleaseTask();
+                                }
+
+                          
+
+                        }
                     }
 
+
                 }
+
+
 
                 //TODO THE VALIDATION MUST BE AGAINST THE BUILDING TO BUILD
-                if (collision.gameObject.CompareTag("Building"))
-                {
-                    if (citizenLabor == CitizenStates.Building)
-                    {
-                        building = collision.gameObject.GetComponent<BuildingBehaviour>();
-                        //THIS SHOULD BE DONE BY TASK? BY THE FACADE?
-                        if(building!= null)
-                        building.InitBuilding();
-
-                        navMeshAgent.enabled = false;
-                        citizenState = citizenLabor;
-                        
-                    }
-                }
+                //if (collision.gameObject.CompareTag("Building"))
+                //{
+                //    if (citizenLabor == CitizenStates.Building)
+                //    {
+                //        building = collision.gameObject.GetComponent<BuildingBehaviour>();
+                //        //THIS SHOULD BE DONE BY TASK? BY THE FACADE?
+                //        if(building!= null)
+                //        building.InitBuilding();
+                //
+                //        navMeshAgent.enabled = false;
+                //        citizenState = citizenLabor;
+                //        
+                //    }
+                //}
 
                 break;
             default:
@@ -173,18 +199,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     void OnCollisionStay(Collision collision)
     {
-        //Debug.log("Collisionstay  " + pointResource);
+        Debug.Log("Collisionstay  " );
         switch (citizenState)
         {
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
-                if (collision.gameObject.name.Equals("Building"))
-                {
-
-           
-                   
-                }
+                Debug.Log("Collisionstay  Building ");
+                
 
                 break;
             case CitizenStates.Died:
@@ -192,13 +214,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             case CitizenStates.Escaping:
                 break;
             case CitizenStates.Gathering:
-                if (resourceTemp == null)
-                {
-                    resourceTemp = collision.gameObject.GetComponent<ResourceScript>();
-                    //pointToMove = pointResource;
-                    SetPointToMove(pointResource);
 
-                }
                 break;
 
             case CitizenStates.Idle:
@@ -208,23 +224,16 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             case CitizenStates.Walking:
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
-                    //Debug.log("Collisionstay  UrbanCenter");
-                    if (citizenLabor != CitizenStates.None)
-                    {
-                        //TODO  ahumentar recursos al jugador
-                        if (CurrentAmountResouce > 0){
-                            CurrentAmountResouce = 0;
-                        }
-                        //pointToMove = pointResource;
-                        SetPointToMove(pointResource);
-                    }
+
+                    Debug.Log("Collisionstay  UrbanCenter " );
+
 
                 }
                 else if (collision.gameObject.name.Equals("POINTTOMOVE"))
                 {
                     collision.gameObject.transform.position = Camera.main.transform.position;
                     SetState(CitizenStates.Idle);
-                    navMeshAgent.enabled = false;
+                 
                 }
                 break;
             default:
@@ -253,30 +262,63 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 break;
             case CitizenStates.Gathering:
 
-
-                if (resourceTemp != null)
+                if (CitizenTask.IsValidCitizenTask(citizenTask) )
                 {
-                    if (resourceTemp.HasResource() && CurrentAmountResouce < ResourceCapacity)
+                    if (citizenTask.IsTaskOnPorgress())
                     {
+                        if (CurrentAmountResouce < ResourceCapacity)
+                        {
+                            CurrentAmountResouce += citizenTask.DiscountResource(CalculateGatheringSpeed());
+                        }
+                        else
+                        {
+                            
+                            //TODO find near object to deposit
+                            var go=  gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
+                            if(go!= null)
+                            {
+                                citizenTask.SetCarryingState();
+                                SetState(CitizenStates.Walking);
+                                SetPointToMove(go.transform.position);
+                            }
+                            else
+                            {
+                                SetState(CitizenStates.Idle);
+                            }
 
-                        //TODO Descontar del recurso con el que se colisiona
-                        CurrentAmountResouce += resourceTemp.DiscountAmount(CalculateGatheringSpeed());
-
-                    }
-                    else if (!resourceTemp.HasResource())
-                    {
-                        SetState(CitizenStates.Idle);
-                        //TODO buscar recurso CERCANO del mapa explorado y construido
+                        }
                     }
                     else
                     {
-                        citizenState = CitizenStates.Walking;
-                        citizenLabor = CitizenStates.Gathering;
-                        //TODO CALCULAR EL PUNTO MAS CERCANO A DEPOSITAR
-                        pointToMove = new Vector3(0, 1, 0);
-                        SetPointToMove(pointToMove);
+                        //TODO find near resource of the same type , if it does not exits
+                        //Idle and reset citizentask
+                        SetState(CitizenStates.Idle);
+                        ReleaseTask();
                     }
+
                 }
+                else
+                {
+
+                  
+                    //TODO find near object to deposit
+                    var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
+                    if (go != null)
+                    {
+                        SetState(CitizenStates.Walking);
+                        SetPointToMove(go.transform.position);
+                    }
+                    else
+                    {
+                        SetState(CitizenStates.Idle);
+                    }
+                     
+
+                }
+                
+
+                
+          
                 break;
             case CitizenStates.Idle:
                 break;
@@ -294,28 +336,33 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     public string GetStatus()
     {
-        return citizenState.ToString() + " "+GetHealthReason()  +" "+ citizenLabor.ToString() + " " + pointToMove;
+        return citizenState.ToString() + " "+GetHealthReason()  +" "+ citizenTask.ToString() + " " + pointToMove;
     }
 
     public void SetState(CitizenStates _citizenStates)
     {
-
+       
         if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
         {
             this.citizenState = CitizenStates.Walking;
-            this.citizenLabor = _citizenStates;
+        
         }
         else
         {
             this.citizenState = _citizenStates;
-            this.citizenLabor = CitizenStates.None;
         }
+
+        if (this.citizenState == CitizenStates.Idle)
+            navMeshAgent.enabled = false;
+
+       
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(newPointToMove);
+       
     }
 
     public void SetPointResource(Vector3 newPointToMove)
@@ -344,14 +391,15 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     private void BuildProgress()
     {
 
-        if (building != null)
+        if (CitizenTask.IsValidCitizenTask( citizenTask))
         {
             //Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
-            if (building.IsBulding())
-                building.AddCurrentBuiltAmount(this.BuildingSpeed);
-            else if (building.CheckState(BuildingStates.Built))
+            if (citizenTask.IsTaskOnPorgress())
+                citizenTask.AddCurrentBuiltAmount(this.BuildingSpeed);
+            else if (citizenTask.BuildingBehaviour.CheckState(BuildingStates.Built))
             {
                 //TODO check if there is other Building to build
+                //set task ontheway if exits otherwise set idle
                 SetState(CitizenStates.Idle);
             }
         }
@@ -400,7 +448,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     public void ReleaseTask()
     {
-         
+        if (this.citizenTask != CitizenTask.Empty)
+        this.citizenTask = CitizenTask.Empty;
     }
 
+    public void SetCitizenTask(CitizenTask citizenTask)
+    {
+        this.citizenTask = citizenTask;
+    }
 }
