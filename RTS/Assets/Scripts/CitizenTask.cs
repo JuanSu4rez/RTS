@@ -28,7 +28,7 @@ public class CitizenTask// : ScriptableObject
     public ResourceScript ResourceScript { get { return resourceScript; } }
 
 
-    private CitizenTaskStates CitizenTaskState = CitizenTaskStates._None;
+
 
     private CitizenTask()
     {
@@ -42,7 +42,7 @@ public class CitizenTask// : ScriptableObject
         this.citizenLabor = _citizenLabor;
         this.resource = resource;
         this.resourceScript = this.gameobject.GetComponent<ResourceScript>();
-        this.SetOnTheWayState();
+        //this.SetOnTheWayState();
     }
 
     private CitizenTask(Vector3 _position, GameObject _gameobject)
@@ -51,7 +51,7 @@ public class CitizenTask// : ScriptableObject
         this.gameobject = _gameobject;
         this.citizenLabor = CitizenStates.Building;
         this.buildingBehaviour = this.gameobject.GetComponent<BuildingBehaviour>();
-        this.SetOnTheWayState();
+        //this.SetOnTheWayState();
     }
 
     public bool IsTaskOnPorgress()
@@ -77,25 +77,7 @@ public class CitizenTask// : ScriptableObject
         return resourceScript.DiscountAmount(v);
     }
 
-    public void SetOnTheWayState()
-    {
-        CitizenTaskState = CitizenTaskStates.OnTheWay;
-    }
-
-    public void SetDoingState()
-    {
-        CitizenTaskState = CitizenTaskStates.Doing;
-    }
-
-    public void SetCarryingState()
-    {
-        CitizenTaskState = CitizenTaskStates.Carrying;
-    }
-
-    public bool CheckState(CitizenTaskStates state)
-    {
-        return CitizenTaskState == state;
-    }
+ 
 
 
     public static CitizenTask CitizenTaskBulding(Vector3 _position, GameObject _gameobject)

@@ -454,7 +454,8 @@ public class CameraScript : MonoBehaviour
         switch (camerastate)
         {
             case CameraStates.None:
-
+                //SOFAR , IT DOES  PAINT SELECTION RECTANGLE ONLY IN STATE NONE
+                //TODO CHECK AGAIN CAMERA STATES
                 if (Input.GetMouseButton(0))
                 {
                     GUI.DrawTexture(selection, selectionTexture);

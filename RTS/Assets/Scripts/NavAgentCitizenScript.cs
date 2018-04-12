@@ -14,13 +14,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     private Collider citizenCollider;
     private CitizenStates citizenState;
 
-  
+
     public Resources CurrentResource { get; set; }
 
     [SerializeField]
     private Team team;
 
-    public Team Team {
+    public Team Team
+    {
         get
         {
             return team;
@@ -40,17 +41,17 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     private Vector3 pointToMove;
     private Vector3 pointResource;
     private float speedWalk;
-  
-    
+
+
     public float AttackPower { get; set; }
     public float ResourceCapacity { get; set; }
     public float DefensePower { get; set; }
     public float BuildingSpeed { get; set; }
     public float GatheringSpeed { get; set; }
-   
+
     public float CurrentAmountResouce { get; set; }
 
-    public float AttackRange { get; set; }    
+    public float AttackRange { get; set; }
 
     private float Health;
     private float CurrentHealth;
@@ -63,7 +64,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     }
 
-        // Use this for initialization
+    // Use this for initialization
     void Start()
     {
         //Debug.log("citizenCollider " + citizenCollider != null);
@@ -76,14 +77,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         AttackPower = 0.1F;
         DefensePower = 0.1F;
         BuildingSpeed = 0.1F;
-      
+
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
 
-        Health= 9999;
-        CurrentHealth =Health;
+        Health = 9999;
+        CurrentHealth = Health;
 
-       
+
         gameFacade = GameScript.GetFacade(team);
 
         changeColor();
@@ -102,8 +103,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     {
         if (collision.collider.isTrigger)
             return;
-     
-       
+
+
         var tag = collision.gameObject.tag;
         var name = collision.gameObject.name;
         switch (citizenState)
@@ -111,7 +112,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
-              
+
                 break;
             case CitizenStates.Died:
                 break;
@@ -125,10 +126,10 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 break;
             case CitizenStates.Walking:
                 //Debug.log("Collision enter");
-             
-                if(CitizenTask.IsValidCitizenTask( citizenTask) && citizenTask.IsTaskOnPorgress())
+
+                if (CitizenTask.IsValidCitizenTask(citizenTask) && citizenTask.IsTaskOnPorgress())
                 {
-                    if (citizenTask.CheckState(CitizenTaskStates.OnTheWay))
+                    if (CheckState(CitizenTaskStates.OnTheWay))
                     {
 
 
@@ -136,12 +137,15 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                         {
                             navMeshAgent.enabled = false;
                             citizenState = citizenTask.CitizenLabor;
-                            citizenTask.SetDoingState();
+                            SetDoingState();
                         }
                     }
-                    else if (  citizenTask.CheckState(CitizenTaskStates.Carrying) )
+                    else if (CheckState(CitizenTaskStates.Carrying))
                     {
-
+                        //TODO DEPENDS ON THE REOSURCE CHEK THE TYPE OF BULDING
+                        //WOOD => LumberCamp
+                        //GOLD, ROCK => MiningCamp
+                        //EVERYTING CAN BE DEPOSIT ON URBANCENTER
                         if (name.Equals("UrbanCenter") && gameFacade.IsMemberOfMyTeam(collision.gameObject.GetComponent<ITeamable>()))
                         {
                             //Debug.log("Collision enter UrbanCenter")
@@ -151,21 +155,21 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                                 CurrentAmountResouce = 0;
                             }
 
-                          
-                                if (citizenTask.IsTaskOnPorgress())
-                                {
-                                    citizenTask.SetOnTheWayState();
-                                    SetState(CitizenStates.Walking);
-                                    SetPointToMove(citizenTask.Position);
-                                }
-                                else
-                                {
-                                    // todo 
-                                    SetState(CitizenStates.Idle);
-                                    ReleaseTask();
-                                }
 
-                          
+                            if (citizenTask.IsTaskOnPorgress())
+                            {
+                                SetOnTheWayState();
+                                SetState(CitizenStates.Walking);
+                                SetPointToMove(citizenTask.Position);
+                            }
+                            else
+                            {
+                                // todo 
+                                SetState(CitizenStates.Idle);
+                                ReleaseTask();
+                            }
+
+
 
                         }
                     }
@@ -199,14 +203,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("Collisionstay  " );
+        Debug.Log("Collisionstay  ");
         switch (citizenState)
         {
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
                 Debug.Log("Collisionstay  Building ");
-                
+
 
                 break;
             case CitizenStates.Died:
@@ -225,7 +229,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
 
-                    Debug.Log("Collisionstay  UrbanCenter " );
+                    Debug.Log("Collisionstay  UrbanCenter ");
 
 
                 }
@@ -233,7 +237,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 {
                     collision.gameObject.transform.position = Camera.main.transform.position;
                     SetState(CitizenStates.Idle);
-                 
+
                 }
                 break;
             default:
@@ -262,7 +266,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 break;
             case CitizenStates.Gathering:
 
-                if (CitizenTask.IsValidCitizenTask(citizenTask) )
+                if (CitizenTask.IsValidCitizenTask(citizenTask))
                 {
                     if (citizenTask.IsTaskOnPorgress())
                     {
@@ -272,12 +276,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                         }
                         else
                         {
-                            
+
                             //TODO find near object to deposit
-                            var go=  gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
-                            if(go!= null)
+                            var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
+                            if (go != null)
                             {
-                                citizenTask.SetCarryingState();
+                                SetCarryingState();
                                 SetState(CitizenStates.Walking);
                                 SetPointToMove(go.transform.position);
                             }
@@ -300,7 +304,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 else
                 {
 
-                  
+
                     //TODO find near object to deposit
                     var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
                     if (go != null)
@@ -312,13 +316,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                     {
                         SetState(CitizenStates.Idle);
                     }
-                     
+
 
                 }
-                
 
-                
-          
+
+
+
                 break;
             case CitizenStates.Idle:
                 break;
@@ -336,16 +340,16 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     public string GetStatus()
     {
-        return citizenState.ToString() + " "+GetHealthReason()  +" "+ citizenTask.ToString() + " " + pointToMove;
+        return citizenState.ToString() + " " + GetHealthReason() + " " + citizenTask.ToString() + " " + pointToMove;
     }
 
     public void SetState(CitizenStates _citizenStates)
     {
-       
+
         if (_citizenStates == CitizenStates.Attacking || _citizenStates == CitizenStates.Building || _citizenStates == CitizenStates.Gathering)
         {
             this.citizenState = CitizenStates.Walking;
-        
+
         }
         else
         {
@@ -355,14 +359,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         if (this.citizenState == CitizenStates.Idle)
             navMeshAgent.enabled = false;
 
-       
+
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(newPointToMove);
-       
+
     }
 
     public void SetPointResource(Vector3 newPointToMove)
@@ -391,7 +395,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     private void BuildProgress()
     {
 
-        if (CitizenTask.IsValidCitizenTask( citizenTask))
+        if (CitizenTask.IsValidCitizenTask(citizenTask))
         {
             //Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
             if (citizenTask.IsTaskOnPorgress())
@@ -405,7 +409,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         }
     }
 
- 
+
 
     public float GetCurrentHealth()
     {
@@ -443,17 +447,44 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             citizenState = CitizenStates.Died;
             Destroy(gameObject, 1);
         }
-    
+
     }
 
     public void ReleaseTask()
     {
         if (this.citizenTask != CitizenTask.Empty)
-        this.citizenTask = CitizenTask.Empty;
+            this.citizenTask = CitizenTask.Empty;
     }
 
-    public void SetCitizenTask(CitizenTask citizenTask)
+    public void SetCitizenTask(CitizenTask _citizenTask)
     {
-        this.citizenTask = citizenTask;
+        if (_citizenTask != CitizenTask.Empty)
+        {
+            this.citizenTask = _citizenTask;
+            SetOnTheWayState();
+        }
+    }
+
+
+    private CitizenTaskStates CitizenTaskState = CitizenTaskStates._None;
+
+    public void SetOnTheWayState()
+    {
+        CitizenTaskState = CitizenTaskStates.OnTheWay;
+    }
+
+    public void SetDoingState()
+    {
+        CitizenTaskState = CitizenTaskStates.Doing;
+    }
+
+    public void SetCarryingState()
+    {
+        CitizenTaskState = CitizenTaskStates.Carrying;
+    }
+
+    public bool CheckState(CitizenTaskStates state)
+    {
+        return CitizenTaskState == state;
     }
 }
