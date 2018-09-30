@@ -53,13 +53,25 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
         Debug.Log("0 ");
         Debug.Log("1 " + this.GetType().FullName + " FACDE " + gameFacade != null );
 
-         if (gameFacade.AssetType == AssetTypes.THREED )
-         {
-             Debug.Log(this.gameObject.transform.childCount);
-             Debug.Log(this.transform.GetChild(2).name);
-             this.transform.GetChild(2).gameObject.SetActive(false);           
-         }
 
+        InitChildrentTool(CitizenTransformChilden.Pick);
+        InitChildrentTool(CitizenTransformChilden.Axe);
+
+    }
+
+
+    private void InitChildrentTool(CitizenTransformChilden children)
+    {
+        EnableChildrentTool(children, false);
+    }
+
+    private void EnableChildrentTool(CitizenTransformChilden children, bool enable)
+    {
+        var id = (int)children;
+        if (this.transform.childCount > id) // gameFacade.AssetType == AssetTypes.THREED )
+        {
+            this.transform.GetChild(id).gameObject.SetActive(enable);
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -238,13 +250,18 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
                 break;
         }
         setAnimation();
-        AddDamage(1);
+        //AddDamage(1);
     }
 
-    public void setAnimation() {
-        if (animator == null )
+    public virtual void setAnimation() {
+        if (animator == null || this.transform.childCount <= (int)CitizenTransformChilden.Pick )
             return;
-        this.transform.GetChild(2).gameObject.SetActive(false);
+
+
+        //this.transform.GetChild((int)CitizenTransformChilden.Pick).gameObject.SetActive(false);
+        EnableChildrentTool(CitizenTransformChilden.Pick, false);
+        //this.transform.GetChild((int)CitizenTransformChilden.Axe).gameObject.SetActive(false)
+        EnableChildrentTool(CitizenTransformChilden.Axe, false);
         //Attacking,    0
         //Building,     1
         //Died,         2
@@ -259,17 +276,23 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IFigther, IWork
 
         int animationState = (int)citizenState;
         if (citizenState == CitizenStates.Walking && citizenLabor == CitizenStates.Gathering && CurrentAmountResouce > 0){
-            animationState = 10;
+            animationState = (int)CitizeAnimationStates.Carrying;
         }
 
         if (citizenState == CitizenStates.Gathering && citizenLabor == CitizenStates.Gathering && CurrentResource == Resources.Gold){
-            if (gameFacade.AssetType == AssetTypes.THREED)            
-                this.transform.GetChild(2).gameObject.SetActive(true);
-            animationState = 8;            
+
+           // if (gameFacade.AssetType == AssetTypes.THREED)
+                EnableChildrentTool(CitizenTransformChilden.Pick, true);
+
+            animationState = (int)CitizeAnimationStates.Gold;
         }
 
         if (citizenState == CitizenStates.Gathering && citizenLabor == CitizenStates.Gathering && CurrentResource == Resources.Wood){
-            animationState = 9;
+
+            //if (gameFacade.AssetType == AssetTypes.THREED)
+                EnableChildrentTool(CitizenTransformChilden.Axe, true);
+
+            animationState = (int)CitizeAnimationStates.Wood;
         }
 
         animator.SetInteger("state", animationState);

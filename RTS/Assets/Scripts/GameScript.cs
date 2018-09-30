@@ -6,7 +6,7 @@ public class GameScript : MonoBehaviour
     public AssetTypes assettype;
 
     [SerializeField]
-    private Player player;
+    public Player player;
     [SerializeField]
     public BuildingsInfo buldingsInfo;
 
