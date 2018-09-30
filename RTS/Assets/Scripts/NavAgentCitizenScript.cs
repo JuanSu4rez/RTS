@@ -29,7 +29,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         set
         {
             team = value;
-            gameFacade = GameScript.GetFacade(team);
+          
         }
     }
 
@@ -58,7 +58,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
 
     public NavMeshAgent navMeshAgent;
-
+    private Animator animator;   
     void Awake()
     {
 
@@ -84,19 +84,39 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         Health = 9999;
         CurrentHealth = Health;
 
-
-        gameFacade = GameScript.GetFacade(team);
+       
+        animator = this.gameObject.GetComponent<Animator>();
+      
 
         changeColor();
-
+        gameFacade = GameScript.GetFacade(team);
         gameFacade.AddUnity(this.gameObject, Units.Citizen);
-    }
-
-    public virtual void changeColor()
+		
+	    InitChildrentTool(CitizenTransformChilden.Pick);
+        InitChildrentTool(CitizenTransformChilden.Axe);
+		
+	}
+		
+    private void InitChildrentTool(CitizenTransformChilden children)
     {
-        Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
+        EnableChildrentTool(children, false);
     }
 
+    private void EnableChildrentTool(CitizenTransformChilden children, bool enable)
+    {
+        var id = (int)children;
+        if (this.transform.childCount > id) // gameFacade.AssetType == AssetTypes.THREED )
+        {
+            this.transform.GetChild(id).gameObject.SetActive(enable);
+        }
+    }
+	
+  	public virtual void changeColor()
+    {
+        var meshColor = gameObject.GetComponent<MeshRenderer>();
+        if(meshColor != null)
+        Utils.ChangeColor(meshColor, team);
+    }
 
 
     void OnCollisionEnter(Collision collision)
@@ -334,10 +354,54 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             default:
                 break;
         }
-
-        //AddDamage(10);
+        setAnimation();
+        //AddDamage(1);
     }
 
+    public virtual void setAnimation() {
+        if (animator == null || this.transform.childCount <= (int)CitizenTransformChilden.Pick)
+            return;
+
+        
+        //this.transform.GetChild((int)CitizenTransformChilden.Pick).gameObject.SetActive(false);
+        EnableChildrentTool(CitizenTransformChilden.Pick, false);
+        //this.transform.GetChild((int)CitizenTransformChilden.Axe).gameObject.SetActive(false)
+        EnableChildrentTool(CitizenTransformChilden.Axe, false);
+        //Attacking,    0
+        //Building,     1
+        //Died,         2
+        //Escaping,     3
+        //Gathering,    4    
+        //Idle,         5
+        //None,         6    
+        //Walking       7
+        //Gold          8
+        //Wood          9
+        //Carrying      10
+
+        int animationState = (int)citizenState;
+        if (citizenState == CitizenStates.Walking && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentAmountResouce > 0){
+            animationState = (int)CitizeAnimationStates.Carrying;
+        }
+
+        if (citizenState == CitizenStates.Gathering && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentResource == Resources.Gold){
+
+           // if (gameFacade.AssetType == AssetTypes.THREED)
+                EnableChildrentTool(CitizenTransformChilden.Pick, true);
+
+            animationState = (int)CitizeAnimationStates.Gold;
+        }
+
+        if (citizenState == CitizenStates.Gathering && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentResource == Resources.Wood){
+
+            //if (gameFacade.AssetType == AssetTypes.THREED)
+                EnableChildrentTool(CitizenTransformChilden.Axe, true);
+
+            animationState = (int)CitizeAnimationStates.Wood;
+        }
+
+        animator.SetInteger("state", animationState);
+    }
     public string GetStatus()
     {
         return citizenState.ToString() + " " + GetHealthReason() + " " + citizenTask.ToString() + " " + pointToMove;

@@ -4,6 +4,28 @@ using System.Linq;
 using System.Text;
 
 
+public enum CitizenTransformChilden
+{
+   One,
+   Two,
+   Pick ,
+   Axe 
+}
+
+public enum CitizeAnimationStates
+{
+    Attacking,  //  0
+    Building,   //  1
+    Died,       //  2
+    Escaping,   //  3
+    Gathering,  //  4    
+    Idle,       //  5
+    None,       //  6    
+    Walking ,    //  7
+    Gold     ,   //  8
+    Wood      ,  //  9
+    Carrying   , //  10
+}
 public enum Resources
 {
     Food,
