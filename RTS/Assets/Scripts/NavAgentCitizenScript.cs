@@ -367,6 +367,9 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         EnableChildrentTool(CitizenTransformChilden.Pick, false);
         //this.transform.GetChild((int)CitizenTransformChilden.Axe).gameObject.SetActive(false)
         EnableChildrentTool(CitizenTransformChilden.Axe, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, false);
+
         //Attacking,    0
         //Building,     1
         //Died,         2
@@ -381,7 +384,18 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
         int animationState = (int)citizenState;
         if (citizenState == CitizenStates.Walking && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentAmountResouce > 0){
-            animationState = (int)CitizeAnimationStates.Carrying;
+            if (CurrentResource == Resources.Gold )
+            {
+                animationState = (int)CitizeAnimationStates.CarryingGold;
+                
+                EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, true);
+            }
+            else if (CurrentResource == Resources.Wood)
+            {
+                animationState = (int)CitizeAnimationStates.CarryingWood;
+                EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, true);
+            }
+            //animationState = (int)CitizeAnimationStates.Carrying;
         }
 
         if (citizenState == CitizenStates.Gathering && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentResource == Resources.Gold){

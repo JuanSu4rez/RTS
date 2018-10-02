@@ -6,9 +6,12 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: unnamed
+    2100002: Rock
+    2100004: Gold
     2300000: //RootNode
     3300000: //RootNode
     4300000: Sphere
+    4300002: Gold
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
@@ -62,7 +65,7 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
+    previousCalculatedGlobalScale: 1.3
     hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
@@ -88,7 +91,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

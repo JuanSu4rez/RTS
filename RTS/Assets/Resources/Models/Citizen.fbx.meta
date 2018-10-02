@@ -12,50 +12,53 @@ ModelImporter:
     100012: Bone_002
     100014: Bone_004
     100016: BoneAxe
-    100018: BoneKnife
+    100018: BoneGold
     100020: BonePick
-    100022: chest
-    100024: //RootNode
-    100026: CitizenMesh
-    100028: control_hips
-    100030: ctl_foot_rool_L
-    100032: ctl_foot_rool_R
-    100034: Foot_control_L
-    100036: Foot_control_R
-    100038: Foot_L
-    100040: Foot_R
-    100042: forem_arm_L
-    100044: forem_arm_L_002
-    100046: forem_arm_R
-    100048: forem_arm_R_002
-    100050: Hand_L
-    100052: Hand_L_002
-    100054: Hand_R
-    100056: Hand_R_002
-    100058: head
-    100060: hips
-    100062: IK_hand_L
-    100064: IK_hand_R
-    100066: IK_Leg_L
-    100068: IK_Leg_R
-    100070: IK_ovo_L
-    100072: IK_ovo_R
-    100074: Knee_ik_L
-    100076: Knee_ik_R
-    100078: Leg_2_L
-    100080: Leg_2_R
-    100082: Leg_L
-    100084: Leg_R
-    100086: neck
-    100088: Pick
-    100090: Root
-    100092: shoulder_L
-    100094: shoulder_R
-    100096: spine
-    100098: toe_L
-    100100: toe_R
-    100102: toe_roll_L
-    100104: toe_roll_R
+    100022: BoneWood
+    100024: chest
+    100026: //RootNode
+    100028: CitizenMesh
+    100030: control_hips
+    100032: ctl_foot_rool_L
+    100034: ctl_foot_rool_R
+    100036: Foot_control_L
+    100038: Foot_control_R
+    100040: Foot_L
+    100042: Foot_R
+    100044: forem_arm_L
+    100046: forem_arm_L_002
+    100048: forem_arm_R
+    100050: forem_arm_R_002
+    100052: Gathered_Gold
+    100054: Gathered_Wood
+    100056: Hand_L
+    100058: Hand_L_002
+    100060: Hand_R
+    100062: Hand_R_002
+    100064: head
+    100066: hips
+    100068: IK_hand_L
+    100070: IK_hand_R
+    100072: IK_Leg_L
+    100074: IK_Leg_R
+    100076: IK_ovo_L
+    100078: IK_ovo_R
+    100080: Knee_ik_L
+    100082: Knee_ik_R
+    100084: Leg_2_L
+    100086: Leg_2_R
+    100088: Leg_L
+    100090: Leg_R
+    100092: neck
+    100094: Pick
+    100096: Root
+    100098: shoulder_L
+    100100: shoulder_R
+    100102: spine
+    100104: toe_L
+    100106: toe_R
+    100108: toe_roll_L
+    100110: toe_roll_R
     400000: arm_L
     400002: arm_R
     400004: Armature
@@ -65,70 +68,77 @@ ModelImporter:
     400012: Bone_002
     400014: Bone_004
     400016: BoneAxe
-    400018: BoneKnife
+    400018: BoneGold
     400020: BonePick
-    400022: chest
-    400024: //RootNode
-    400026: CitizenMesh
-    400028: control_hips
-    400030: ctl_foot_rool_L
-    400032: ctl_foot_rool_R
-    400034: Foot_control_L
-    400036: Foot_control_R
-    400038: Foot_L
-    400040: Foot_R
-    400042: forem_arm_L
-    400044: forem_arm_L_002
-    400046: forem_arm_R
-    400048: forem_arm_R_002
-    400050: Hand_L
-    400052: Hand_L_002
-    400054: Hand_R
-    400056: Hand_R_002
-    400058: head
-    400060: hips
-    400062: IK_hand_L
-    400064: IK_hand_R
-    400066: IK_Leg_L
-    400068: IK_Leg_R
-    400070: IK_ovo_L
-    400072: IK_ovo_R
-    400074: Knee_ik_L
-    400076: Knee_ik_R
-    400078: Leg_2_L
-    400080: Leg_2_R
-    400082: Leg_L
-    400084: Leg_R
-    400086: neck
-    400088: Pick
-    400090: Root
-    400092: shoulder_L
-    400094: shoulder_R
-    400096: spine
-    400098: toe_L
-    400100: toe_R
-    400102: toe_roll_L
-    400104: toe_roll_R
+    400022: BoneWood
+    400024: chest
+    400026: //RootNode
+    400028: CitizenMesh
+    400030: control_hips
+    400032: ctl_foot_rool_L
+    400034: ctl_foot_rool_R
+    400036: Foot_control_L
+    400038: Foot_control_R
+    400040: Foot_L
+    400042: Foot_R
+    400044: forem_arm_L
+    400046: forem_arm_L_002
+    400048: forem_arm_R
+    400050: forem_arm_R_002
+    400052: Gathered_Gold
+    400054: Gathered_Wood
+    400056: Hand_L
+    400058: Hand_L_002
+    400060: Hand_R
+    400062: Hand_R_002
+    400064: head
+    400066: hips
+    400068: IK_hand_L
+    400070: IK_hand_R
+    400072: IK_Leg_L
+    400074: IK_Leg_R
+    400076: IK_ovo_L
+    400078: IK_ovo_R
+    400080: Knee_ik_L
+    400082: Knee_ik_R
+    400084: Leg_2_L
+    400086: Leg_2_R
+    400088: Leg_L
+    400090: Leg_R
+    400092: neck
+    400094: Pick
+    400096: Root
+    400098: shoulder_L
+    400100: shoulder_R
+    400102: spine
+    400104: toe_L
+    400106: toe_R
+    400108: toe_roll_L
+    400110: toe_roll_R
     2100000: unnamed
     2100002: CitizenMaterial__Material_Diffuse_Color
-    4300000: Axe
-    4300002: CitizenMesh
-    4300004: Pick
+    4300000: Gathered_Wood
+    4300002: Axe
+    4300004: CitizenMesh
+    4300006: Pick
+    4300008: Gathered_Gold
     7400000: Default Take
-    7400002: Carrying
-    7400004: Death1
-    7400006: Death2
-    7400008: Gold
-    7400010: Idle
-    7400012: T_pose
-    7400014: Attack
-    7400016: Walk
-    7400018: Wood
+    7400002: CarryingGold
+    7400004: CarryingWood
+    7400006: Death1
+    7400008: Death2
+    7400010: Gold
+    7400012: Idle
+    7400014: T_pose
+    7400016: Attack
+    7400018: Walk
+    7400020: Wood
     9500000: //RootNode
     13700000: Axe
     13700002: CitizenMesh
-    13700004: Pick
-    2186277476908879412: ImportLogs
+    13700004: Gathered_Gold
+    13700006: Gathered_Wood
+    13700008: Pick
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -138,7 +148,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleCurves: 1
+    resampleCurves: 0
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
@@ -149,10 +159,10 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
-    animationRotationError: 0.5
-    animationPositionError: 0.5
-    animationScaleError: 0.5
+    animationCompression: 1
+    animationRotationError: 0
+    animationPositionError: 0
+    animationScaleError: 0
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
@@ -161,7 +171,7 @@ ModelImporter:
       name: Default Take
       takeName: Default Take
       firstFrame: -1
-      lastFrame: 19
+      lastFrame: 28
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -186,9 +196,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Carrying
-      takeName: Carrying
-      firstFrame: -1
+      name: CarryingGold
+      takeName: CarryingGold
+      firstFrame: 0
       lastFrame: 29
       wrapMode: 0
       orientationOffsetY: 0
@@ -197,7 +207,35 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: CarryingWood
+      takeName: CarryingWood
+      firstFrame: 0
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -216,7 +254,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Death1
       takeName: Death1
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 32
       wrapMode: 0
       orientationOffsetY: 0
@@ -244,7 +282,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Death2
       takeName: Death2
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 54
       wrapMode: 0
       orientationOffsetY: 0
@@ -272,7 +310,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Gold
       takeName: Gold
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 29
       wrapMode: 0
       orientationOffsetY: 0
@@ -300,7 +338,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Idle
       takeName: Idle
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 329
       wrapMode: 0
       orientationOffsetY: 0
@@ -309,7 +347,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -356,7 +394,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Attack
       takeName: Attack
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 24
       wrapMode: 0
       orientationOffsetY: 0
@@ -365,7 +403,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -384,7 +422,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk
       takeName: Walk
-      firstFrame: -1
+      firstFrame: 0
       lastFrame: 26
       wrapMode: 0
       orientationOffsetY: 0
@@ -393,7 +431,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 1
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -412,8 +450,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Wood
       takeName: Wood
-      firstFrame: -1
-      lastFrame: 25
+      firstFrame: 0
+      lastFrame: 24
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -445,8 +483,8 @@ ModelImporter:
     addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -465,7 +503,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 0
+    tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
@@ -480,10 +518,10 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: Armature
-    rootMotionBoneRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2

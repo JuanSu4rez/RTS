@@ -9,7 +9,9 @@ public enum CitizenTransformChilden
    One,
    Two,
    Axe ,
-   Pick 
+   Pick,
+   Gathered_Gold,
+   Gathered_Wood
 }
 
 public enum CitizeAnimationStates
@@ -24,7 +26,8 @@ public enum CitizeAnimationStates
     Walking ,    //  7
     Gold     ,   //  8
     Wood      ,  //  9
-    Carrying   , //  10
+    CarryingGold   , //  10
+    CarryingWood        //11
 }
 public enum Resources
 {
