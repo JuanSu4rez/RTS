@@ -78,7 +78,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
         gameFacade = GameScript.GetFacade(team);
         if (gameFacade != null)
-          gameFacade.AddUnity(this.gameObject,Units.Archer);
+          gameFacade.AddUnit(this.gameObject,Units.Archer);
 
     }
 
@@ -178,7 +178,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.log("Colision " + pointResource);
+        ////Debug.log("Colision " + pointResource);
         var name = collision.gameObject.name;
         var tag = collision.gameObject.tag;
         switch (soldierState)
@@ -204,7 +204,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     void OnCollisionStay(Collision collision)
     {
-        //Debug.log("Collisionstay  " + pointResource);
+        ////Debug.log("Collisionstay  " + pointResource);
         switch (soldierState)
         {
             case SoldierStates.Attacking:
@@ -219,7 +219,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             case SoldierStates.Walking:
                 //if (collision.gameObject.name.Equals("UrbanCenter"))
                 //{
-                //    //Debug.log("Collisionstay  UrbanCenter");
+                //    ////Debug.log("Collisionstay  UrbanCenter");
                 //    if (citizenLabor != CitizenStates.None)
                 //    {
                 //        //TODO  ahumentar recursos al jugador
@@ -248,7 +248,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
     // Update is called once per frame
     void Update()
     {
-        //Debug.log(pointToMove);
+        ////Debug.log(pointToMove);
         switch (soldierState)
         {
             case SoldierStates.Attacking:

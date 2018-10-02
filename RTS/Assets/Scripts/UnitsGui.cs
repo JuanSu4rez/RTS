@@ -18,7 +18,7 @@ public class UnitsGui : ScriptableObject, IGui
     // Update is called once per frame
     public void UpdateGui(GameObject selectedGameObject)
     {
-        //Debug.Log(" UnitsGui Update " + HasOptionSelected());
+        ////Debug.Log(" UnitsGui Update " + HasOptionSelected());
         if (HasOptionSelected())
         {
 

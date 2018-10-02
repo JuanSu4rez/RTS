@@ -13,8 +13,8 @@ public class CameraController : MonoBehaviour {
         cameraPosition = gameObject.transform.position;
         Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Debug.Log("Total de la pantalla " + Screen.width);
-        Debug.Log("Tercio de la pantalla " + Screen.width / 3);
+        //Debug.Log("Total de la pantalla " + Screen.width);
+        //Debug.Log("Tercio de la pantalla " + Screen.width / 3);
     }
 	
 	// Update is called once per frame
@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour {
         //Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 mousePosition = Input.mousePosition;
 
-        Debug.Log("mousePosition.x " + mousePosition.x);
+        //Debug.Log("mousePosition.x " + mousePosition.x);
 
         if (mousePosition.x < Screen.width/8){            
             gameObject.transform.position =  new Vector3(--cameraPosition.x, cameraPosition.y, ++cameraPosition.z);

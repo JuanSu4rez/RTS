@@ -8,8 +8,8 @@ public enum CitizenTransformChilden
 {
    One,
    Two,
-   Pick ,
-   Axe 
+   Axe ,
+   Pick 
 }
 
 public enum CitizeAnimationStates

@@ -168,7 +168,7 @@ public class CameraScript : MonoBehaviour
             {
                 if (currentSelecteds.Count > 0)
                 {
-                    Debug.Log("Camera state " + camerastate);
+                    //Debug.Log("Camera state " + camerastate);
                     for (int i = 0; i < currentSelecteds.Count; i++)
                     {
                         ((GameObject)currentSelecteds[i]).gameObject.GetComponent<ISelectable>().IsSelected = true;

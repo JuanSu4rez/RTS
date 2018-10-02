@@ -42,7 +42,7 @@ public class BuildingGui : ScriptableObject, IGui
                             gameFacade.DiscountResources(Units.SwordMan);
                         }
                         else{
-                            Debug.Log("No hay recursos suficientes");
+                            //Debug.Log("No hay recursos suficientes");
                         }
                     }                    
                 }
@@ -58,7 +58,7 @@ public class BuildingGui : ScriptableObject, IGui
                         }
                         else
                         {
-                            Debug.Log("No hay recursos suficientes");
+                            //Debug.Log("No hay recursos suficientes");
                         }
                     }
                 }
@@ -74,7 +74,7 @@ public class BuildingGui : ScriptableObject, IGui
                             gameFacade.DiscountResources(Units.Citizen);                            
                         }
                         else{
-                            Debug.Log("No hay recursos suficientes");
+                            //Debug.Log("No hay recursos suficientes");
                         }
                     }
                 }

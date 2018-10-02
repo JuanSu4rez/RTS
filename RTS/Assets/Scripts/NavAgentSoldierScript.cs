@@ -74,7 +74,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
         changeColor();
 
-        gameFacade.AddUnity(this.gameObject, Units.Citizen);
+        gameFacade.AddUnit(this.gameObject, Units.Citizen);
         vectorup.x = 0;
         vectorup.z = 0;
     }
@@ -133,7 +133,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.log("Colision " + pointResource);
+        ////Debug.log("Colision " + pointResource);
         var name = collision.gameObject.name;
         var tag = collision.gameObject.tag;
         switch (soldierState)
@@ -158,7 +158,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     void OnCollisionStay(Collision collision)
     {
-        //Debug.log("Collisionstay  " + pointResource);
+        ////Debug.log("Collisionstay  " + pointResource);
         switch (soldierState)
         {
             case SoldierStates.Attacking:
@@ -173,7 +173,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
             case SoldierStates.Walking:
                 //if (collision.gameObject.name.Equals("UrbanCenter"))
                 //{
-                //    //Debug.log("Collisionstay  UrbanCenter");
+                //    ////Debug.log("Collisionstay  UrbanCenter");
                 //    if (citizenLabor != CitizenStates.None)
                 //    {
                 //        //TODO  ahumentar recursos al jugador
@@ -202,7 +202,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     // Update is called once per frame
     void Update()
     {
-        //Debug.log(pointToMove);
+        ////Debug.log(pointToMove);
         switch (soldierState)
         {
             case SoldierStates.Attacking:

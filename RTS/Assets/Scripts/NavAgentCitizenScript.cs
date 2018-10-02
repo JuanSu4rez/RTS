@@ -67,7 +67,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     // Use this for initialization
     void Start()
     {
-        //Debug.log("citizenCollider " + citizenCollider != null);
+        ////Debug.log("citizenCollider " + citizenCollider != null);
         citizenCollider = this.gameObject.GetComponent<Collider>();
         citizenState = CitizenStates.Idle;
         CurrentResource = Resources.None;
@@ -90,7 +90,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
         changeColor();
         gameFacade = GameScript.GetFacade(team);
-        gameFacade.AddUnity(this.gameObject, Units.Citizen);
+        gameFacade.AddUnit(this.gameObject, Units.Citizen);
 		
 	    InitChildrentTool(CitizenTransformChilden.Pick);
         InitChildrentTool(CitizenTransformChilden.Axe);
@@ -145,7 +145,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             case CitizenStates.None:
                 break;
             case CitizenStates.Walking:
-                //Debug.log("Collision enter");
+                ////Debug.log("Collision enter");
 
                 if (CitizenTask.IsValidCitizenTask(citizenTask) && citizenTask.IsTaskOnPorgress())
                 {
@@ -168,7 +168,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                         //EVERYTING CAN BE DEPOSIT ON URBANCENTER
                         if (name.Equals("UrbanCenter") && gameFacade.IsMemberOfMyTeam(collision.gameObject.GetComponent<ITeamable>()))
                         {
-                            //Debug.log("Collision enter UrbanCenter")
+                            ////Debug.log("Collision enter UrbanCenter")
                             if (CurrentAmountResouce > 0)
                             {
                                 gameFacade.AddResources(CurrentResource, CurrentAmountResouce);
@@ -223,13 +223,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("Collisionstay  ");
+        //Debug.Log("Collisionstay  ");
         switch (citizenState)
         {
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
-                Debug.Log("Collisionstay  Building ");
+                //Debug.Log("Collisionstay  Building ");
 
 
                 break;
@@ -249,7 +249,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 if (collision.gameObject.name.Equals("UrbanCenter"))
                 {
 
-                    Debug.Log("Collisionstay  UrbanCenter ");
+                    //Debug.Log("Collisionstay  UrbanCenter ");
 
 
                 }
@@ -270,7 +270,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     // Update is called once per frame
     void Update()
     {
-        //Debug.log(pointToMove);
+        ////Debug.log(pointToMove);
         switch (citizenState)
         {
             case CitizenStates.Attacking:
@@ -359,7 +359,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     }
 
     public virtual void setAnimation() {
-        if (animator == null || this.transform.childCount <= (int)CitizenTransformChilden.Pick)
+        if (animator == null || this.transform.childCount <= (int)CitizenTransformChilden.Axe)
             return;
 
         
@@ -461,7 +461,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
         if (CitizenTask.IsValidCitizenTask(citizenTask))
         {
-            //Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
+            ////Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
             if (citizenTask.IsTaskOnPorgress())
                 citizenTask.AddCurrentBuiltAmount(this.BuildingSpeed);
             else if (citizenTask.BuildingBehaviour.CheckState(BuildingStates.Built))
