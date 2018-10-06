@@ -49,6 +49,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
     private float lastShoot;
 
     public NavMeshAgent navMeshAgent;
+    public Animator animator;
 
     void Awake()
     {
@@ -62,6 +63,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
         AttackPower = 100F;
         DefensePower = 0.1F;
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
+        animator = this.gameObject.GetComponent<Animator>();
         Health = 9999;
         CurrentHealth = Health;
         gameFacade = GameScript.GetFacade(team);
@@ -327,12 +329,51 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             default:
                 break;
         }
+        setAnimation();
     }
 
-   //public Vector3 getTargetDistance()
-   //{
-   //    return transform.position - militaryTask.Gameobject.transform.position;
-   //}
+    public virtual void setAnimation()
+    {
+        if (animator == null)
+            return;
+        /*
+                Attacking,  //  0        
+                Idle,       //  1
+                None,       //  2    
+                Walking,    //  3
+                Dying1,     //  4
+                Dying2      //  5
+         */
+        int animationState = (int)soldierState;
+
+        if (soldierState == SoldierStates.Died)
+        {
+            System.Random random = new System.Random();
+            animationState = (int)SoldierAnimationStates.Dying1 + random.Next(1, 2);
+        }
+
+        if (soldierState == SoldierStates.Idle)
+        {
+            animationState = (int)SoldierAnimationStates.Idle;
+        }
+
+        if (soldierState == SoldierStates.Walking)
+        {
+            animationState = (int)SoldierAnimationStates.Walking;
+        }
+
+        if (soldierState == SoldierStates.Attacking)
+        {
+            animationState = (int)SoldierAnimationStates.Attacking;
+        }
+
+        animator.SetInteger("state", animationState);
+    }
+
+    //public Vector3 getTargetDistance()
+    //{
+    //    return transform.position - militaryTask.Gameobject.transform.position;
+    //}
 
     public string GetStatus()
     {

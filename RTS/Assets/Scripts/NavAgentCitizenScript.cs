@@ -451,8 +451,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             this.citizenState = _citizenStates;
         }
 
-        //if (this.citizenState == CitizenStates.Idle)
-            //navMeshAgent.enabled = false;
+        if (this.citizenState == CitizenStates.Idle)
+            navMeshAgent.ResetPath();
 
 
     }
