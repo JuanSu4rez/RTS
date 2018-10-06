@@ -48,6 +48,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     private float lastShoot;
 
     public NavMeshAgent navMeshAgent;
+    private Animator animator;
     [SerializeField]
     private Vector3 vectorup = Vector3.up;
 
@@ -62,6 +63,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         AttackPower = 100F;
         DefensePower = 0.1F;
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
+        animator = this.gameObject.GetComponent<Animator>();
         Health = 9999;
         CurrentHealth = Health;
         gameFacade = GameScript.GetFacade(this.team);
@@ -72,7 +74,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         coolDown = 2f;
         lastShoot = 0f;
 
-        changeColor();
+        //changeColor();
 
         gameFacade.AddUnit(this.gameObject, Units.Citizen);
         vectorup.x = 0;
@@ -225,7 +227,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                              if (distance  && targetDistance.sqrMagnitude < AttackRange)
                             {
                                 SetState( SoldierStates.Attacking);
-                                navMeshAgent.enabled = false;
+                                //navMeshAgent.enabled = false;
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
                                 if (Time.time > lastShoot + coolDown)
@@ -268,7 +270,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                     if (_distance && targetDistance.sqrMagnitude <= AttackRange)
                     {
                         SetState(SoldierStates.Attacking);
-                        navMeshAgent.enabled = false;
+                        //navMeshAgent.enabled = false;
                     }
                     else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
                     {
@@ -276,17 +278,50 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                     }
                 }
 
-                if (
-                  (this.transform.position - navMeshAgent.destination) == vectorup
-                    )
+                if ((this.transform.position - navMeshAgent.destination) == vectorup)
                     SetState(SoldierStates.Idle);
                 break;
             default:
                 break;
         }
+        setAnimation();
     }
 
-  
+    public virtual void setAnimation()
+    {
+        if (animator == null)
+            return;
+        /*
+                Attacking,  //  0        
+                Idle,       //  1
+                None,       //  2    
+                Walking,    //  3
+                Dying1,     //  4
+                Dying2      //  5
+         */
+        int animationState = (int)soldierState;       
+
+        if (soldierState == SoldierStates.Died)
+        {
+            System.Random random = new System.Random();
+            animationState = (int)SoldierAnimationStates.Dying1 + random.Next(1, 2);
+        }
+
+        if (soldierState == SoldierStates.Idle){
+            animationState = (int)SoldierAnimationStates.Idle;
+        }
+
+        if (soldierState == SoldierStates.Walking){
+            animationState = (int)SoldierAnimationStates.Walking;
+        }
+
+        if (soldierState == SoldierStates.Attacking){
+            animationState = (int)SoldierAnimationStates.Attacking;
+        }
+
+        animator.SetInteger("state", animationState);
+    }
+
 
     public string GetStatus()
     {
@@ -311,7 +346,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
-        navMeshAgent.enabled = true;
+        //navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(newPointToMove);
     }
 

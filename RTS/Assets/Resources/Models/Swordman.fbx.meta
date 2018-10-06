@@ -1,0 +1,696 @@
+fileFormatVersion: 2
+guid: cb07dbc4e25cfe64795ea660b8ca3357
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: arm.L
+    100002: arm.L 1
+    100004: arm.R
+    100006: arm.R 1
+    100008: Armature
+    100010: ArmatureSwordman
+    100012: Axe
+    100014: Bone
+    100016: Bone 1
+    100018: Bone.001
+    100020: Bone.001 1
+    100022: Bone.002
+    100024: Bone.002 1
+    100026: Bone.004
+    100028: Bone.004 1
+    100030: BoneAxe
+    100032: BoneAxe_end
+    100034: BoneGold
+    100036: BoneGold_end
+    100038: BoneHammer
+    100040: BoneHammer_end
+    100042: BoneMeat
+    100044: BoneMeat_end
+    100046: BonePick
+    100048: BonePick_end
+    100050: BoneShield
+    100052: BoneShield_end
+    100054: BoneSword
+    100056: BoneSword_end
+    100058: BoneWood
+    100060: BoneWood_end
+    100062: chest
+    100064: chest 1
+    100066: CitizenMesh
+    100068: control_hips
+    100070: control_hips 1
+    100072: ctl_foot_rool.L
+    100074: ctl_foot_rool.L 1
+    100076: ctl_foot_rool.L_end
+    100078: ctl_foot_rool.L_end 1
+    100080: ctl_foot_rool.R
+    100082: ctl_foot_rool.R 1
+    100084: ctl_foot_rool.R_end
+    100086: ctl_foot_rool.R_end 1
+    100088: Foot.L
+    100090: Foot.L 1
+    100092: Foot.L_end
+    100094: Foot.L_end 1
+    100096: Foot.R
+    100098: Foot.R 1
+    100100: Foot.R_end
+    100102: Foot.R_end 1
+    100104: Foot_control.L
+    100106: Foot_control.L 1
+    100108: Foot_control.R
+    100110: Foot_control.R 1
+    100112: forem_arm.L
+    100114: forem_arm.L 1
+    100116: forem_arm.L.002
+    100118: forem_arm.L.002 1
+    100120: forem_arm.L.002_end
+    100122: forem_arm.L.002_end 1
+    100124: forem_arm.R
+    100126: forem_arm.R 1
+    100128: forem_arm.R.002
+    100130: forem_arm.R.002 1
+    100132: forem_arm.R.002_end
+    100134: forem_arm.R.002_end 1
+    100136: Gathered_Gold
+    100138: Gathered_Meat
+    100140: Gathered_Wood
+    100142: Hammer
+    100144: Hand.L
+    100146: Hand.L 1
+    100148: Hand.L.002
+    100150: Hand.L.002 1
+    100152: Hand.L.002_end
+    100154: Hand.L.002_end 1
+    100156: Hand.R
+    100158: Hand.R 1
+    100160: Hand.R.002
+    100162: Hand.R.002 1
+    100164: Hand.R.002_end
+    100166: Hand.R.002_end 1
+    100168: head
+    100170: head 1
+    100172: head_end
+    100174: head_end 1
+    100176: hips
+    100178: hips 1
+    100180: IK_hand.L
+    100182: IK_hand.L 1
+    100184: IK_hand.R
+    100186: IK_hand.R 1
+    100188: IK_Leg.L
+    100190: IK_Leg.L 1
+    100192: IK_Leg.R
+    100194: IK_Leg.R 1
+    100196: IK_ovo.L
+    100198: IK_ovo.L 1
+    100200: IK_ovo.L_end
+    100202: IK_ovo.L_end 1
+    100204: IK_ovo.R
+    100206: IK_ovo.R 1
+    100208: IK_ovo.R_end
+    100210: IK_ovo.R_end 1
+    100212: Knee_ik.L
+    100214: Knee_ik.L 1
+    100216: Knee_ik.L_end
+    100218: Knee_ik.L_end 1
+    100220: Knee_ik.R
+    100222: Knee_ik.R 1
+    100224: Knee_ik.R_end
+    100226: Knee_ik.R_end 1
+    100228: Leg.L
+    100230: Leg.L 1
+    100232: Leg.R
+    100234: Leg.R 1
+    100236: Leg_2.L
+    100238: Leg_2.L 1
+    100240: Leg_2.L_end
+    100242: Leg_2.L_end 1
+    100244: Leg_2.R
+    100246: Leg_2.R 1
+    100248: Leg_2.R_end
+    100250: Leg_2.R_end 1
+    100252: neck
+    100254: neck 1
+    100256: Pick
+    100258: Root
+    100260: Root 1
+    100262: Shield
+    100264: shoulder.L
+    100266: shoulder.L 1
+    100268: shoulder.R
+    100270: shoulder.R 1
+    100272: spine
+    100274: spine 1
+    100276: Sword
+    100278: //RootNode
+    100280: SwordmanMesh
+    100282: toe.L
+    100284: toe.L 1
+    100286: toe.L_end
+    100288: toe.L_end 1
+    100290: toe.R
+    100292: toe.R 1
+    100294: toe.R_end
+    100296: toe.R_end 1
+    100298: toe_roll.L
+    100300: toe_roll.L 1
+    100302: toe_roll.R
+    100304: toe_roll.R 1
+    100306: arm_L
+    100308: arm_R
+    100310: Bone_001
+    100312: Bone_002
+    100314: Bone_004
+    100316: ctl_foot_rool_L
+    100318: ctl_foot_rool_R
+    100320: Foot_control_L
+    100322: Foot_control_R
+    100324: Foot_L
+    100326: Foot_R
+    100328: forem_arm_L
+    100330: forem_arm_L_002
+    100332: forem_arm_R
+    100334: forem_arm_R_002
+    100336: Hand_L
+    100338: Hand_L_002
+    100340: Hand_R
+    100342: Hand_R_002
+    100344: IK_hand_L
+    100346: IK_hand_R
+    100348: IK_Leg_L
+    100350: IK_Leg_R
+    100352: IK_ovo_L
+    100354: IK_ovo_R
+    100356: Knee_ik_L
+    100358: Knee_ik_R
+    100360: Leg_2_L
+    100362: Leg_2_R
+    100364: Leg_L
+    100366: Leg_R
+    100368: shoulder_L
+    100370: shoulder_R
+    100372: toe_L
+    100374: toe_R
+    100376: toe_roll_L
+    100378: toe_roll_R
+    400000: arm.L
+    400002: arm.L 1
+    400004: arm.R
+    400006: arm.R 1
+    400008: Armature
+    400010: ArmatureSwordman
+    400012: Axe
+    400014: Bone
+    400016: Bone 1
+    400018: Bone.001
+    400020: Bone.001 1
+    400022: Bone.002
+    400024: Bone.002 1
+    400026: Bone.004
+    400028: Bone.004 1
+    400030: BoneAxe
+    400032: BoneAxe_end
+    400034: BoneGold
+    400036: BoneGold_end
+    400038: BoneHammer
+    400040: BoneHammer_end
+    400042: BoneMeat
+    400044: BoneMeat_end
+    400046: BonePick
+    400048: BonePick_end
+    400050: BoneShield
+    400052: BoneShield_end
+    400054: BoneSword
+    400056: BoneSword_end
+    400058: BoneWood
+    400060: BoneWood_end
+    400062: chest
+    400064: chest 1
+    400066: CitizenMesh
+    400068: control_hips
+    400070: control_hips 1
+    400072: ctl_foot_rool.L
+    400074: ctl_foot_rool.L 1
+    400076: ctl_foot_rool.L_end
+    400078: ctl_foot_rool.L_end 1
+    400080: ctl_foot_rool.R
+    400082: ctl_foot_rool.R 1
+    400084: ctl_foot_rool.R_end
+    400086: ctl_foot_rool.R_end 1
+    400088: Foot.L
+    400090: Foot.L 1
+    400092: Foot.L_end
+    400094: Foot.L_end 1
+    400096: Foot.R
+    400098: Foot.R 1
+    400100: Foot.R_end
+    400102: Foot.R_end 1
+    400104: Foot_control.L
+    400106: Foot_control.L 1
+    400108: Foot_control.R
+    400110: Foot_control.R 1
+    400112: forem_arm.L
+    400114: forem_arm.L 1
+    400116: forem_arm.L.002
+    400118: forem_arm.L.002 1
+    400120: forem_arm.L.002_end
+    400122: forem_arm.L.002_end 1
+    400124: forem_arm.R
+    400126: forem_arm.R 1
+    400128: forem_arm.R.002
+    400130: forem_arm.R.002 1
+    400132: forem_arm.R.002_end
+    400134: forem_arm.R.002_end 1
+    400136: Gathered_Gold
+    400138: Gathered_Meat
+    400140: Gathered_Wood
+    400142: Hammer
+    400144: Hand.L
+    400146: Hand.L 1
+    400148: Hand.L.002
+    400150: Hand.L.002 1
+    400152: Hand.L.002_end
+    400154: Hand.L.002_end 1
+    400156: Hand.R
+    400158: Hand.R 1
+    400160: Hand.R.002
+    400162: Hand.R.002 1
+    400164: Hand.R.002_end
+    400166: Hand.R.002_end 1
+    400168: head
+    400170: head 1
+    400172: head_end
+    400174: head_end 1
+    400176: hips
+    400178: hips 1
+    400180: IK_hand.L
+    400182: IK_hand.L 1
+    400184: IK_hand.R
+    400186: IK_hand.R 1
+    400188: IK_Leg.L
+    400190: IK_Leg.L 1
+    400192: IK_Leg.R
+    400194: IK_Leg.R 1
+    400196: IK_ovo.L
+    400198: IK_ovo.L 1
+    400200: IK_ovo.L_end
+    400202: IK_ovo.L_end 1
+    400204: IK_ovo.R
+    400206: IK_ovo.R 1
+    400208: IK_ovo.R_end
+    400210: IK_ovo.R_end 1
+    400212: Knee_ik.L
+    400214: Knee_ik.L 1
+    400216: Knee_ik.L_end
+    400218: Knee_ik.L_end 1
+    400220: Knee_ik.R
+    400222: Knee_ik.R 1
+    400224: Knee_ik.R_end
+    400226: Knee_ik.R_end 1
+    400228: Leg.L
+    400230: Leg.L 1
+    400232: Leg.R
+    400234: Leg.R 1
+    400236: Leg_2.L
+    400238: Leg_2.L 1
+    400240: Leg_2.L_end
+    400242: Leg_2.L_end 1
+    400244: Leg_2.R
+    400246: Leg_2.R 1
+    400248: Leg_2.R_end
+    400250: Leg_2.R_end 1
+    400252: neck
+    400254: neck 1
+    400256: Pick
+    400258: Root
+    400260: Root 1
+    400262: Shield
+    400264: shoulder.L
+    400266: shoulder.L 1
+    400268: shoulder.R
+    400270: shoulder.R 1
+    400272: spine
+    400274: spine 1
+    400276: Sword
+    400278: //RootNode
+    400280: SwordmanMesh
+    400282: toe.L
+    400284: toe.L 1
+    400286: toe.L_end
+    400288: toe.L_end 1
+    400290: toe.R
+    400292: toe.R 1
+    400294: toe.R_end
+    400296: toe.R_end 1
+    400298: toe_roll.L
+    400300: toe_roll.L 1
+    400302: toe_roll.R
+    400304: toe_roll.R 1
+    400306: arm_L
+    400308: arm_R
+    400310: Bone_001
+    400312: Bone_002
+    400314: Bone_004
+    400316: ctl_foot_rool_L
+    400318: ctl_foot_rool_R
+    400320: Foot_control_L
+    400322: Foot_control_R
+    400324: Foot_L
+    400326: Foot_R
+    400328: forem_arm_L
+    400330: forem_arm_L_002
+    400332: forem_arm_R
+    400334: forem_arm_R_002
+    400336: Hand_L
+    400338: Hand_L_002
+    400340: Hand_R
+    400342: Hand_R_002
+    400344: IK_hand_L
+    400346: IK_hand_R
+    400348: IK_Leg_L
+    400350: IK_Leg_R
+    400352: IK_ovo_L
+    400354: IK_ovo_R
+    400356: Knee_ik_L
+    400358: Knee_ik_R
+    400360: Leg_2_L
+    400362: Leg_2_R
+    400364: Leg_L
+    400366: Leg_R
+    400368: shoulder_L
+    400370: shoulder_R
+    400372: toe_L
+    400374: toe_R
+    400376: toe_roll_L
+    400378: toe_roll_R
+    2100000: No Name
+    2100002: CitizenMaterial
+    2100004: None__Material_Diffuse_Color
+    2100006: CitizenMaterial__Material_Diffuse_Color
+    2300000: Axe
+    2300002: Gathered_Gold
+    2300004: Gathered_Meat
+    2300006: Gathered_Wood
+    2300008: Hammer
+    2300010: Pick
+    2300012: Shield
+    2300014: Sword
+    3300000: Axe
+    3300002: Gathered_Gold
+    3300004: Gathered_Meat
+    3300006: Gathered_Wood
+    3300008: Hammer
+    3300010: Pick
+    3300012: Shield
+    3300014: Sword
+    4300000: Shield
+    4300002: Sword
+    4300004: SwordmanMesh
+    4300006: Hammer
+    4300008: Gathered_Gold
+    4300010: Gathered_Wood
+    4300012: Gathered_Meat
+    4300014: Pick
+    4300016: Axe
+    4300018: CitizenMesh
+    7400000: Carrying
+    7400002: ArmatureSwordman|Gold
+    7400004: ArmatureSwordman|T pose
+    7400006: Armature|Building
+    7400008: Armature|CarryingGold
+    7400010: Armature|CarryingMeat
+    7400012: Armature|CarryingWood
+    7400014: Armature|T pose
+    7400016: Armature|T pose.002
+    7400018: Pick|T pose
+    7400020: Default Take
+    7400022: Building
+    7400024: CarryingGold
+    7400026: CarryingMeat
+    7400028: CarryingWood
+    7400030: Death1
+    7400032: Death2
+    7400034: Gold
+    7400036: Idle
+    7400038: T_pose
+    7400040: Attack
+    7400042: T_pose_001
+    7400044: T_pose_002
+    7400046: Walk
+    7400048: Wood
+    9500000: //RootNode
+    13700000: CitizenMesh
+    13700002: SwordmanMesh
+    13700004: Shield
+    13700006: Sword
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Death1
+      takeName: Death1
+      firstFrame: 0
+      lastFrame: 32
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death2
+      takeName: Death2
+      firstFrame: 0
+      lastFrame: 54
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      firstFrame: 0
+      lastFrame: 164
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: T_pose
+      takeName: T_pose
+      firstFrame: -1
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack
+      takeName: Attack
+      firstFrame: 0
+      lastFrame: 19
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Walk
+      takeName: Walk
+      firstFrame: 0
+      lastFrame: 26
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 130
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1.3
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -10,7 +10,9 @@ public enum CitizenTransformChilden
    Two,
    Axe ,
    Pick,
+   Hammer,
    Gathered_Gold,
+   Gathered_Meat,
    Gathered_Wood
 }
 
@@ -26,9 +28,23 @@ public enum CitizeAnimationStates
     Walking ,    //  7
     Gold     ,   //  8
     Wood      ,  //  9
-    CarryingGold   , //  10
-    CarryingWood        //11
+    CarryingGold, //  10
+    CarryingWood,  //11
+    CarryingMeat,  //12
+    Dying1,         //13
+    Dying2          //14
 }
+
+public enum SoldierAnimationStates
+{
+    Attacking,  //  0        
+    Idle,       //  1
+    None,       //  2    
+    Walking,    //  3
+    Dying1,     //  4
+    Dying2      //  5
+}
+
 public enum Resources
 {
     Food,

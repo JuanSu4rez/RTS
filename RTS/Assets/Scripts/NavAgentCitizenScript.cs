@@ -58,6 +58,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
 
     public NavMeshAgent navMeshAgent;
+    public NavMeshObstacle navMeshObstacle;
     private Animator animator;   
     void Awake()
     {
@@ -80,6 +81,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
+        navMeshObstacle = this.gameObject.GetComponent<NavMeshObstacle>();
 
         Health = 9999;
         CurrentHealth = Health;
@@ -155,7 +157,10 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
                         if (citizenTask.Gameobject == collision.transform.gameObject)
                         {
-                            navMeshAgent.enabled = false;
+                            navMeshAgent.ResetPath();
+                            //navMeshObstacle.enabled = true;
+                            //navMeshObstacle.carving = true;
+
                             citizenState = citizenTask.CitizenLabor;
                             SetDoingState();
                         }
@@ -367,31 +372,34 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         EnableChildrentTool(CitizenTransformChilden.Pick, false);
         //this.transform.GetChild((int)CitizenTransformChilden.Axe).gameObject.SetActive(false)
         EnableChildrentTool(CitizenTransformChilden.Axe, false);
+        EnableChildrentTool(CitizenTransformChilden.Hammer, false);
         EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Meat, false);
         EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, false);
-
-        //Attacking,    0
-        //Building,     1
-        //Died,         2
-        //Escaping,     3
-        //Gathering,    4    
-        //Idle,         5
-        //None,         6    
-        //Walking       7
-        //Gold          8
-        //Wood          9
-        //Carrying      10
-
+        /*
+                Attacking,  //  0
+                Building,   //  1
+                Died,       //  2
+                Escaping,   //  3
+                Gathering,  //  4    
+                Idle,       //  5
+                None,       //  6    
+                Walking ,    //  7
+                Gold     ,   //  8
+                Wood      ,  //  9
+                CarryingGold, //  10
+                CarryingWood,  //11
+                CarryingMeat  //12
+                Dying1,         //13
+                Dying2          //14
+         */
         int animationState = (int)citizenState;
         if (citizenState == CitizenStates.Walking && citizenTask.CitizenLabor == CitizenStates.Gathering && CurrentAmountResouce > 0){
-            if (CurrentResource == Resources.Gold )
-            {
-                animationState = (int)CitizeAnimationStates.CarryingGold;
-                
+            if (CurrentResource == Resources.Gold ){
+                animationState = (int)CitizeAnimationStates.CarryingGold;                
                 EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, true);
             }
-            else if (CurrentResource == Resources.Wood)
-            {
+            else if (CurrentResource == Resources.Wood){
                 animationState = (int)CitizeAnimationStates.CarryingWood;
                 EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, true);
             }
@@ -414,6 +422,15 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             animationState = (int)CitizeAnimationStates.Wood;
         }
 
+        if (citizenState == CitizenStates.Building){
+            EnableChildrentTool(CitizenTransformChilden.Hammer, true);
+        }
+
+        if (citizenState == CitizenStates.Died){
+            System.Random random = new System.Random();           
+            animationState = (int)CitizeAnimationStates.Dying1 + random.Next(1, 2);
+        }
+
         animator.SetInteger("state", animationState);
     }
     public string GetStatus()
@@ -434,15 +451,15 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
             this.citizenState = _citizenStates;
         }
 
-        if (this.citizenState == CitizenStates.Idle)
-            navMeshAgent.enabled = false;
+        //if (this.citizenState == CitizenStates.Idle)
+            //navMeshAgent.enabled = false;
 
 
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
-        navMeshAgent.enabled = true;
+        //navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(newPointToMove);
 
     }
@@ -523,7 +540,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         if (CurrentHealth <= 0)
         {
             citizenState = CitizenStates.Died;
-            Destroy(gameObject, 1);
+            Destroy(gameObject, 3);
         }
 
     }
