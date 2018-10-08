@@ -12,11 +12,6 @@ public class GameResource
     private Dictionary<string, Object> cache = new Dictionary<string, Object>();
 
 
-    public GameResource(IGameFacade facade)
-    {
-
-    }
-
     public GameResource(AssetTypes type)
     {
         path = type.GetPath();

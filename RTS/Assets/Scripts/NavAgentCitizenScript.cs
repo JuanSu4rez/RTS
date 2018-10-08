@@ -157,7 +157,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
                         if (citizenTask.Gameobject == collision.transform.gameObject)
                         {
-                            navMeshAgent.ResetPath();
+                         
                             //navMeshObstacle.enabled = true;
                             //navMeshObstacle.carving = true;
 
@@ -454,7 +454,6 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         if (this.citizenState == CitizenStates.Idle)
             navMeshAgent.ResetPath();
 
-
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
@@ -571,6 +570,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     public void SetDoingState()
     {
         CitizenTaskState = CitizenTaskStates.Doing;
+        navMeshAgent.ResetPath();
     }
 
     public void SetCarryingState()

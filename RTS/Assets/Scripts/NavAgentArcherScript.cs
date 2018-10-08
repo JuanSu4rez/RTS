@@ -86,7 +86,8 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     public virtual void changeColor()
     {
-        Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
+        if (gameObject.GetComponent<MeshRenderer>() != null)
+            Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
     }
 
     public void shootArrow()
@@ -270,7 +271,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
                             if (distance && targetDistance.sqrMagnitude < AttackRange)
                             {
                                 SetState( SoldierStates.Attacking);
-                                navMeshAgent.enabled = false;
+                                //navMeshAgent.enabled = false;
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
                                 if (Time.time > lastShoot + coolDown)
@@ -304,26 +305,28 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
             case SoldierStates._None:
                 break;
             case SoldierStates.Walking:
-                if (militaryTask != null)
+
+                if (militaryTask != null && !militaryTask.IscompletedTask())
                 {
                     Vector3 targetDistance = Vector3.zero;
                     var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
                     if (distance && targetDistance.sqrMagnitude < AttackRange)
                     {
-                        SetState( SoldierStates.Attacking);
-                        navMeshAgent.enabled = false;
+                        SetState(SoldierStates.Attacking);
+                        //navMeshAgent.enabled = false;
                     }
                     else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
                     {
                         SetPointToMove(militaryTask.Gameobject.transform.position);
                     }
                 }
+                else
+                {
 
-                if (
-                     //navMeshAgent.destination == this.transform.position
-                     //||
-                     (this.transform.position - navMeshAgent.destination) == Vector3.up
-                       )
+                }
+               
+
+                if ((this.transform.position - navMeshAgent.destination).sqrMagnitude < this.navMeshAgent.stoppingDistance)
                     SetState(SoldierStates.Idle);
                 break;
             default:
@@ -382,26 +385,23 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable<Sol
 
     public void SetState(SoldierStates _soldierStates)
     {
-      
-        if (_soldierStates == SoldierStates.Idle)
-        {
+        var isidle = _soldierStates == SoldierStates.Idle || _soldierStates == SoldierStates.Attacking;
 
-            if (attackCollider!= null)
-            attackCollider.enabled = true;
-          }
-        else
-        {
-             if(attackCollider!= null)
-            attackCollider.enabled = false;
-        }
+
+        if (attackCollider != null)
+            attackCollider.enabled = isidle;
+
+        if(isidle)
+            navMeshAgent.ResetPath();
+
         soldierState = _soldierStates;
 
-      
+            
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
     {
-        navMeshAgent.enabled = true;
+        //navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(newPointToMove);
     }
 

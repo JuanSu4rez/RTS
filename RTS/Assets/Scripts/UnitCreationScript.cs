@@ -69,13 +69,15 @@ public class UnitCreationScript : MonoBehaviour {
              unitToCreate  =  facade.GameResource.Load<GameObject>(unitType.ToString()) ;
         }
 
-        var team = unitToCreate.GetComponent<ITeamable>();
+
+        GameObject newUnit = Instantiate(unitToCreate);
+
+        var team = newUnit.GetComponent<ITeamable>();
         if (team != null)
         {
             team.Team = myteam.Team;
         }
 
-        GameObject newUnit = Instantiate(unitToCreate);
         newUnit.transform.position = calculateUnitOrigin();
         newUnit.name = unitType.ToString();
     }

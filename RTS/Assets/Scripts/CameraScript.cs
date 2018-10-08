@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 
 public class CameraScript : MonoBehaviour
 {
-
-    public ArrayList objectsInScene;
-
+    private Vector3 _mouseposition;
     //BoxSelection
     private Texture2D selectionTexture = null;
+
     private Texture2D selectionBorder = null;
+
     private static Rect selection = new Rect(0, 0, 0, 0);
 
     private readonly Vector2 empty = new Vector2(-10, -10);
@@ -22,8 +22,9 @@ public class CameraScript : MonoBehaviour
 
     private CameraSelectionTypes cameraSelectionType = CameraSelectionTypes._None;
 
-
     private ArrayList currentSelecteds;
+
+    public ArrayList objectsInScene;
 
     private GameObject currentSelected;
 
@@ -43,15 +44,23 @@ public class CameraScript : MonoBehaviour
 
     private GameObject pointtomove;
 
-    private IGui currentGui;
 
 
+    private NonGUI nonGUI;
     private BuildingGui buildingGui;
     private MilitaryGui militaryGui;
     private UnitsGui unitsGui;
 
+    private IGui currentGui = null;
+
     [SerializeField]
     private GameObject buildingValidator;
+
+    public static GameAreasManager gameareas;
+
+    public  bool DebugAreas = false;
+
+
 
     // Use this for initialization
     void Start()
@@ -69,11 +78,18 @@ public class CameraScript : MonoBehaviour
         firstclick = empty;
         secondclick = empty;
 
+
+        nonGUI = ScriptableObject.CreateInstance<NonGUI>();
+        currentGui = nonGUI;
+
         unitsGui = ScriptableObject.CreateInstance<UnitsGui>();
         unitsGui.SetBuildingValidator(buildingValidator);
 
         buildingGui = ScriptableObject.CreateInstance<BuildingGui>();
         militaryGui = ScriptableObject.CreateInstance<MilitaryGui>();
+
+        gameareas = ScriptableObject.CreateInstance<GameAreasManager>();
+        gameareas.Init();
 
         #region point to move
         pointtomove = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -83,15 +99,18 @@ public class CameraScript : MonoBehaviour
         pointtomove.name = "POINTTOMOVE";
         #endregion
 
-        objectsInScene = new ArrayList();
-        currentSelecteds = new ArrayList();
+        objectsInScene = new ArrayList(20);
+        currentSelecteds = new ArrayList(20);
         GetObjectsinScene();
 
     }
 
+
+
     public void GetObjectsinScene()
     {
 
+        //TODO FILTER BY TEAM
         GameObject[] allSelectableObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
 
         for (int i = 0; i < allSelectableObjects.Length; i++)
@@ -117,39 +136,45 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        gameareas.RecalculateAreas(camerastate);
         //if the player is not putting a building or something
-        if (currentGui == null || !currentGui.HasOptionSelected())
+        if (!currentGui.HasOptionSelected())
             userClick();
 
-        if (currentGui == null)
-            return;
+
         switch (camerastate)
         {
             case CameraStates.None:
                 break;
             case CameraStates.UnitsSelection:
+
                 if (!currentGui.HasOptionSelected())
                     ClickActionsUnits();
                 else
                     currentGui.UpdateGui(currentSelected);
+
                 break;
             case CameraStates.BuildingsSelection:
+
                 break;
         }
     }
 
     private void userClick()
     {
+        Vector3 _onscreenmouseposition = Input.mousePosition;
+        _onscreenmouseposition.y = Screen.height - Input.mousePosition.y;
+
+        _mouseposition = Input.mousePosition;
+
         if (camerastate != CameraStates.None)
         {
-            //check wether the clikc is inside of the button area
-            Vector3 _mouseposition = Input.mousePosition;
-            _mouseposition.y = Screen.height - Input.mousePosition.y;
-            //TODO CREATE CONSTANTS
-
-            if (_mouseposition.y >= Screen.height - (Screen.height - Screen.width / 3.0f))
+            if (_onscreenmouseposition.y >= gameareas.GameArea.height)
             {
-                return;
+                if (firstclick == empty)
+                    return;
+                else
+                    _mouseposition.y = gameareas.GuiArea.height;
             }
         }
 
@@ -157,10 +182,10 @@ public class CameraScript : MonoBehaviour
             //todo temporal solution
             !unitsGui.HasOptionSelected() && firstclick == empty)
         {
-
+            secondclick = empty;
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+            return;
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -169,12 +194,52 @@ public class CameraScript : MonoBehaviour
                 if (currentSelecteds.Count > 0)
                 {
                     //Debug.Log("Camera state " + camerastate);
+                    //TODO VALIDATE WITH SUAREZ
+                    //temporal counter
+                    int citizens = 0, militar = 0, buildings = 0;
                     for (int i = 0; i < currentSelecteds.Count; i++)
                     {
-                        ((GameObject)currentSelecteds[i]).gameObject.GetComponent<ISelectable>().IsSelected = true;
+                        var obj = ((GameObject)currentSelecteds[i]);
+
+                        obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
+                        //todo temporal
+                        if(obj.GetComponent<NavAgentCitizenScript>()!= null)
+                        {
+                            citizens++;
+                        }
+                        else if (obj.GetComponent<BuildingBehaviour>() != null)
+                        {
+                            buildings++;
+                        }
+                        else
+                        {
+                            militar++;
+                        }
+
                     }
+
+                    //todo temporal
                     camerastate = CameraStates.UnitsSelection;
-                    cameraSelectionType = CameraSelectionTypes.Military;
+
+                    if(citizens >0  && militar == 0 && buildings == 0)
+                    {
+                        SetSelectedGameObject((GameObject)currentSelecteds[0]);
+                        cameraSelectionType = CameraSelectionTypes.Citizen;
+                        currentGui = this.unitsGui;
+                    }
+                    else if (militar > 0  && citizens >= 0 && buildings == 0 )
+                    {
+                        SetSelectedGameObject((GameObject)currentSelecteds[0]);
+                        cameraSelectionType = CameraSelectionTypes.Military;
+                        currentGui = this.militaryGui;
+                    }
+                    else if (buildings > 0)
+                    {
+                        camerastate = CameraStates.None;
+                        cameraSelectionType = CameraSelectionTypes._None;
+                        currentGui = this.nonGUI;
+                    }
+
                 }
                 else
                 {
@@ -211,7 +276,7 @@ public class CameraScript : MonoBehaviour
                                     break;
                                 default:
                                     camerastate = CameraStates.None;
-                                    currentGui = null;
+                                    currentGui = nonGUI;
                                     break;
 
                             }
@@ -221,13 +286,14 @@ public class CameraScript : MonoBehaviour
                 }
 
                 firstclick = empty;
+                secondclick = empty;
             }
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && firstclick != empty)
         {
- 
-            secondclick = Input.mousePosition;
+
+            secondclick = _mouseposition;// Input.mousePosition;
 
             Vector2 selectionStart = new Vector2();
             Vector2 selectionEnd = selectionStart;
@@ -244,30 +310,54 @@ public class CameraScript : MonoBehaviour
 
             selection = new Rect(selectionStart.x, selectionStart.y, width, heigth);
 
-            //TODO SELECT ALL THE GAMEOBJECTS ON THE AREA
-            if (selection.width != 0 && selection.height != 0) {
+            //TODO SELECT ALL THE GAMEOBJECTS THAT BELONG TO YOUR TEAM ON THE AREA
+            //TODO FILTER BY TEAM
+            if (selection.width != 0 && selection.height != 0)
+            {
                 currentSelecteds.RemoveRange(0, currentSelecteds.Count);
-                for (int index = 0; index < objectsInScene.Count; index++) {
+                for (int index = 0; index < objectsInScene.Count; index++)
+                {
                     GameObject obj = ((GameObject)objectsInScene[index]);
+
+                    if (obj == null)
+                        continue;
+
+                    var iselectable = obj.gameObject.GetComponent<ISelectable>();
+
+                    if(iselectable == null)
+                        continue;
+
                     if (selection.Contains(get2sCoordinates(obj)))
                     {
                         currentSelecteds.Add(obj);
-                        obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
+                        iselectable.IsSelected = true;
                     }
-                    else {
+                    else
+                    {
+          
                         currentSelecteds.Remove(obj);
-                        obj.gameObject.GetComponent<ISelectable>().IsSelected = false;
+                        iselectable.IsSelected = false;
                     }
                 }
             }
-          
+            else if (currentSelecteds.Count > 0)
+            {
 
-           
-
+                ClearSelection();
+            }
         }
     }
 
+    private void ClearSelection()
+    {
+        for (int index = 0; index < currentSelecteds.Count; index++)
+        {
+            GameObject obj = ((GameObject)currentSelecteds[index]);
+            obj.gameObject.GetComponent<ISelectable>().IsSelected = false;
 
+        }
+        currentSelecteds.RemoveRange(0, currentSelecteds.Count);
+    }
 
 
     private void SetSelectedGameObject(GameObject hitselected)
@@ -290,6 +380,15 @@ public class CameraScript : MonoBehaviour
 
     private void ClickActionsUnits()
     {
+        //TODO TEMPORAL SOLUTION
+        //TO AVOID CLICKING ON GUI AREA WHEN YOU HAVE A SELECTION
+        Vector3 _onscreenmouseposition = Input.mousePosition;
+        _onscreenmouseposition.y = Screen.height - Input.mousePosition.y;
+        if (_onscreenmouseposition.y >= gameareas.GameArea.height)
+        {
+            return;
+        }
+
         if (currentSelected == null)
             return;
 
@@ -343,7 +442,6 @@ public class CameraScript : MonoBehaviour
                         pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         soldierTemp.SetState(SoldierStates.Walking);
                         soldierTemp.SetPointToMove(pointtomove.transform.position);
-
                         soldierTemp.ReleaseTask();
                         break;
                 }
@@ -439,8 +537,8 @@ public class CameraScript : MonoBehaviour
                         break;
                 }
 
-                if(citizenTask != CitizenTask.Empty)
-                citizenTemp.SetCitizenTask(citizenTask);
+                if (citizenTask != CitizenTask.Empty)
+                    citizenTemp.SetCitizenTask(citizenTask);
 
 
             }
@@ -448,15 +546,17 @@ public class CameraScript : MonoBehaviour
     }
 
 
-    private void OnGUI()
+    void OnGUI()
     {
-      
+        var originalcolor = GUI.color;
+
+        var originalcolorback = GUI.backgroundColor;
+
         switch (camerastate)
         {
             case CameraStates.None:
-                //SOFAR , IT DOES  PAINT SELECTION RECTANGLE ONLY IN STATE NONE
-                //TODO CHECK AGAIN CAMERA STATES
-                if (Input.GetMouseButton(0))
+
+                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty)
                 {
                     GUI.DrawTexture(selection, selectionTexture);
                     GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
@@ -465,14 +565,53 @@ public class CameraScript : MonoBehaviour
                     GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
                 }
 
+                if (DebugAreas)
+                {
+                    Color coloraux = Color.green;
+                    GUI.color = coloraux;
+                    coloraux.a = 0.3f;
+                    GUI.backgroundColor = coloraux;
+                    GUI.Button(gameareas.GameArea, "A");
+                }
+
 
                 break;
-
             default:
+
+
+
+                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty)
+                {
+                    GUI.DrawTexture(selection, selectionTexture);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y, 1, selection.height), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x + selection.width, selection.y, 1, selection.height), selectionBorder);
+                    GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
+                }
+
                 if (currentGui != null)
                     currentGui.ShowGUI(currentSelected);
+
+                if (DebugAreas)
+                {
+                    Color coloraux = Color.green;
+                    GUI.color = coloraux;
+                    coloraux.a = 0.3f;
+                    GUI.backgroundColor = coloraux;
+                    GUI.Button(gameareas.GameArea, "A");
+
+                    coloraux = Color.blue;
+                    GUI.color = coloraux;
+                    coloraux.a = 0.3f;
+                    GUI.backgroundColor = coloraux;
+                    GUI.Button(gameareas.GuiArea, "B");
+                }
+
                 break;
         }
+
+        GUI.color = originalcolor;
+        GUI.backgroundColor = originalcolorback;
     }
 
 

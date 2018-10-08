@@ -63,6 +63,7 @@ public interface IGameFacade
 public class GameFacade : ScriptableObject, IGameFacade
 {
     private string messageFacade;
+
     public String MessageFacade { get { return messageFacade; } }
 
     public AssetTypes Assettype { get; internal set; }

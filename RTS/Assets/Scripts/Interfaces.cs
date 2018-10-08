@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IGameAreas
+{
+
+    void Init();
+
+    void RecalculateAreas( CameraStates state);
+
+   
+}
 
 public interface ISelectable
 {

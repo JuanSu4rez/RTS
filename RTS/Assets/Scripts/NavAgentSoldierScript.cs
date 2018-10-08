@@ -83,6 +83,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     public virtual void changeColor()
     {
+        if (gameObject.GetComponent<MeshRenderer>() != null)
         Utils.ChangeColor(gameObject.GetComponent<MeshRenderer>(), team);
     }
 
@@ -204,6 +205,8 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     // Update is called once per frame
     void Update()
     {
+        
+
         ////Debug.log(pointToMove);
         switch (soldierState)
         {
@@ -216,19 +219,18 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                         //TODO calc damage depending on the distance and the attack Range
                         //damagable.AddDamage(AttackPower);
                         if (militaryTask.IscompletedTask())
-                            SetState(SoldierStates.Idle);
+                            SetState( SoldierStates.Idle);
                         else
                         {
 
-                            Vector3 targetDistance = Vector3.zero;
+                           Vector3 targetDistance = Vector3.zero;
                             var distance = militaryTask.GetTargetDistance(this.gameObject, out targetDistance);
+                            
 
-
-                            if (distance && targetDistance.sqrMagnitude < AttackRange)
+                             if (distance  && targetDistance.sqrMagnitude < AttackRange)
                             {
-                                SetState(SoldierStates.Attacking);
+                                SetState( SoldierStates.Attacking);
                                 //navMeshAgent.enabled = false;
-                                navMeshAgent.ResetPath();
                                 gameObject.transform.LookAt(militaryTask.Gameobject.transform);
                                 //Cooldwon
                                 if (Time.time > lastShoot + coolDown)
@@ -247,7 +249,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 }
                 else
                 {
-                    SetState(SoldierStates.Idle);
+                    SetState( SoldierStates.Idle);
                 }
 
                 break;
@@ -261,7 +263,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                 break;
             case SoldierStates.Walking:
 
-                if (militaryTask != null)
+                if (militaryTask != null && !militaryTask.IscompletedTask())
                 {
                     Vector3 targetDistance = Vector3.zero;
 
@@ -271,7 +273,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                     if (_distance && targetDistance.sqrMagnitude <= AttackRange)
                     {
                         SetState(SoldierStates.Attacking);
-                        navMeshAgent.ResetPath();
+                        //navMeshAgent.enabled = false;
                     }
                     else if (militaryTask.Gameobject.transform.position != navMeshAgent.destination)
                     {
@@ -279,10 +281,9 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                     }
                 }
 
-                if ((this.transform.position - navMeshAgent.destination) == vectorup) {
+                if ((this.transform.position - navMeshAgent.destination).sqrMagnitude < this.navMeshAgent.stoppingDistance)
                     SetState(SoldierStates.Idle);
-                    navMeshAgent.ResetPath();
-                }
+
                 break;
             default:
                 break;
@@ -333,18 +334,17 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     public void SetState(SoldierStates _soldierStates)
     {
+        var isidle = _soldierStates == SoldierStates.Idle || _soldierStates == SoldierStates.Attacking;
 
-        if (_soldierStates == SoldierStates.Idle)
-        {
-            if(attackCollider!= null)
-            attackCollider.enabled = true;
-        }
-        else
-        {
-            if (attackCollider != null)
-                attackCollider.enabled = false;
-        }
+        if (attackCollider != null)
+            attackCollider.enabled = isidle;
+
+        if(isidle)
+            navMeshAgent.ResetPath();
+
         soldierState = _soldierStates;
+
+            
     }
 
     public void SetPointToMove(Vector3 newPointToMove)
