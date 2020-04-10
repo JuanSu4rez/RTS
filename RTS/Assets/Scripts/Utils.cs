@@ -19,6 +19,68 @@ public sealed class Utils
             }
         }
     }
+
+
+    public static Vector3[] GetPoints(Collider collider)
+    {
+        var pos = collider.transform.position;
+        switch (collider)
+        {
+            case BoxCollider box:
+                /*
+             var size =    box.bounds.size;
+              
+             
+                //pos.z = 0;
+                return new Vector3[] {
+                    pos + collider.transform.right * size.x,
+                    pos +( -collider.transform.right) * size.x,
+                    pos + collider.transform.up * size.x,
+                    pos + (-collider.transform.up) * size.x
+                };
+                */
+
+
+
+
+                break;
+            case CapsuleCollider capsule:
+
+                float radius = capsule.radius* 0.7f;
+
+                pos = collider.transform.position;
+                //pos.z = 0;
+                return new Vector3[] {
+                    pos + collider.transform.right * radius,
+
+                    pos +( -collider.transform.right) * radius,
+                    pos + collider.transform.up * radius,
+                    pos + (-collider.transform.up) * radius,
+                };
+
+                break;
+        }
+
+        return null;
+    }
+
+    internal static Vector3[] GetPointsToWait(int numbers, Vector3 point, Vector3 direction, Vector3 fee)
+    {
+
+
+
+
+        var result = new Vector3[numbers];
+
+        for (int i = 0; i < result.Length; i++)
+        {
+            result[i] = point + direction + (fee * (i + 1));
+        }
+
+
+        return result;
+
+    }
 }
 
 

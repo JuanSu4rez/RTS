@@ -490,8 +490,31 @@ public class CameraScript : MonoBehaviour
                         break;
                     case "Gold":
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
-                        citizenTemp.SetPointToMove(hit.transform.position);
-                        citizenTemp.SetPointResource(hit.transform.position);
+                     
+
+                       var queuecontroller =  hit.transform.gameObject.GetComponent<QueueController>();
+
+                        if (queuecontroller != null) {
+
+                            bool flag = false;
+                          var position =   queuecontroller.GetPosition(citizenTemp.gameObject, out flag);
+
+                            if (flag) {
+                                citizenTemp.SetPointToMove(position);
+                                citizenTemp.SetPointResource(hit.transform.position);
+                            }
+                            else{
+                                Debug.Log("Recurso no recibe mas trabajadores");
+                            }
+
+                        }
+                        else{
+
+                            citizenTemp.SetPointToMove(hit.transform.position);
+                            citizenTemp.SetPointResource(hit.transform.position);
+                           
+                        }
+
                         citizenTemp.SetState(CitizenStates.Gathering);
                         citizenTemp.CurrentResource = Resources.Gold;
 
@@ -567,7 +590,7 @@ public class CameraScript : MonoBehaviour
 
                 if (DebugAreas)
                 {
-                    Color coloraux = Color.green;
+                    Color coloraux = Color.red;
                     GUI.color = coloraux;
                     coloraux.a = 0.3f;
                     GUI.backgroundColor = coloraux;
@@ -594,7 +617,7 @@ public class CameraScript : MonoBehaviour
 
                 if (DebugAreas)
                 {
-                    Color coloraux = Color.green;
+                    Color coloraux = Color.red;
                     GUI.color = coloraux;
                     coloraux.a = 0.3f;
                     GUI.backgroundColor = coloraux;

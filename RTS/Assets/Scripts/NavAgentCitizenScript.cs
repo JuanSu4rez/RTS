@@ -5,6 +5,21 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
+/**
+REMOVER LA RESPONSABILIDADES COMPLEJAS EN LOS ONCOLISION
+
+TENER METODOS FIJOS CON FUNCIONALIDADES RESPONSABILIDADES BIEN DEFINIDAS
+NO TENER QUE COPIAR TRES LINEAS DE COLIDO PARA PODER REPLICAR UNA FUNCIONALIDADES
+
+NO PONSERSE EMOS
+
+NO RECORDARSE FOTO MONTAJES
+
+VERIFICAR TYPING 
+ - OPCIONAL BUSCAR DONDE EL JEFE DE TOCA PLATZI DIGITA 
+
+**/
+
 public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable
 {
     private IGameFacade gameFacade;
@@ -157,10 +172,10 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
                         if (citizenTask.Gameobject == collision.transform.gameObject)
                         {
-                         
+
                             //navMeshObstacle.enabled = true;
                             //navMeshObstacle.carving = true;
-
+                            this.transform.LookAt(citizenTask.Gameobject.transform.position);
                             citizenState = citizenTask.CitizenLabor;
                             SetDoingState();
                         }
@@ -185,7 +200,36 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                             {
                                 SetOnTheWayState();
                                 SetState(CitizenStates.Walking);
-                                SetPointToMove(citizenTask.Position);
+                               
+                                var queuecontroller = citizenTask.Gameobject.GetComponent<QueueController>();
+
+                                if (queuecontroller != null)
+                                {
+
+                                    bool flag = false;
+                                    var position = queuecontroller.GetPosition(this.gameObject, out flag);
+
+                                    if (flag)
+                                    {
+                                        SetPointToMove(position);
+                                      
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("Recurso no recibe mas trabajadores");
+                                    }
+
+                                }
+                                else
+                                {
+
+                                   
+                                    SetPointToMove(citizenTask.Position);
+
+                                }
+
+
+                             
                             }
                             else
                             {
@@ -260,6 +304,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 }
                 else if (collision.gameObject.name.Equals("POINTTOMOVE"))
                 {
+					
+					//evitar esto manejarlo por update manejando un rango de toleracia
                     collision.gameObject.transform.position = Camera.main.transform.position;
                     SetState(CitizenStates.Idle);
 
@@ -306,9 +352,16 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                             var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
                             if (go != null)
                             {
+
+								//debe ir todo en un solo metodo
                                 SetCarryingState();
                                 SetState(CitizenStates.Walking);
                                 SetPointToMove(go.transform.position);
+                                //llamar al metodo de librar la cola
+                              var queue =   this.citizenTask.Gameobject.GetComponent<QueueController>();
+
+                                queue.RelasePostion(this.gameObject);
+
                             }
                             else
                             {
