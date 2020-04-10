@@ -13,7 +13,7 @@ NO TENER QUE COPIAR TRES LINEAS DE COLIDO PARA PODER REPLICAR UNA FUNCIONALIDADE
 
 NO PONSERSE EMOS
 
-NO RECORDARSE FOTO MONTAJES
+NO RECORDARSE FOTO MONTAJES EXCEPTO SIN SON CON CAMISETAS DE SANTA FE
 
 VERIFICAR TYPING 
  - OPCIONAL BUSCAR DONDE EL JEFE DE TOCA PLATZI DIGITA 
@@ -70,6 +70,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
 
     private float Health;
     private float CurrentHealth;
+    private float distanceTolerance;
 
 
     public NavMeshAgent navMeshAgent;
@@ -81,9 +82,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     }
 
     // Use this for initialization
-    void Start()
-    {
-        ////Debug.log("citizenCollider " + citizenCollider != null);
+    void Start(){
         citizenCollider = this.gameObject.GetComponent<Collider>();
         citizenState = CitizenStates.Idle;
         CurrentResource = Resources.None;
@@ -94,58 +93,48 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         DefensePower = 0.1F;
         BuildingSpeed = 0.1F;
 
-
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
         navMeshObstacle = this.gameObject.GetComponent<NavMeshObstacle>();
 
         Health = 9999;
         CurrentHealth = Health;
+        distanceTolerance = 2;
 
-       
-        animator = this.gameObject.GetComponent<Animator>();
-      
+        animator = this.gameObject.GetComponent<Animator>();      
 
         changeColor();
         gameFacade = GameScript.GetFacade(team);
         gameFacade.AddUnit(this.gameObject, Units.Citizen);
 		
 	    InitChildrentTool(CitizenTransformChilden.Pick);
-        InitChildrentTool(CitizenTransformChilden.Axe);
-		
+        InitChildrentTool(CitizenTransformChilden.Axe);		
 	}
 		
-    private void InitChildrentTool(CitizenTransformChilden children)
-    {
+    private void InitChildrentTool(CitizenTransformChilden children){
         EnableChildrentTool(children, false);
     }
 
-    private void EnableChildrentTool(CitizenTransformChilden children, bool enable)
-    {
+    private void EnableChildrentTool(CitizenTransformChilden children, bool enable){
         var id = (int)children;
-        if (this.transform.childCount > id) // gameFacade.AssetType == AssetTypes.THREED )
-        {
+        if (this.transform.childCount > id){
             this.transform.GetChild(id).gameObject.SetActive(enable);
         }
     }
 	
-  	public virtual void changeColor()
-    {
+  	public virtual void changeColor(){
         var meshColor = gameObject.GetComponent<MeshRenderer>();
         if(meshColor != null)
         Utils.ChangeColor(meshColor, team);
     }
 
 
-    void OnCollisionEnter(Collision collision)
-    {
+    void OnCollisionEnter(Collision collision){
         if (collision.collider.isTrigger)
             return;
 
-
         var tag = collision.gameObject.tag;
         var name = collision.gameObject.name;
-        switch (citizenState)
-        {
+        switch (citizenState) { 
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
@@ -270,6 +259,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         }
     }
 
+    /*
     void OnCollisionStay(Collision collision)
     {
         //Debug.Log("Collisionstay  ");
@@ -316,14 +306,11 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         }
 
         //ResourceCapacity =
-    }
+    }*/
 
     // Update is called once per frame
-    void Update()
-    {
-        ////Debug.log(pointToMove);
-        switch (citizenState)
-        {
+    void Update(){
+        switch (citizenState){
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
@@ -337,21 +324,14 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                 break;
             case CitizenStates.Gathering:
 
-                if (CitizenTask.IsValidCitizenTask(citizenTask))
-                {
-                    if (citizenTask.IsTaskOnPorgress())
-                    {
-                        if (CurrentAmountResouce < ResourceCapacity)
-                        {
+                if (CitizenTask.IsValidCitizenTask(citizenTask)){
+                    if (citizenTask.IsTaskOnPorgress()){
+                        if (CurrentAmountResouce < ResourceCapacity){
                             CurrentAmountResouce += citizenTask.DiscountResource(CalculateGatheringSpeed());
                         }
-                        else
-                        {
-
-                            //TODO find near object to deposit
+                        else{
                             var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
-                            if (go != null)
-                            {
+                            if (go != null){
 
 								//debe ir todo en un solo metodo
                                 SetCarryingState();
@@ -363,63 +343,48 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                                 queue.RelasePostion(this.gameObject);
 
                             }
-                            else
-                            {
+                            else{
                                 SetState(CitizenStates.Idle);
                             }
-
                         }
                     }
-                    else
-                    {
+                    else{
                         //TODO find near resource of the same type , if it does not exits
                         //Idle and reset citizentask
                         SetState(CitizenStates.Idle);
                         ReleaseTask();
                     }
-
                 }
-                else
-                {
-
-
+                else{
                     //TODO find near object to deposit
                     var go = gameFacade.FindNearBuldingToDeposit(this.transform.position, this.CurrentResource);
-                    if (go != null)
-                    {
+                    if (go != null){
                         SetState(CitizenStates.Walking);
                         SetPointToMove(go.transform.position);
                     }
-                    else
-                    {
+                    else{
                         SetState(CitizenStates.Idle);
                     }
-
-
                 }
-
-
-
-
                 break;
             case CitizenStates.Idle:
                 break;
             case CitizenStates.None:
                 break;
             case CitizenStates.Walking:
-                //Walking();
+                float distanceToDestiny = Vector3.Distance(navMeshAgent.destination, transform.position);
+                if (distanceTolerance >= distanceToDestiny)
+                    SetState(CitizenStates.Idle);
                 break;
             default:
                 break;
         }
         setAnimation();
-        //AddDamage(1);
     }
 
     public virtual void setAnimation() {
         if (animator == null || this.transform.childCount <= (int)CitizenTransformChilden.Axe)
             return;
-
         
         //this.transform.GetChild((int)CitizenTransformChilden.Pick).gameObject.SetActive(false);
         EnableChildrentTool(CitizenTransformChilden.Pick, false);
