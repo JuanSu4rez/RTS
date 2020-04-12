@@ -50,26 +50,7 @@ public enum SoldierAnimationStates
     Dying2      //  5
 }
 
-public enum Resources
-{
-    Food,
-    Gold,
-    None,
-    Rock,
-    Wood,
-}
 
-public enum CitizenStates
-{
-    Attacking,
-    Building,
-    Died,
-    Escaping,
-    Gathering,
-    Idle,
-    None,
-    Walking
-}
 
 
 public enum CitizenTaskStates

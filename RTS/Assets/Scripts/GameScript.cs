@@ -2,18 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameScript : MonoBehaviour
-{
+public class GameScript : MonoBehaviour {
     [SerializeField]
     private AssetTypes assettype;
- 
+
     [SerializeField]
     private BuildingsInfo buldingsInfo;
 
     [SerializeField]
     private UnitsInfo unitsInfo;
 
- 
+
     private Player player;
 
     [SerializeField]
@@ -23,16 +22,13 @@ public class GameScript : MonoBehaviour
     [SerializeField]
     private Team[] teams;
 
-    public Team[] Teams
-    {
+    public Team[] Teams {
         get { return teams; }
-        set
-        {
+        set {
             teams = value;
             this.diplomacies = new Diplomacy[teams.Length];
-            for(int i = 0;i< diplomacies.Length; i++)
-            {
-                diplomacies[i] = new Diplomacy(teams[i],Postures.Enemy);
+            for (int i = 0; i < diplomacies.Length; i++) {
+                diplomacies[i] = new Diplomacy(teams[i], Postures.Enemy);
             }
         }
 
@@ -41,9 +37,8 @@ public class GameScript : MonoBehaviour
     [SerializeField]
     private Diplomacy[] diplomacies;
 
-  
-    public Diplomacy[] Diplomacies
-    {
+
+    public Diplomacy[] Diplomacies {
         get { return diplomacies; }
         set { diplomacies = value; }
 
@@ -54,19 +49,16 @@ public class GameScript : MonoBehaviour
     private static IGameFacade[] facades;
 
 
-    void Awake()
-    {
-        if(teams == null || teams.Length == 0)
-        {
+    void Awake() {
+        if (teams == null || teams.Length == 0) {
             throw new UnityException("Debe asignar los respectivos equipos.");
         }
 
 
-        for(int i = 0;i< unitsInfo.UnitInformation.Length; i++)
-        {
+        for (int i = 0; i < unitsInfo.UnitInformation.Length; i++) {
             var unit = unitsInfo.UnitInformation[i];
-            if(unit.Costs!= null  && unit.Costs.Count >0 )
-            buldingsInfo.BuldingInformation[(int)unit.DevelopedBuilding].AddUnitToCreate(unitsInfo.UnitInformation[i]);
+            if (unit.Costs != null && unit.Costs.Count > 0)
+                buldingsInfo.BuldingInformation[(int)unit.DevelopedBuilding].AddUnitToCreate(unitsInfo.UnitInformation[i]);
         }
 
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
@@ -79,12 +71,11 @@ public class GameScript : MonoBehaviour
         gameFacade.Diplomacies = diplomacies;
         player = gameFacade.Player;
         gameFacade.FacadeName = "Player";
-        facades = new IGameFacade[teams.Length+1];
+        facades = new IGameFacade[teams.Length + 1];
 
         facades[0] = gameFacade;
 
-        for (int i = 0; i < teams.Length; i++)
-        {
+        for (int i = 0; i < teams.Length; i++) {
             var gameFacadei = ScriptableObject.CreateInstance<GameFacade>();
             gameFacadei.Team = teams[i];
             gameFacadei.Player = ScriptableObject.CreateInstance<Player>();
@@ -93,28 +84,26 @@ public class GameScript : MonoBehaviour
             gameFacadei.UnitsInfo = unitsInfo;
             gameFacadei.Assettype = assettype;
             gameFacadei.Diplomacies = diplomacies;
-            gameFacadei.FacadeName = "Player ["+(i+1)+"]";
+            gameFacadei.FacadeName = "Player [" + (i + 1) + "]";
             facades[i + 1] = gameFacadei;
             if (gameFacadei.Team == null ||
                 gameFacadei.Player == null ||
                 gameFacadei.BuildingsInfo == null ||
                 gameFacadei.UnitsInfo == null ||
-            
+
                 gameFacadei.Diplomacies == null)
-               throw new UnityException("Invalid Team Index "+i);
+                throw new UnityException("Invalid Team Index " + i);
         }
 
-    }           
-
-
-    void Start()
-    {    
-        
-        
     }
 
-    public static IGameFacade GetFacade(Team team)
-    {
+
+    void Start() {
+
+
+    }
+
+    public static IGameFacade GetFacade(Team team) {
         if (team != null)
             return facades[team.Id];
         else
@@ -122,8 +111,7 @@ public class GameScript : MonoBehaviour
     }
 
 
-    public static IGameFacade GetFacade(ITeamable team)
-    {
+    public static IGameFacade GetFacade(ITeamable team) {
         if (team != null)
             return GetFacade(team.Team);
         else
@@ -132,12 +120,11 @@ public class GameScript : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
     }
 
-     void OnGUI(){
+    void OnGUI() {
         GUI.contentColor = Color.black;
         GUI.Label(new Rect(10, 10, 100, 50), "Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
         GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
@@ -145,7 +132,20 @@ public class GameScript : MonoBehaviour
         GUI.Label(new Rect(310, 10, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
         GUI.Label(new Rect(10, 20, 100, 50), "NU " + (int)player.NumberofUnits);
         GUI.Label(new Rect(110, 20, 100, 50), "CU " + (int)player.UnitsCapacity);
+
+        if (PlayerController.InstancePlayerController != null) {
+            GUI.contentColor = Color.cyan;
+          
+            GUI.Label(new Rect(10, 40, 100, 50), "V2 -> Oro " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Gold).Amount);
+            GUI.Label(new Rect(110, 40, 100, 50), "Alimento " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Food).Amount);
+            GUI.Label(new Rect(210, 40, 100, 50), "Madera " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Wood).Amount);
+            GUI.Label(new Rect(310, 40, 100, 50), "Piedra " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Rock).Amount);
+            GUI.Label(new Rect(410, 40, 100, 50), "NU " + (int)PlayerController.InstancePlayerController.NumberofUnits);
+            GUI.Label(new Rect(510, 40, 100, 50), "CU " + (int)PlayerController.InstancePlayerController.UnitsCapacity);
+
+          
+        }
     }
 
-  
+
 }

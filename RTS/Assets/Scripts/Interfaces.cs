@@ -12,11 +12,7 @@ public interface IGameAreas
    
 }
 
-public interface ISelectable
-{
-    bool IsSelected { get; set; }
 
-}
 
 public interface IAliveBeing
 {

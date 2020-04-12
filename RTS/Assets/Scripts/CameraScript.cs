@@ -464,6 +464,114 @@ public class CameraScript : MonoBehaviour
 
     private void CitizenAction()
     {
+        #region implementatioforunicontroller
+        var unitController = currentSelected.gameObject.GetComponent<UnitController>();
+
+        if (unitController != null) {
+
+          
+
+            if (Input.GetMouseButtonDown(1)) {
+                //when a citizen is selected
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit)) {
+                 
+
+                    string rightclickedObj = hit.transform.gameObject.tag;
+
+                    //se le asigna un pinto con una altura y+1
+                    var point =  new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+
+                    switch (rightclickedObj) {
+                        case "Land":
+
+                            unitController.Move(point);
+
+
+                            break;
+                        case "Gold":
+
+
+                           
+
+                            var queuecontroller = hit.transform.gameObject.GetComponent<QueueController>();
+
+                            if (queuecontroller != null) {
+
+                                bool flag = false;
+                                var position = queuecontroller.GetPosition(unitController.gameObject, out flag);
+
+                                if (flag) {
+                                    unitController.Move(position, () => {
+
+
+                                        GatheringTask gatheringtask  = new GatheringTask();
+
+
+                                        gatheringtask.resourceType = Resources.Gold;
+                                        //buscar edifico a depositar mina o centro urbano
+                                        gatheringtask.positionBuldingtodeposit = new Vector3( -7.4f, 1f, -7.75f);
+                                        gatheringtask.position = position;
+                                        gatheringtask.Gatheringspeed = 5;
+                                        gatheringtask.MaxCapacity = 1000;
+                                        gatheringtask.CurrentAmountResouce = 0;
+                                        gatheringtask.resourcescript = hit.transform.gameObject.GetComponent<ResourceScript>();
+
+
+                                        unitController.SetTask(gatheringtask);
+
+
+                                    });
+
+                                }
+                                else {
+                                    Debug.Log("Recurso no recibe mas trabajadores");
+                                }
+
+                            }
+                            else 
+                            {
+                                unitController.Move(hit.transform.position);
+
+                       
+
+                            }
+
+                      
+                            break;
+                        case "Forest":
+                       
+                            
+                            break;
+
+                        case "Rock":
+                       
+
+                            break;
+
+                        case "Building":
+
+                    
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                   
+                      
+
+
+                }
+            }
+
+
+           
+
+        }
+        #endregion
+
         var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
 
         if (citizenTemp == null)
