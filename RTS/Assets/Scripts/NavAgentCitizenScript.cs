@@ -201,11 +201,9 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
     }
 
     /*
-    void OnCollisionStay(Collision collision)
-    {
+    void OnCollisionStay(Collision collision){
         //Debug.Log("Collisionstay  ");
-        switch (citizenState)
-        {
+        switch (citizenState){
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:

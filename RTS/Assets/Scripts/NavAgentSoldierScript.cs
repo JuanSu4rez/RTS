@@ -42,6 +42,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     private float Health;
     private float CurrentHealth;
+    private float distanceTolerance;
 
     //Cooldown
     private float coolDown;
@@ -66,6 +67,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
         animator = this.gameObject.GetComponent<Animator>();
         Health = 9999;
         CurrentHealth = Health;
+        distanceTolerance = 2;
         gameFacade = GameScript.GetFacade(this.team);
         SetState( SoldierStates.Idle);
 
@@ -281,9 +283,11 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
                     }
                 }
 
-                if ((this.transform.position - navMeshAgent.destination).sqrMagnitude < this.navMeshAgent.stoppingDistance)
+                //if ((this.transform.position - navMeshAgent.destination).sqrMagnitude < this.navMeshAgent.stoppingDistance)
+                //    SetState(SoldierStates.Idle);
+                float distanceToDestiny = Vector3.Distance(navMeshAgent.destination, transform.position);
+                if (distanceTolerance >= distanceToDestiny)
                     SetState(SoldierStates.Idle);
-
                 break;
             default:
                 break;
