@@ -13,7 +13,7 @@ public class GameScript : MonoBehaviour {
     private UnitsInfo unitsInfo;
 
 
-    private Player player;
+
 
     [SerializeField]
     private Team Playerteam;
@@ -38,6 +38,12 @@ public class GameScript : MonoBehaviour {
     private Diplomacy[] diplomacies;
 
 
+    public PlayerController[] players;
+
+    private static PlayerController[] _splayers;
+
+    private PlayerController player;
+
     public Diplomacy[] Diplomacies {
         get { return diplomacies; }
         set { diplomacies = value; }
@@ -50,6 +56,14 @@ public class GameScript : MonoBehaviour {
 
 
     void Awake() {
+
+        if (players == null || players.Length == 0) {
+            throw new UnityException("Debe asignar los respectivos equipos.");
+        }
+
+        _splayers = players;
+        player = players[0];
+
         if (teams == null || teams.Length == 0) {
             throw new UnityException("Debe asignar los respectivos equipos.");
         }
@@ -69,7 +83,7 @@ public class GameScript : MonoBehaviour {
         gameFacade.UnitsInfo = unitsInfo;
         gameFacade.Assettype = assettype;
         gameFacade.Diplomacies = diplomacies;
-        player = gameFacade.Player;
+  
         gameFacade.FacadeName = "Player";
         facades = new IGameFacade[teams.Length + 1];
 
@@ -125,26 +139,35 @@ public class GameScript : MonoBehaviour {
     }
 
     void OnGUI() {
-        GUI.contentColor = Color.black;
-        GUI.Label(new Rect(10, 10, 100, 50), "Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
-        GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
-        GUI.Label(new Rect(210, 10, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);
-        GUI.Label(new Rect(310, 10, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
-        GUI.Label(new Rect(10, 20, 100, 50), "NU " + (int)player.NumberofUnits);
-        GUI.Label(new Rect(110, 20, 100, 50), "CU " + (int)player.UnitsCapacity);
+        //GUI.contentColor = Color.black;
+        //GUI.Label(new Rect(10, 10, 100, 50), "Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
+        //GUI.Label(new Rect(110, 10, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
+        //GUI.Label(new Rect(210, 10, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);
+        //GUI.Label(new Rect(310, 10, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
+        //GUI.Label(new Rect(10, 20, 100, 50), "NU " + (int)player.NumberofUnits);
+        //GUI.Label(new Rect(110, 20, 100, 50), "CU " + (int)player.UnitsCapacity);
 
-        if (PlayerController.InstancePlayerController != null) {
+       
+
+
             GUI.contentColor = Color.cyan;
           
-            GUI.Label(new Rect(10, 40, 100, 50), "V2 -> Oro " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Gold).Amount);
-            GUI.Label(new Rect(110, 40, 100, 50), "Alimento " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Food).Amount);
-            GUI.Label(new Rect(210, 40, 100, 50), "Madera " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Wood).Amount);
-            GUI.Label(new Rect(310, 40, 100, 50), "Piedra " + (int)PlayerController.InstancePlayerController.GetResourceAmount(Resources.Rock).Amount);
-            GUI.Label(new Rect(410, 40, 100, 50), "NU " + (int)PlayerController.InstancePlayerController.NumberofUnits);
-            GUI.Label(new Rect(510, 40, 100, 50), "CU " + (int)PlayerController.InstancePlayerController.UnitsCapacity);
+            GUI.Label(new Rect(10, 40, 100, 50), "V2 -> Oro " + (int)player.GetResourceAmount(Resources.Gold).Amount);
+            GUI.Label(new Rect(110, 40, 100, 50), "Alimento " + (int)player.GetResourceAmount(Resources.Food).Amount);
+            GUI.Label(new Rect(210, 40, 100, 50), "Madera " + (int)player.GetResourceAmount(Resources.Wood).Amount);
+            GUI.Label(new Rect(310, 40, 100, 50), "Piedra " + (int)player.GetResourceAmount(Resources.Rock).Amount);
+            GUI.Label(new Rect(410, 40, 100, 50), "NU " + (int)player.NumberofUnits);
+            GUI.Label(new Rect(510, 40, 100, 50), "CU " + (int)player.UnitsCapacity);
 
-          
-        }
+      
+    }
+
+
+    public static void AddResource(int team ,Resources resource ,  float amount) {
+
+        if(team< _splayers.Length )
+        _splayers[team].AddResourceAmount(resource, amount);
+
     }
 
 

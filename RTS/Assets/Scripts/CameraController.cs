@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
-{
+public class CameraController : MonoBehaviour {
 
     public CameraMovementType cameraMovementType = CameraMovementType.Type1;
 
@@ -14,13 +13,15 @@ public class CameraController : MonoBehaviour
 
 
     public int AreaScaleW = 8;
+
     public int AreaScaleH = 8;
 
     public bool DebugAreas;
 
+
+
     // Use this for initialization
-    void Start()
-    {
+    void Start() {
         cameraPosition = gameObject.transform.position;
 
         //Debug.Log("Total de la pantalla " + Screen.width);
@@ -28,16 +29,13 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
-        if (Input.GetMouseButton(0))
-        {
+        if (Input.GetMouseButton(0)) {
             return;
         }
 
-        switch (cameraMovementType)
-        {
+        switch (cameraMovementType) {
             case CameraMovementType.Type1:
                 MovementTypeOne();
 
@@ -54,8 +52,7 @@ public class CameraController : MonoBehaviour
     }
 
 
-    private void MovementTypeOne()
-    {
+    private void MovementTypeOne() {
         Vector2 mousePosition = Input.mousePosition;
 
         //Mouse Correction included to use cotains method of the Rect class
@@ -70,21 +67,17 @@ public class CameraController : MonoBehaviour
 
         //Debug.Log("mousePosition.x " + mousePosition.x);
 
-        if (mousePosition.x < width / AreaScaleW)
-        {
+        if (mousePosition.x < width / AreaScaleW) {
             gameObject.transform.position = new Vector3(--cameraPosition.x, cameraPosition.y, ++cameraPosition.z);
         }
-        if (mousePosition.x > width - width / AreaScaleW)
-        {
+        if (mousePosition.x > width - width / AreaScaleW) {
             gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, --cameraPosition.z);
         }
-        if (mousePosition.y < height / AreaScaleH)
-        {
+        if (mousePosition.y < height / AreaScaleH) {
             //this condition used to be on mouse position greater than height - height / AreaScale
             gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, ++cameraPosition.z);
         }
-        if (mousePosition.y > height - height / AreaScaleH)
-        {
+        if (mousePosition.y > height - height / AreaScaleH) {
             //this condition used to be on mouse position less than  height / AreaScale
             gameObject.transform.position = new Vector3(--cameraPosition.x, cameraPosition.y, --cameraPosition.z);
         }
@@ -96,8 +89,9 @@ public class CameraController : MonoBehaviour
     Vector3 mousePosition = Vector3.zero;
     bool MouseInGameArea;
 
-    private void MovementTypeTwo()
-    {
+
+    private float nextTime = 0;
+    private void MovementTypeTwo() {
         mousePosition = Input.mousePosition;
 
         //Mouse Correction included to use cotains method of the Rect class
@@ -114,36 +108,47 @@ public class CameraController : MonoBehaviour
 
 
         MouseInGameArea = CameraScript.gameareas.GameArea.Contains(mousePosition);
-        if (!MouseInGameArea)
+        if (!MouseInGameArea) {
+
+            nextTime = 0;
             return;
 
-        //Debug.Log("mousePosition.x " + mousePosition.x);
+        }
 
+        if (nextTime == 0) {
+            nextTime = Time.time + 2;
+            return;
+        }
+
+
+
+        if (Time.time < nextTime) {
+            return;
+        }
+
+        //Debug.Log("mousePosition.x " + mousePosition.x);
 
 
         if (mousePosition.x < width / AreaScaleW
             || mousePosition.x > width - width / AreaScaleW
             || mousePosition.y < height / AreaScaleH
             || mousePosition.y > height - height / AreaScaleH
-            )
-        {
+            ) {
             //Inversion due to camera rotation
             result.x = result.x * -1;
             result.z = result.y;
             result.y = 0;
 
-            var finalpos  = gameObject.transform.position + (result * (VelocityScale * Time.deltaTime));
-           // finalpos.y = gameObject.transform.position.y;
+            var finalpos = gameObject.transform.position + (result * (VelocityScale * Time.deltaTime));
+            // finalpos.y = gameObject.transform.position.y;
             gameObject.transform.position = finalpos;
         }
 
     }
 
 
-    void OnGUI()
-    {
-        if (DebugAreas)
-        {
+    void OnGUI() {
+        if (DebugAreas) {
             var originalcolor = GUI.color;
 
             var originalbackcolor = GUI.backgroundColor;
@@ -151,11 +156,11 @@ public class CameraController : MonoBehaviour
             var width = CameraScript.gameareas.GameArea.width;
             var height = CameraScript.gameareas.GameArea.height;
 
-          
+
             var _width = width / AreaScaleW;
 
-     
-            var _height =  height / AreaScaleH;
+
+            var _height = height / AreaScaleH;
 
             var auxColor = Color.blue;
             auxColor.a = 0.5f;
@@ -164,7 +169,7 @@ public class CameraController : MonoBehaviour
 
             GUI.Button(new Rect(0, 0, width, _height), "");
             GUI.Button(new Rect(0, 0, _width, height), "");
-            GUI.Button(new Rect(0, height-_height, width, _height), "");
+            GUI.Button(new Rect(0, height - _height, width, _height), "");
             GUI.Button(new Rect(width - _width, 0, _width, height), "");
 
 
@@ -173,7 +178,7 @@ public class CameraController : MonoBehaviour
 
             GUI.backgroundColor = auxColor;
 
-            GUI.Label(new Rect(width/2,height/2, 100, 100), "A");
+            GUI.Label(new Rect(width / 2, height / 2, 100, 100), "A");
 
 
 
@@ -183,10 +188,10 @@ public class CameraController : MonoBehaviour
 
             if (cameraMovementType == CameraMovementType.Type2) {
 
-                Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + (result* 10));
+                Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + (result * 10));
                 GUI.Label(new Rect(Screen.width / 2 + 10, Screen.height / 2 + 10, Screen.width, 500), cameraMovementType + " " + MouseInGameArea + " " + centerScreen + " " + mousePosition + " " + distance + " " + result);
             }
-               
+
 
         }
 

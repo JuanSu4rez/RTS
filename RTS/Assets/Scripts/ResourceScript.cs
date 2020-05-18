@@ -14,9 +14,24 @@ public class ResourceScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (!HasResource()) {
-            Destroy(this.gameObject);
+            // Destroy(this.gameObject);
+            Disabled();
         }
 	}
+
+    public bool IsEnabled() {
+        return this.gameObject.active && this.enabled;
+    }
+
+    private void  Disabled() {
+        this.enabled = false;
+        this.gameObject.SetActive(false);
+    }
+
+    private void Enabled() {
+        this.enabled = true;
+        this.gameObject.SetActive(true);
+    }
 
     public float DiscountAmount(float newAmount) {
 

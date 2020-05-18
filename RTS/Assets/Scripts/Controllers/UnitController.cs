@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBeing, IControlable<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable {
+public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IWorker, IDamagable, IStatus {//, , IControlable<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable {
 
 
-    public CitizenStates CitizenState;
+    public CitizenStates citizenState;
 
     private CitizenStates initialCitizenState;
 
@@ -16,23 +16,11 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
     public Task task;
 
-    [SerializeField]
-    private Team team;
 
-    public Team Team {
-        get {
-            return team;
-        }
-        set {
-            team = value;
-        }
-    }
+    public int Team = 0;
 
     public bool IsSelected { get; set; }
-
-    public PlayerController playercontroller;
-
-
+   
     private NavMeshAgent navMeshAgent;
 
     private Animator animator;
@@ -48,6 +36,14 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
         navMeshAgent = this.gameObject.GetComponent<NavMeshAgent>();
         animator = this.gameObject.GetComponent<Animator>();
+
+        InitChildrentTool(CitizenTransformChilden.Pick);
+        InitChildrentTool(CitizenTransformChilden.Axe);
+   
+        InitChildrentTool(CitizenTransformChilden.Hammer);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Gold);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Meat);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Wood);
     }
 
     void OnCollisionStay(Collision collision) {
@@ -59,13 +55,14 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
     }
 
-
+    int frame = 0;
     void Update() {
-        initialCitizenState = CitizenState;
+        frame++;
+        initialCitizenState = citizenState;
 
 
         if (task != null) {
-            Debug.Log($"state {task.GetType().FullName}");
+          // Debug.Log($"state {task.GetType().FullName}");
             switch (task) {
 
                 case MoveTask mtask:
@@ -82,18 +79,31 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
         }
 
-        setAnimation();
+        SetAnimation();
     }
 
+    float nextrecalc = 0;
 
     void ExcuteMovingTask(MoveTask mtask) {
+
+        if (nextrecalc == 0) 
+        nextrecalc = Time.time + 3f;
+
+        if (Time.time > nextrecalc) {
+            navMeshAgent.ResetPath();
+            navMeshAgent.SetDestination(mtask.position);
+            nextrecalc = Time.time + 3f;
+        }
+
 
         float distanceToDestiny = Mathf.Abs(Vector3.Distance(navMeshAgent.destination, this.transform.position));
         if (distanceTolerance >= distanceToDestiny) {
 
+            nextrecalc = 0;
+
             navMeshAgent.ResetPath();
             this.task = null;
-            CitizenState = CitizenStates.Idle;
+            citizenState = CitizenStates.Idle;
 
             if (mtask.action != null) {
 
@@ -106,7 +116,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
             return;
         }
 
-        CitizenState = CitizenStates.Walking;
+        citizenState = CitizenStates.Walking;
     }
 
     void ExcuteGatheringTask(GatheringTask gtask) {
@@ -136,16 +146,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
                 }
 
 
-                this.Move(gtask.positionBuldingtodeposit, animstate, () => {
-
-                    //incrementar la capicidad del jugador del recurso dado
-                    if (playercontroller != null) {
-
-                        playercontroller.AddResourceAmount(gtask.resourceType, gtask.CurrentAmountResouce);
-                    }
-
-
-                });
+             
 
             }
             else 
@@ -155,7 +156,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
             return;
         }
 
-        this.CitizenState = CitizenStates.Gathering;
+        this.citizenState = CitizenStates.Gathering;
 
 
         gtask.Execute();
@@ -185,14 +186,13 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
                     break;
             }
 
+            taskcopy.ReleaseWorkSpot(this.gameObject);
+
+            //Move to positionBuldingtodeposit
             this.Move(taskcopy.positionBuldingtodeposit, animstate, () => {
 
                 //incrementar la capicidad del jugador del recurso dado
-                if (playercontroller != null) {
-
-                    playercontroller.AddResourceAmount(taskcopy.resourceType, taskcopy.CurrentAmountResouce);
-
-                }
+                GameScript.AddResource(Team, taskcopy.resourceType, taskcopy.CurrentAmountResouce);
 
                 if (taskcopy.IsValidTask()) {
                     taskcopy.ResetTask();
@@ -200,10 +200,56 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
                     //se mueve otra vez a la posicion del recurso
                     //TODO se tiene que hacer la logica de la cola por recruso
 
-                    this.Move(taskcopy.position, () => {
-                        // la tarea es nuevamente recolectar
-                        this.task = taskcopy;
-                    });
+                    var queuecontroller = taskcopy.resourcescript.GetComponent<QueueController>();
+
+                    if (queuecontroller != null) {
+
+                        int flag = -1;
+                        GameObject obj = this.gameObject;
+
+                        var position = queuecontroller.GetPosition(ref obj, out flag);
+
+                        if (flag >= 0) {
+                            Move(position, () => {
+
+
+                                if (flag == 1) {
+
+
+                                   /*GatheringTask gatheringtask = new GatheringTask();
+
+                                    gatheringtask.onwait = flag == 0;
+                                    gatheringtask.resourceType = Resources.Gold;
+                                    //buscar edifico a depositar mina o centro urbano
+                                    gatheringtask.positionBuldingtodeposit = new Vector3(-7.4f, 1f, -7.75f);
+                                    gatheringtask.position = position;
+                                    gatheringtask.Gatheringspeed = 0.1f;
+                                    gatheringtask.MaxCapacity = 50;
+                                    gatheringtask.CurrentAmountResouce = 0;
+                                    gatheringtask.resourcescript = taskcopy.resourcescript;
+
+    */
+                                    this.SetTask(taskcopy);
+                                
+                                }
+                                else {
+                                    //liberamos la copia del task
+                                    this.transform.LookAt(taskcopy.resourcescript.transform.position);
+                                }
+
+
+                            });
+
+                        }
+                        else {
+                            Debug.Log("Recurso no recibe mas trabajadores");
+                        }
+
+                    }
+
+
+
+                   // taskcopy = null;
 
                 }
                 else {
@@ -228,7 +274,8 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
     public void Move(Vector3 position, Action action = null) {
 
-        task = new MoveTask() { position = position, action = action };
+        ReleaseTask();
+        this.SetTask( new MoveTask() { position = position, action = action });
 
         navMeshAgent.SetDestination(position);
     }
@@ -249,29 +296,57 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
 
 
 
-    private void setAnimation() {
-       
+    private void SetAnimation() {
 
-        int animationState = (int)CitizenState;
+        //if (animator != null && this.transform.childCount == (int)CitizenTransformChilden.Axe) 
+            { 
+        //this.transform.GetChild((int)CitizenTransformChilden.Pick).gameObject.SetActive(false);
+        EnableChildrentTool(CitizenTransformChilden.Pick, false);
+        //this.transform.GetChild((int)CitizenTransformChilden.Axe).gameObject.SetActive(false)
+        EnableChildrentTool(CitizenTransformChilden.Axe, false);
+        EnableChildrentTool(CitizenTransformChilden.Hammer, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Meat, false);
+        EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, false);
+        }
+
+        int animationState = (int)citizenState;
 
         if (task != null) {
+
             switch (task) {
 
                 case MoveTask mtask:
-
+                    Debug.Log($"{frame} Amimation MoveTask");
                     if (mtask.animationstate != CitizeAnimationStates.None)
                         animationState = (int)mtask.animationstate;
 
+                    switch (mtask.animationstate) {
+                       
+                        case CitizeAnimationStates.Walking:
+                            break;
+                        case CitizeAnimationStates.CarryingGold:
+                            EnableChildrentTool(CitizenTransformChilden.Gathered_Gold, true);
+                            break;
+                        case CitizeAnimationStates.CarryingWood:
+                            EnableChildrentTool(CitizenTransformChilden.Gathered_Wood, true);
+                            break;
+                        case CitizeAnimationStates.CarryingMeat:
+                            EnableChildrentTool(CitizenTransformChilden.Gathered_Meat, true);
+                            break;
+                       
+                    }
+
                     break;
                 case GatheringTask gtask:
-
+                    Debug.Log($"{frame} Amimation GatheringTask");
 
                     switch (gtask.resourceType) {
                         case Resources.Food:
                             break;
                         case Resources.Gold:
 
-
+                            EnableChildrentTool(CitizenTransformChilden.Pick, true);
                             animationState = (int)CitizeAnimationStates.Gold;
 
                             break;
@@ -283,7 +358,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
                             break;
                     }
 
-                    Debug.Log($"ANIMATION GATHERING {gtask.resourceType} {animationState}");
+                   // Debug.Log($"ANIMATION GATHERING {gtask.resourceType} {animationState}");
 
 
                     break;
@@ -295,7 +370,105 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable {//, IAliveBe
         animator.SetInteger("state", animationState);
     }
 
+    private void InitChildrentTool(CitizenTransformChilden children) {
+        EnableChildrentTool(children, false);
+    }
+
+    private void EnableChildrentTool(CitizenTransformChilden children, bool enable) {
+        var id = (int)children;
+        if (this.transform.childCount > id) {
+            this.transform.GetChild(id).gameObject.SetActive(enable);
+        }
+    }
+
+
+    public T GetTask<T>() where T : Task {
+        return task as T;
+    }
+
+
+    public void ReleaseTask() {
+
+        if (this.task == null)
+            return;
+
+        switch (this.task) {
+
+            case GatheringTask gtask:
+                gtask.ReleaseWorkSpot(this.gameObject);
+                break;
+        }
+    }
+
+
+    #region IsAlive implementation 
+
+    private float Health;
+    private float CurrentHealth;
+
+    public float GetCurrentHealth() {
+        return CurrentHealth;
+    }
+
+    public float GetHealth() {
+        return Health;
+    }
+
+    public float GetHealthReason() {
+        return CurrentHealth / Health;
+    }
+
+    public bool IsAlive() {
+        return CurrentHealth > 0;
+    }
+
+  
+
+    #endregion
+
+    #region IFighter implementation 
+    public float AttackPower { get; set; }
+    public float AttackRange { get; set; }
+    public float DefensePower { get; set; }
+
+    #endregion
+
+    #region IFighter implementation 
+    public float ResourceCapacity { get; set; }
+
+    public float CurrentAmountResouce { get; set; }
+
+    public float BuildingSpeed { get; set; }
+
+    public float GatheringSpeed { get; set; }
+
+    public Resources CurrentResource { get; set; }
+    #endregion
+
+
+    #region IDamagable implementation 
+    public void AddDamage(float damage) {
+        if (IsAlive()) {
+            if (damage > CurrentHealth) {
+                CurrentHealth = 0;
+            }
+            else
+                CurrentHealth = (int)(CurrentHealth - damage);
+        }
+        if (CurrentHealth <= 0) {
+          citizenState = CitizenStates.Died;
+            Destroy(gameObject, 3);
+        }
+    }
 
 
 
+    #endregion
+
+    #region IStatus implementation 
+    public string GetStatus() {
+        return citizenState.ToString() + " " + GetHealthReason() + " ";// + citizenTask.ToString() + " " + pointToMove;
+    }
+
+    #endregion
 }

@@ -92,8 +92,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         gameFacade.AddUnit(this.gameObject, Units.Citizen);
 		
 	    InitChildrentTool(CitizenTransformChilden.Pick);
-        InitChildrentTool(CitizenTransformChilden.Axe);		
-	}
+        InitChildrentTool(CitizenTransformChilden.Axe);
+        InitChildrentTool(CitizenTransformChilden.Hammer);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Gold);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Meat);
+        InitChildrentTool(CitizenTransformChilden.Gathered_Wood);
+    }
 		
     private void InitChildrentTool(CitizenTransformChilden children){
         EnableChildrentTool(children, false);
@@ -156,15 +160,18 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                                 SetOnTheWayState();
                                 SetState(CitizenStates.Walking);                               
                                 var queuecontroller = citizenTask.Gameobject.GetComponent<QueueController>();
-                                if (queuecontroller != null){
-                                    bool flag = false;
-                                    var position = queuecontroller.GetPosition(this.gameObject, out flag);
-                                    if (flag){
+                                if (false){
+                                    /*
+                                    int flag = -1;
+                                    var go = ref this.gameObject;
+                                    var position = queuecontroller.GetPosition(ref this.gameObject, out flag);
+                                    if (flag>= 0) {
                                         SetPointToMove(position);                                     
                                     }
                                     else{
                                         Debug.Log("Recurso no recibe mas trabajadores");
                                     }
+                                    */
                                 }
                                 else{                                   
                                     SetPointToMove(citizenTask.Position);

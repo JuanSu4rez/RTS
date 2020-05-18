@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
 
-[System.Serializable]
+[Serializable]
 public class PlayerController  {
+
+
 
     public ResourceAmount GoldAmount;
 
@@ -12,7 +15,7 @@ public class PlayerController  {
 
     public ResourceAmount FoodAmount;
 
-    public static PlayerController InstancePlayerController;
+  
     [SerializeField]
     private int _NumberofUnits;
 
@@ -30,7 +33,7 @@ public class PlayerController  {
 
     public PlayerController() {
 
-        InstancePlayerController = this;
+        
         GoldAmount = new ResourceAmount(Resources.Gold, 0);
 
         RockAmount = new ResourceAmount(Resources.Rock, 0);

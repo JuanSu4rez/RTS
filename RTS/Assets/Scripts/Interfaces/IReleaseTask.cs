@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class  Task 
-{
+public interface IReleaseTask { 
 
-    
+
 }

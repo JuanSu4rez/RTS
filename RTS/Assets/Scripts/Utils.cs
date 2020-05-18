@@ -64,13 +64,13 @@ public sealed class Utils
         return null;
     }
 
-    internal static Vector3[] GetPointsToWait(int numbers, Vector3 point, Vector3 direction, Vector3 fee)
+    internal static Vector3[] GetPointsToWait(int size, Vector3 point, Vector3 direction, Vector3 fee)
     {
 
 
 
 
-        var result = new Vector3[numbers];
+        var result = new Vector3[size];
 
         for (int i = 0; i < result.Length; i++)
         {

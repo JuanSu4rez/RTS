@@ -480,8 +480,13 @@ public class CameraScript : MonoBehaviour
 
                     string rightclickedObj = hit.transform.gameObject.tag;
 
-                    //se le asigna un pinto con una altura y+1
-                    var point =  new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+                    var iselectable = currentSelected.GetComponent<ISelectable>();
+
+                    if (iselectable != null)
+                        iselectable.IsSelected = true;
+
+                        //se le asigna un pinto con una altura y+1
+                        var point =  new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
 
                     switch (rightclickedObj) {
                         case "Land":
@@ -499,28 +504,33 @@ public class CameraScript : MonoBehaviour
 
                             if (queuecontroller != null) {
 
-                                bool flag = false;
-                                var position = queuecontroller.GetPosition(unitController.gameObject, out flag);
+                                int  flag = -1;
+                                GameObject obj = unitController.gameObject;
 
-                                if (flag) {
+                                var position = queuecontroller.GetPosition(ref obj, out flag);
+
+                                if (flag >= 0) {
                                     unitController.Move(position, () => {
 
 
-                                        GatheringTask gatheringtask  = new GatheringTask();
+                                        if (flag == 1) {
+                                            GatheringTask gatheringtask = new GatheringTask();
 
+                                            gatheringtask.onwait = flag == 0;
+                                            gatheringtask.resourceType = Resources.Gold;
+                                            //buscar edifico a depositar mina o centro urbano
+                                            gatheringtask.positionBuldingtodeposit = new Vector3(-7.4f, 1f, -7.75f);
+                                            gatheringtask.position = position;
+                                            gatheringtask.Gatheringspeed = 0.1f;
+                                            gatheringtask.MaxCapacity = 50;
+                                            gatheringtask.CurrentAmountResouce = 0;
+                                            gatheringtask.resourcescript = hit.transform.gameObject.GetComponent<ResourceScript>();
 
-                                        gatheringtask.resourceType = Resources.Gold;
-                                        //buscar edifico a depositar mina o centro urbano
-                                        gatheringtask.positionBuldingtodeposit = new Vector3( -7.4f, 1f, -7.75f);
-                                        gatheringtask.position = position;
-                                        gatheringtask.Gatheringspeed = 5;
-                                        gatheringtask.MaxCapacity = 1000;
-                                        gatheringtask.CurrentAmountResouce = 0;
-                                        gatheringtask.resourcescript = hit.transform.gameObject.GetComponent<ResourceScript>();
-
-
-                                        unitController.SetTask(gatheringtask);
-
+                                            unitController.transform.LookAt(gatheringtask.resourcescript.transform.position);
+                                            unitController.SetTask(gatheringtask);
+                                        }
+                                        else
+                                            unitController.transform.LookAt(hit.transform.position);
 
                                     });
 
@@ -604,10 +614,11 @@ public class CameraScript : MonoBehaviour
 
                         if (queuecontroller != null) {
 
-                            bool flag = false;
-                          var position =   queuecontroller.GetPosition(citizenTemp.gameObject, out flag);
+                            int  flag = -1;
+                            var go = citizenTemp.gameObject;
+                             var position =   queuecontroller.GetPosition(ref go, out flag);
 
-                            if (flag) {
+                            if (flag >= 0) {
                                 citizenTemp.SetPointToMove(position);
                                 citizenTemp.SetPointResource(hit.transform.position);
                             }

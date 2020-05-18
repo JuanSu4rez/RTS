@@ -56,9 +56,10 @@ public class TrackingStatus : MonoBehaviour {
         end:
         IsAliveBeing = aliveBeing != null;
 
-    
 
-      
+
+        selectable = this.GetComponent<ISelectable>();
+        IsAliveBeing = true;
     }
 
     private bool setInterfacesByAliveBeing()
@@ -72,8 +73,10 @@ public class TrackingStatus : MonoBehaviour {
             status = aux as IStatus;
             worker = aux as IWorker;
             aliveBeing = aux as IAliveBeing;
-            selectable = aux as ISelectable;
+        
         }
+
+        selectable = aux as ISelectable;
         return result;
     }
 
@@ -88,8 +91,10 @@ public class TrackingStatus : MonoBehaviour {
             status = aux as IStatus;
             worker = aux as IWorker;
             building = aux as IBulding;
-            selectable = aux as ISelectable;
+        
         }
+
+        selectable = aux as ISelectable;
         return result;
     }
 
@@ -174,10 +179,12 @@ public class TrackingStatus : MonoBehaviour {
 
     public float GetHealthReason()
     {
-        if (IsAliveBeing)
+        if (aliveBeing!= null)
             return aliveBeing.GetHealthReason(); 
-        else
+        if(building != null)
             return building.CurrentBuiltAmount / building.TotalBuiltAmount;
+
+        return 0;
     }
 
 }
