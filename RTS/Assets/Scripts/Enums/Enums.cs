@@ -109,6 +109,7 @@ public enum CameraStates
 /// </summary>
 public enum Buildings
 {
+    _none,
     ArcheryRange,
     Barracks,
     Blacksmith,
@@ -228,6 +229,32 @@ public enum Postures
         }
         return Resources.None;
     }
+
+
+    public static Buildings GetBuildingFromResource(this Resources rec) {
+
+        Buildings buld = Buildings._none;
+        switch (rec) {
+            case Resources.Food:
+                buld =  Buildings.Farm;
+
+                break;
+            case Resources.Gold:
+                buld = Buildings.MiningCamp;
+                break;
+            case Resources.None:
+                break;
+            case Resources.Rock:
+                buld = Buildings.MiningCamp;
+                break;
+            case Resources.Wood:
+                buld = Buildings.Farm;
+                break;
+        }
+
+        return buld;
+    }
+
 
 
     public static string GetPath(this AssetTypes AssetType)

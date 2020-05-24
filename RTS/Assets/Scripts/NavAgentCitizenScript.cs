@@ -20,12 +20,14 @@ VERIFICAR TYPING
 
 **/
 
-public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable, IDamagable
+public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1<CitizenStates>, IFigther, IWorker, IStatus, ISelectable, ITeamable_v1, IDamagable
 {
     private IGameFacade gameFacade;
     private CitizenTask citizenTask = CitizenTask.Empty;
     private Collider citizenCollider;
     private CitizenStates citizenState;
+
+
 
     public Resources CurrentResource { get; set; }
 
@@ -39,6 +41,13 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
         set{
             team = value;          
         }
+    }
+
+
+    public int IdTeam = 0;
+    public int TeamId() {
+        //todo hay que remover los team de los script
+        return Team != null ? Team.Id : 0;
     }
 
     public bool IsSelected { get; set; }
@@ -150,7 +159,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable<Ci
                         //WOOD => LumberCamp
                         //GOLD, ROCK => MiningCamp
                         //EVERYTING CAN BE DEPOSIT ON URBANCENTER
-                        if (name.Equals("UrbanCenter") && gameFacade.IsMemberOfMyTeam(collision.gameObject.GetComponent<ITeamable>()))
+                        if (name.Equals("UrbanCenter") && gameFacade.IsMemberOfMyTeam(collision.gameObject.GetComponent<ITeamable_v1>()))
                         {
                             if (CurrentAmountResouce > 0){ 
                                 gameFacade.AddResources(CurrentResource, CurrentAmountResouce);

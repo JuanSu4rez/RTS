@@ -8,7 +8,7 @@ public class UnitCreationScript : MonoBehaviour {
     public float durationCreationUnitTime { get; set; }
     public float CreationUnitTime { get; set; }
     public Queue<Units> creationQueue;
-    private ITeamable myteam;
+    private ITeamable_v1 myteam;
 
     private IGameFacade facade;
     [SerializeField]
@@ -29,7 +29,7 @@ public class UnitCreationScript : MonoBehaviour {
         CreationUnitTime = 0;
         creationQueue = new Queue<Units>();
 
-        myteam = this.GetComponent<ITeamable>();
+        myteam = this.GetComponent<ITeamable_v1>();
 
         facade =GameScript.GetFacade(myteam);
 
@@ -72,7 +72,7 @@ public class UnitCreationScript : MonoBehaviour {
 
         GameObject newUnit = Instantiate(unitToCreate);
 
-        var team = newUnit.GetComponent<ITeamable>();
+        var team = newUnit.GetComponent<ITeamable_v1>();
         if (team != null)
         {
             team.Team = myteam.Team;
@@ -101,9 +101,11 @@ public class UnitCreationScript : MonoBehaviour {
     {
 
         Gizmos.color = myteam!= null && myteam.Team != null? myteam.Team.Color: Color.gray;
-        Gizmos.DrawCube(calculateUnitOrigin(), new Vector3(1, 1, 1));
+        Gizmos.DrawCube(Utils.PositionSubHalfBounsdssizeXZ(this.gameObject), new Vector3(1, 1, 1));
 
-        Gizmos.DrawLine(this.transform.position, calculateUnitOrigin());
+        Gizmos.DrawLine(this.transform.position, Utils.PositionSubHalfBounsdssizeXZ(this.gameObject));
+
+        
 
 
         //Gizmos.color = Color.red;

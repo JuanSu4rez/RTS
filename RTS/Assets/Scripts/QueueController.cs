@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class QueueController : MonoBehaviour {
@@ -70,7 +71,18 @@ public class QueueController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        //si el recurso se acabo debe detenerse los demas
 
+
+        foreach (var go in waitlist) {
+            int index = Array.FindIndex(worker, p => p == go);
+
+            if (index >= 0) {
+
+                Debug.LogError(worker[index].name + " object exists in two list");
+                Application.Quit();
+            }
+        }
     }
 
     public virtual void OnDrawGizmos() {
@@ -98,7 +110,7 @@ public class QueueController : MonoBehaviour {
         Vector3 position = Vector3.zero;
         result = -1;
 
-        int index = Array.FindIndex(worker, i => i == null);
+        int index = Array.FindIndex(worker, p => p == null);
 
         if (index >= 0) {
             result = 1;
@@ -130,73 +142,104 @@ public class QueueController : MonoBehaviour {
 
 
     public void RelasePostion(GameObject obj) {
+     
+        var t =  Time.time; 
+    
         int index = Array.FindIndex(worker, p => p == obj);
+        // Debug.Log(t + "Array.FindIndex(worker ");
 
         if (index > -1) {
 
-            worker[index] = null;
+            //Debug.Log(t + "remuevo en la lista de trabajo " + index+" "+ worker[index]);
+            int cc = waitlist.Count;
 
             if (waitlist.Count > 0) {
 
+
                 var otherworker = waitlist[0];
-                waitlist.RemoveAt(0);
 
-                worker[index] = otherworker;
+                if (otherworker == obj) {
+                    Debug.Log("El objeto removido de la lista de trabajo no puede estar disponible a trabajar.");
+                    return;
+                }
 
+                worker[index] = null;
 
+                waitlist.Remove(otherworker);
+                int cc2 = waitlist.Count;
+                //Debug.Log(t + "waitlist change " + cc + " " + cc2);
                 var unitController = otherworker.GetComponent<UnitController>();
 
                 var resourcescript = this.GetComponent<ResourceScript>();
 
                 var hasunitcontroller = unitController != null;
-                var hashresourceScript = resourcescript != null;
+
 
                 if (hasunitcontroller) {
 
+                    //machetaso
 
+                    var _gtTask = unitController.GetTask<Task>();
 
+                    if (_gtTask is CompositeTask) {
 
-                    var position = pointstowWork[index];
+                        CompositeTask cmptask = _gtTask as CompositeTask;
+                        if (cmptask.task is GatheringTask) {
 
-                    unitController.Move(position, () => {
+                            _gtTask = cmptask.task as GatheringTask;
+                        }
+                    }
 
+                    if (_gtTask is GatheringTask) {
 
-                        GatheringTask gatheringtask = new GatheringTask();
+                        GatheringTask gtTask = _gtTask as GatheringTask;
+                  
 
-                        gatheringtask.onwait = false;
-                        gatheringtask.resourceType = Resources.Gold;
-                        //buscar edifico a depositar mina o centro urbano
-                        gatheringtask.positionBuldingtodeposit = new Vector3(-7.4f, 1f, -7.75f);
-                        gatheringtask.position = position;
-                        gatheringtask.Gatheringspeed = 5;
-                        gatheringtask.MaxCapacity = 1000;
-                        gatheringtask.CurrentAmountResouce = 0;
-                        gatheringtask.resourcescript = resourcescript;
+                        worker[index] = otherworker;
+                        var position = pointstowWork[index];
 
+                        //si al hacer el move hago el release task entonces bi se realiza la tarea
+                        unitController.Move(position, gtTask, () => {
+                            //
 
-                        unitController.SetTask(gatheringtask);
+                            gtTask.onwait = false;
+                            gtTask.ResetTask();
+                            unitController.SetTask(gtTask);
+                            // unitController.EnableTask();
+                        });
 
+                    }
+                    else {
+                         Debug.Log(t + unitController.gameObject.name+ " The unit doest not have a peding task. " + (_gtTask != null ? _gtTask.GetType().Name : ""));
 
-
-                    });
-
-
-
+                    }
 
                 }
                 else {
-                    Debug.Log($"Worker no cumple con los componentes hasunitcontroller {hasunitcontroller} ");
+                    //  Debug.Log(t + $" Worker no cumple con los componentes hasunitcontroller {hasunitcontroller} ");
                 }
 
             }
+            else {
+                worker[index] = null;
+            }
 
-            return;
+       
+        }
+        else {
+
+            //Debug.Log(t + "RelasePostion "+ obj.name);
+            if (waitlist.Remove(obj)) {
+                //   Debug.Log(t+" remuevo en la lista de espera");
+                return;
+            }
+
+
         }
 
-        waitlist.Remove(obj);
 
 
-        return;
+
     }
 
 }

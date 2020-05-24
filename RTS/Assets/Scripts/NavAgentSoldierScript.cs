@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<SoldierStates>, IFigther, IStatus, ISelectable, ITeamable, IDamagable
+public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1<SoldierStates>, IFigther, IStatus, ISelectable, ITeamable_v1, IDamagable
 {
     private IGameFacade gameFacade;
     private SoldierStates soldierState;
@@ -14,6 +14,13 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
 
     private SphereCollider attackCollider;
 
+
+
+    public int IdTeam = 0;
+    public int TeamId() {
+        //todo hay que remover los team de los script
+        return Team != null ? Team.Id : 0;
+    }
 
     [SerializeField]
     private Team team;
@@ -107,7 +114,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable<So
     {
         if (soldierState == SoldierStates.Idle)
         {
-            var team = collider.gameObject.GetComponent<ITeamable>();
+            var team = collider.gameObject.GetComponent<ITeamable_v1>();
 
             if (team == null || team.Team == null)
                 return;

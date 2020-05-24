@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 using UnityEngine.EventSystems;
 
-public class CameraScript : MonoBehaviour
-{
+public class CameraScript : MonoBehaviour {
     private Vector3 _mouseposition;
     //BoxSelection
     private Texture2D selectionTexture = null;
@@ -31,10 +31,8 @@ public class CameraScript : MonoBehaviour
 
     private CameraStates camerastate;
 
-    public GameObject CurrentSelected
-    {
-        get
-        {
+    public GameObject CurrentSelected {
+        get {
             return currentSelected;
         }
     }
@@ -58,13 +56,12 @@ public class CameraScript : MonoBehaviour
 
     public static GameAreasManager gameareas;
 
-    public  bool DebugAreas = false;
+    public bool DebugAreas = false;
 
 
 
     // Use this for initialization
-    void Start()
-    {
+    void Start() {
         selectionTexture = new Texture2D(1, 1);
         selectionTexture.SetPixels32(new Color32[] { new Color32(10, 195, 28, 30) });
         selectionTexture.alphaIsTransparency = true;
@@ -107,24 +104,20 @@ public class CameraScript : MonoBehaviour
 
 
 
-    public void GetObjectsinScene()
-    {
+    public void GetObjectsinScene() {
 
         //TODO FILTER BY TEAM
         GameObject[] allSelectableObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
 
-        for (int i = 0; i < allSelectableObjects.Length; i++)
-        {
+        for (int i = 0; i < allSelectableObjects.Length; i++) {
             ISelectable tempSel = allSelectableObjects[i].GetComponent<ISelectable>();
-            if (tempSel != null)
-            {
+            if (tempSel != null) {
                 objectsInScene.Add(allSelectableObjects[i]);
             }
         }
     }
 
-    public static Vector2 get2sCoordinates(GameObject selectable)
-    {
+    public static Vector2 get2sCoordinates(GameObject selectable) {
         if (selectable == null)
             return Vector2.zero;
 
@@ -134,16 +127,14 @@ public class CameraScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         gameareas.RecalculateAreas(camerastate);
         //if the player is not putting a building or something
         if (!currentGui.HasOptionSelected())
             userClick();
 
 
-        switch (camerastate)
-        {
+        switch (camerastate) {
             case CameraStates.None:
                 break;
             case CameraStates.UnitsSelection:
@@ -160,17 +151,14 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    private void userClick()
-    {
+    private void userClick() {
         Vector3 _onscreenmouseposition = Input.mousePosition;
         _onscreenmouseposition.y = Screen.height - Input.mousePosition.y;
 
         _mouseposition = Input.mousePosition;
 
-        if (camerastate != CameraStates.None)
-        {
-            if (_onscreenmouseposition.y >= gameareas.GameArea.height)
-            {
+        if (camerastate != CameraStates.None) {
+            if (_onscreenmouseposition.y >= gameareas.GameArea.height) {
                 if (firstclick == empty)
                     return;
                 else
@@ -180,39 +168,31 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) &&
             //todo temporal solution
-            !unitsGui.HasOptionSelected() && firstclick == empty)
-        {
+            !unitsGui.HasOptionSelected() && firstclick == empty) {
             secondclick = empty;
             firstclick = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             Vector3 initialPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             return;
         }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (firstclick != empty)
-            {
-                if (currentSelecteds.Count > 0)
-                {
+        else if (Input.GetMouseButtonUp(0)) {
+            if (firstclick != empty) {
+                if (currentSelecteds.Count > 0) {
                     //Debug.Log("Camera state " + camerastate);
                     //TODO VALIDATE WITH SUAREZ
                     //temporal counter
                     int citizens = 0, militar = 0, buildings = 0;
-                    for (int i = 0; i < currentSelecteds.Count; i++)
-                    {
+                    for (int i = 0; i < currentSelecteds.Count; i++) {
                         var obj = ((GameObject)currentSelecteds[i]);
 
                         obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
                         //todo temporal
-                        if(obj.GetComponent<NavAgentCitizenScript>()!= null)
-                        {
+                        if (obj.GetComponent<NavAgentCitizenScript>() != null) {
                             citizens++;
                         }
-                        else if (obj.GetComponent<BuildingBehaviour>() != null)
-                        {
+                        else if (obj.GetComponent<BuildingBehaviour>() != null) {
                             buildings++;
                         }
-                        else
-                        {
+                        else {
                             militar++;
                         }
 
@@ -221,43 +201,36 @@ public class CameraScript : MonoBehaviour
                     //todo temporal
                     camerastate = CameraStates.UnitsSelection;
 
-                    if(citizens >0  && militar == 0 && buildings == 0)
-                    {
+                    if (citizens > 0 && militar == 0 && buildings == 0) {
                         SetSelectedGameObject((GameObject)currentSelecteds[0]);
                         cameraSelectionType = CameraSelectionTypes.Citizen;
                         currentGui = this.unitsGui;
                     }
-                    else if (militar > 0  && citizens >= 0 && buildings == 0 )
-                    {
+                    else if (militar > 0 && citizens >= 0 && buildings == 0) {
                         SetSelectedGameObject((GameObject)currentSelecteds[0]);
                         cameraSelectionType = CameraSelectionTypes.Military;
                         currentGui = this.militaryGui;
                     }
-                    else if (buildings > 0)
-                    {
+                    else if (buildings > 0) {
                         camerastate = CameraStates.None;
                         cameraSelectionType = CameraSelectionTypes._None;
                         currentGui = this.nonGUI;
                     }
 
                 }
-                else
-                {
+                else {
 
                     RaycastHit hit;
                     Ray ray = Camera.main.ScreenPointToRay(firstclick);
 
-                    if (Physics.Raycast(ray, out hit))
-                    {
+                    if (Physics.Raycast(ray, out hit)) {
                         var _name = hit.transform.gameObject.name;
                         //TRANSATITION TO UnitsSelection OR BuildingsSelection
                         var hitselected = hit.transform.gameObject;
                         SetSelectedGameObject(hitselected);
-                        if (currentSelected != null)
-                        {
+                        if (currentSelected != null) {
                             var _tag = currentSelected.tag;
-                            switch (_tag)
-                            {
+                            switch (_tag) {
 
                                 case "Citizen":
                                     camerastate = CameraStates.UnitsSelection;
@@ -290,8 +263,7 @@ public class CameraScript : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0) && firstclick != empty)
-        {
+        if (Input.GetMouseButton(0) && firstclick != empty) {
 
             secondclick = _mouseposition;// Input.mousePosition;
 
@@ -312,11 +284,9 @@ public class CameraScript : MonoBehaviour
 
             //TODO SELECT ALL THE GAMEOBJECTS THAT BELONG TO YOUR TEAM ON THE AREA
             //TODO FILTER BY TEAM
-            if (selection.width != 0 && selection.height != 0)
-            {
+            if (selection.width != 0 && selection.height != 0) {
                 currentSelecteds.RemoveRange(0, currentSelecteds.Count);
-                for (int index = 0; index < objectsInScene.Count; index++)
-                {
+                for (int index = 0; index < objectsInScene.Count; index++) {
                     GameObject obj = ((GameObject)objectsInScene[index]);
 
                     if (obj == null)
@@ -324,34 +294,29 @@ public class CameraScript : MonoBehaviour
 
                     var iselectable = obj.gameObject.GetComponent<ISelectable>();
 
-                    if(iselectable == null)
+                    if (iselectable == null)
                         continue;
 
-                    if (selection.Contains(get2sCoordinates(obj)))
-                    {
+                    if (selection.Contains(get2sCoordinates(obj))) {
                         currentSelecteds.Add(obj);
                         iselectable.IsSelected = true;
                     }
-                    else
-                    {
-          
+                    else {
+
                         currentSelecteds.Remove(obj);
                         iselectable.IsSelected = false;
                     }
                 }
             }
-            else if (currentSelecteds.Count > 0)
-            {
+            else if (currentSelecteds.Count > 0) {
 
                 ClearSelection();
             }
         }
     }
 
-    private void ClearSelection()
-    {
-        for (int index = 0; index < currentSelecteds.Count; index++)
-        {
+    private void ClearSelection() {
+        for (int index = 0; index < currentSelecteds.Count; index++) {
             GameObject obj = ((GameObject)currentSelecteds[index]);
             obj.gameObject.GetComponent<ISelectable>().IsSelected = false;
 
@@ -360,16 +325,13 @@ public class CameraScript : MonoBehaviour
     }
 
 
-    private void SetSelectedGameObject(GameObject hitselected)
-    {
-        if (hitselected != null)
-        {
+    private void SetSelectedGameObject(GameObject hitselected) {
+        if (hitselected != null) {
             var auxst = hitselected.GetComponent<ISelectable>();
             if (auxst != null)
                 auxst.IsSelected = true;
 
-            if (currentSelected != null)
-            {
+            if (currentSelected != null) {
                 auxst = currentSelected.GetComponent<ISelectable>();
                 if (auxst != null)
                     auxst.IsSelected = false;
@@ -378,22 +340,19 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    private void ClickActionsUnits()
-    {
+    private void ClickActionsUnits() {
         //TODO TEMPORAL SOLUTION
         //TO AVOID CLICKING ON GUI AREA WHEN YOU HAVE A SELECTION
         Vector3 _onscreenmouseposition = Input.mousePosition;
         _onscreenmouseposition.y = Screen.height - Input.mousePosition.y;
-        if (_onscreenmouseposition.y >= gameareas.GameArea.height)
-        {
+        if (_onscreenmouseposition.y >= gameareas.GameArea.height) {
             return;
         }
 
         if (currentSelected == null)
             return;
 
-        switch (cameraSelectionType)
-        {
+        switch (cameraSelectionType) {
             case CameraSelectionTypes.Citizen:
                 CitizenAction();
                 break;
@@ -409,35 +368,28 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    private void PeopleAction()
-    {
+    private void PeopleAction() {
 
     }
 
-    private void BuldingAction()
-    {
+    private void BuldingAction() {
 
     }
 
-    private void MilitaryAction()
-    {
-        var soldierTemp = currentSelected.gameObject.GetComponent<IControlable<SoldierStates>>();
+    private void MilitaryAction() {
+        var soldierTemp = currentSelected.gameObject.GetComponent<IControlable_v1<SoldierStates>>();
 
-        if (soldierTemp == null)
-        {
+        if (soldierTemp == null) {
             return;
         }
 
-        if (Input.GetMouseButtonDown(1))
-        {
+        if (Input.GetMouseButtonDown(1)) {
             //when a citizen is selected
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
+            if (Physics.Raycast(ray, out hit)) {
                 string rightclickedObj = hit.transform.gameObject.name;
-                switch (rightclickedObj)
-                {
+                switch (rightclickedObj) {
                     case "Land":
                         pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         soldierTemp.SetState(SoldierStates.Walking);
@@ -462,21 +414,20 @@ public class CameraScript : MonoBehaviour
         }
     }
 
-    private void CitizenAction()
-    {
+    private void CitizenAction() {
         #region implementatioforunicontroller
         var unitController = currentSelected.gameObject.GetComponent<UnitController>();
 
         if (unitController != null) {
 
-          
+
 
             if (Input.GetMouseButtonDown(1)) {
                 //when a citizen is selected
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit)) {
-                 
+
 
                     string rightclickedObj = hit.transform.gameObject.tag;
 
@@ -485,54 +436,97 @@ public class CameraScript : MonoBehaviour
                     if (iselectable != null)
                         iselectable.IsSelected = true;
 
-                        //se le asigna un pinto con una altura y+1
-                        var point =  new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
+                    //se le asigna un pinto con una altura y+1
+                    var point = new Vector3(hit.point.x, hit.point.y + 1, hit.point.z);
 
                     switch (rightclickedObj) {
                         case "Land":
-
-                            unitController.Move(point);
+                            //esto no funciona por que cuando camina de la cola a la mina la tarea es 
+                            //moverse y el action esta pendiente
+                            unitController.ReleaseTask();
+                            unitController.Move(point,null);
 
 
                             break;
                         case "Gold":
 
 
-                           
+                            //si mi task actual es recojer oro
+                            Task currenttask = unitController.GetTask<Task>();
+
+                            CompositeTask cmp = (currenttask as CompositeTask);
+                            
+                            GatheringTask gthtask = (currenttask as GatheringTask);
+
+                            if (gthtask != null && gthtask.resourceType == Resources.Gold) {
+
+                                Debug.Log("Citizen is already Gathering gold");
+                                return;
+
+                            }
+
+                            if (cmp != null) {
+                                if (cmp.task is GatheringTask) {
+                                    gthtask = cmp.task as GatheringTask;
+                                }
+                            }
+
+                            if (gthtask != null && gthtask.resourceType == Resources.Gold) {
+
+                                Debug.Log("Citizen is already Gathering gold");
+                                return;
+
+                            }
+
+
+
+
+
+
 
                             var queuecontroller = hit.transform.gameObject.GetComponent<QueueController>();
 
                             if (queuecontroller != null) {
 
-                                int  flag = -1;
+                                int flag = -1;
+
                                 GameObject obj = unitController.gameObject;
+
+                                var buildinggameobject = GameScript.FindResoruceBuidingToDeposit(0, Resources.Gold, unitController.transform.position);
+
+                                if (buildinggameobject == null) {
+                                    Debug.Log("!No hay edificio para depositar no se asigna la tarea");
+                                    return;
+                                }
 
                                 var position = queuecontroller.GetPosition(ref obj, out flag);
 
+                                var resource = hit.transform.gameObject.GetComponent<ResourceScript>();
+
                                 if (flag >= 0) {
-                                    unitController.Move(position, () => {
 
 
-                                        if (flag == 1) {
-                                            GatheringTask gatheringtask = new GatheringTask();
 
-                                            gatheringtask.onwait = flag == 0;
-                                            gatheringtask.resourceType = Resources.Gold;
-                                            //buscar edifico a depositar mina o centro urbano
-                                            gatheringtask.positionBuldingtodeposit = new Vector3(-7.4f, 1f, -7.75f);
-                                            gatheringtask.position = position;
-                                            gatheringtask.Gatheringspeed = 0.1f;
-                                            gatheringtask.MaxCapacity = 50;
-                                            gatheringtask.CurrentAmountResouce = 0;
-                                            gatheringtask.resourcescript = hit.transform.gameObject.GetComponent<ResourceScript>();
+                                    GatheringTask gatheringtask = new GatheringTask();
 
-                                            unitController.transform.LookAt(gatheringtask.resourcescript.transform.position);
+                                    gatheringtask.onwait = flag == 0;
+                                    gatheringtask.resourceType = Resources.Gold;
+                                    gatheringtask.positionBuldingtodeposit = Utils.PositionSubHalfBounsdssizeXZ(buildinggameobject);
+                                    gatheringtask.position = position;
+                                    gatheringtask.Gatheringspeed = 0.1f;
+                                    gatheringtask.MaxCapacity = 50;
+                                    gatheringtask.CurrentAmountResouce = 0;
+                                    gatheringtask.resourcescript = resource;
+
+                                    //antes de mover se hace un realease del task actual
+                                    unitController.ReleaseTask();
+                                    unitController.Move(position, gatheringtask,
+                                    //accion una ves llega al puesto    
+                                        () => {
+                                            //todo que pasa si es null
                                             unitController.SetTask(gatheringtask);
                                         }
-                                        else
-                                            unitController.transform.LookAt(hit.transform.position);
-
-                                    });
+                                    );
 
                                 }
                                 else {
@@ -540,67 +534,59 @@ public class CameraScript : MonoBehaviour
                                 }
 
                             }
-                            else 
-                            {
-                                unitController.Move(hit.transform.position);
-
-                       
-
+                            else {
+                                Debug.Log("No existe queue controller");
                             }
 
-                      
+
                             break;
                         case "Forest":
-                       
-                            
+
+
                             break;
 
                         case "Rock":
-                       
+
 
                             break;
 
                         case "Building":
 
-                    
+
                             break;
 
                         default:
                             break;
                     }
 
-                   
-                      
+
+
 
 
                 }
             }
 
 
-           
+
 
         }
         #endregion
 
         var citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
 
-        if (citizenTemp == null)
-        {
+        if (citizenTemp == null) {
             return;
         }
 
-        if (Input.GetMouseButtonDown(1))
-        {
+        if (Input.GetMouseButtonDown(1)) {
             //when a citizen is selected
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
+            if (Physics.Raycast(ray, out hit)) {
                 CitizenTask citizenTask = CitizenTask.Empty;
 
                 string rightclickedObj = hit.transform.gameObject.tag;
-                switch (rightclickedObj)
-                {
+                switch (rightclickedObj) {
                     case "Land":
                         pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         citizenTemp.SetPointToMove(pointtomove.transform.position);
@@ -608,30 +594,30 @@ public class CameraScript : MonoBehaviour
                         break;
                     case "Gold":
                         citizenTemp = currentSelected.gameObject.GetComponent<NavAgentCitizenScript>();
-                     
 
-                       var queuecontroller =  hit.transform.gameObject.GetComponent<QueueController>();
+
+                        var queuecontroller = hit.transform.gameObject.GetComponent<QueueController>();
 
                         if (queuecontroller != null) {
 
-                            int  flag = -1;
+                            int flag = -1;
                             var go = citizenTemp.gameObject;
-                             var position =   queuecontroller.GetPosition(ref go, out flag);
+                            var position = queuecontroller.GetPosition(ref go, out flag);
 
                             if (flag >= 0) {
                                 citizenTemp.SetPointToMove(position);
                                 citizenTemp.SetPointResource(hit.transform.position);
                             }
-                            else{
+                            else {
                                 Debug.Log("Recurso no recibe mas trabajadores");
                             }
 
                         }
-                        else{
+                        else {
 
                             citizenTemp.SetPointToMove(hit.transform.position);
                             citizenTemp.SetPointResource(hit.transform.position);
-                           
+
                         }
 
                         citizenTemp.SetState(CitizenStates.Gathering);
@@ -688,18 +674,15 @@ public class CameraScript : MonoBehaviour
     }
 
 
-    void OnGUI()
-    {
+    void OnGUI() {
         var originalcolor = GUI.color;
 
         var originalcolorback = GUI.backgroundColor;
 
-        switch (camerastate)
-        {
+        switch (camerastate) {
             case CameraStates.None:
 
-                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty)
-                {
+                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty) {
                     GUI.DrawTexture(selection, selectionTexture);
                     GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
                     GUI.DrawTexture(new Rect(selection.x, selection.y, 1, selection.height), selectionBorder);
@@ -707,8 +690,7 @@ public class CameraScript : MonoBehaviour
                     GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
                 }
 
-                if (DebugAreas)
-                {
+                if (DebugAreas) {
                     Color coloraux = Color.red;
                     GUI.color = coloraux;
                     coloraux.a = 0.3f;
@@ -722,8 +704,7 @@ public class CameraScript : MonoBehaviour
 
 
 
-                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty)
-                {
+                if (Input.GetMouseButton(0) && firstclick != empty && secondclick != empty) {
                     GUI.DrawTexture(selection, selectionTexture);
                     GUI.DrawTexture(new Rect(selection.x, selection.y, selection.width, 1), selectionBorder);
                     GUI.DrawTexture(new Rect(selection.x, selection.y, 1, selection.height), selectionBorder);
@@ -734,8 +715,7 @@ public class CameraScript : MonoBehaviour
                 if (currentGui != null)
                     currentGui.ShowGUI(currentSelected);
 
-                if (DebugAreas)
-                {
+                if (DebugAreas) {
                     Color coloraux = Color.red;
                     GUI.color = coloraux;
                     coloraux.a = 0.3f;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, IDamagable,ITeamable
+public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, IDamagable,ITeamable_v1
 {
 
     [SerializeField]
@@ -12,6 +12,8 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     public Team Team { get { return team; } set { team = value;
             changeColor();
         } }
+
+
 
 
     private float LastCurrentBuiltAmount;
@@ -66,6 +68,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
     void OnEnable()
     {
         SetFundationalBuildingData();
+      
     }
     void Start()
     {
@@ -77,8 +80,8 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
         facade = GameScript.GetFacade(team);
         if (facade != null)
             facade.AddBuilding(this.gameObject, _building);
-       
-         
+
+        GameScript.AddBuiding(TeamId(), this);
     }
     
   
@@ -259,4 +262,11 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
         var result = "Bulding " + this.State.ToString() + ", CurrentBuiltAmount = " + this.CurrentBuiltAmount;
         return result;
     }
+
+    public int IdTeam = 0;
+    public int TeamId() {
+        //todo hay que remover los team de los script
+        return Team != null ? Team.Id : 0;
+    }
+
 }

@@ -13,6 +13,7 @@ public class GameScript : MonoBehaviour {
     private UnitsInfo unitsInfo;
 
 
+    public const int PlayerTeam = 0;
 
 
     [SerializeField]
@@ -118,14 +119,19 @@ public class GameScript : MonoBehaviour {
     }
 
     public static IGameFacade GetFacade(Team team) {
-        if (team != null)
+       
+
+        if (team != null  )
             return facades[team.Id];
         else
             return null;
     }
 
 
-    public static IGameFacade GetFacade(ITeamable team) {
+    public static IGameFacade GetFacade(ITeamable_v1 team) {
+
+
+     
         if (team != null)
             return GetFacade(team.Team);
         else
@@ -168,6 +174,22 @@ public class GameScript : MonoBehaviour {
         if(team< _splayers.Length )
         _splayers[team].AddResourceAmount(resource, amount);
 
+    }
+
+    public static void AddBuiding(int team, BuildingBehaviour buiding) {
+
+        if (team < _splayers.Length)
+            _splayers[team].AddBuilding(buiding);
+
+    }
+
+
+    public static GameObject FindResoruceBuidingToDeposit(int team, Resources resource, Vector3 position) {
+
+        if (team < _splayers.Length)
+          return   _splayers[team].FindResoruceBuidingToDeposit( position, resource);
+
+        return null;
     }
 
 

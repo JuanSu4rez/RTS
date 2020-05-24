@@ -56,13 +56,10 @@ public class GatheringTask : Task {
     /// </summary>
     public void ReleaseWorkSpot(GameObject go) {
 
-        if (!IsValidTask()) {
-            return;
-        }
-
         var queuecontroller = resourcescript.GetComponent<QueueController>();
 
-        if (queuecontroller != null) {
+        if (queuecontroller != null) 
+        {
             queuecontroller.RelasePostion(go);
         }
 

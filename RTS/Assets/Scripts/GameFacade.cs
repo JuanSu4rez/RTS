@@ -54,7 +54,7 @@ public interface IGameFacade
 
     void RemoveUnity(GameObject obj, Units unit);
 
-    bool IsMemberOfMyTeam(ITeamable teamable);
+    bool IsMemberOfMyTeam(ITeamable_v1 teamable);
 
 
 }
@@ -229,7 +229,7 @@ public class GameFacade : ScriptableObject, IGameFacade
         return result;
     }
 
-    public bool IsMemberOfMyTeam(ITeamable teamable)
+    public bool IsMemberOfMyTeam(ITeamable_v1 teamable)
     {
         return teamable != null && teamable.Team.Id == Team.Id;
     }
@@ -409,7 +409,7 @@ public class Diplomacy
 [System.Serializable]
 public class ResourceAmount
 {
-    [SerializeField]
+   
     public Resources Resource;
 
     [SerializeField]

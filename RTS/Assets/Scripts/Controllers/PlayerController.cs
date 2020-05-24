@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System;
+using System.Collections.Generic;
+using UnityEngine.UIElements;
+using System.Linq;
 
 [Serializable]
 public class PlayerController  {
@@ -14,6 +17,12 @@ public class PlayerController  {
     public ResourceAmount WoodAmount;
 
     public ResourceAmount FoodAmount;
+
+    private List<BuildingBehaviour> buildings = new List<BuildingBehaviour>(20);
+
+    public string Name;
+
+    public Color color;
 
   
     [SerializeField]
@@ -97,6 +106,67 @@ public class PlayerController  {
         }
 
         return result;
+    }
+
+    private int numberofurbancenters = 0;
+
+    public void AddBuilding(BuildingBehaviour building) {
+
+        if (buildings.Contains(building)) {
+            return;
+        }
+
+        if (buildings.Count > 0 && building.Building == Buildings.UrbanCenter) {
+
+            buildings.Insert(numberofurbancenters, building);
+            numberofurbancenters++;
+        }
+        else {
+            buildings.Add(building);
+        }
+    }
+
+    public GameObject FindResoruceBuidingToDeposit(Vector3 position ,Resources resource) {
+
+        GameObject result = null;
+
+        if (!UtilsCollections.IsNullOrEmpty(buildings)) {
+
+
+
+            Buildings buidingtofind = resource.GetBuildingFromResource();
+
+            float currentdistance = 0;
+
+            buildings.ForEach(p => {
+
+                if (p.Building == buidingtofind || p.Building == Buildings.UrbanCenter) {
+
+                    if (result == null) {
+
+                        result = p.gameObject;
+                        currentdistance = Mathf.Abs( Vector3.Distance(position, p.gameObject.transform.position));
+                    }
+                    else 
+                    { 
+                      var newdistance  = Mathf.Abs(Vector3.Distance(position, p.gameObject.transform.position));
+                        if (newdistance < currentdistance) {
+
+                            result = p.gameObject;
+                            currentdistance = newdistance;
+
+                        }
+
+                    }
+                
+                }
+
+               });
+
+
+        }
+        return result;
+
     }
 
 }

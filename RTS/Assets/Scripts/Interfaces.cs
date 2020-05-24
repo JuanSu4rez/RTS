@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,12 +23,23 @@ public interface IAliveBeing
     float GetHealthReason();
 }
 
-public interface IControlable<T> where T : struct
+public interface IControlable_v1<T> where T : struct
 {
     void SetPointToMove(Vector3 newPointToMove);
     void SetState(T newState);
     void ReleaseTask();
 }
+
+public interface IControlable {
+
+     void SetTask(Task T);
+
+     void EnableTask();
+
+    void ReleaseTask();
+}
+
+
 
 public interface IFigther{
     float AttackPower { get; set; }
@@ -61,8 +73,17 @@ public interface IStatus {
     string GetStatus();
 }
 
-public interface ITeamable {
+public interface ITeamable_v1 {
     Team Team { get; set; }
+
+    int TeamId();
+}
+
+
+public interface ITeamable {
+    void SetTeam(int team);
+
+    int TeamId();
 }
 
 public interface IDamagable {

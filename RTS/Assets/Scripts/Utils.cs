@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 
 public sealed class Utils
 {
@@ -20,6 +21,36 @@ public sealed class Utils
         }
     }
 
+
+    public static Vector3[] GetPoints(GameObject gor) {
+        List<Vector3> aux = new List<Vector3>();
+        if (gor == null)
+            return aux.ToArray();
+
+        if (GridScript.gridScript == null || GridScript.gridScript.gird == null) {
+            return aux.ToArray();
+        }
+
+
+        if (gor.tag == "Citizen") {
+
+            aux.AddRange( GridScript.gridScript.gird.GetSorroundPositions(gor.transform.position));
+        }
+        else if (gor.tag == "Military") {
+
+            aux.AddRange(GridScript.gridScript.gird.GetSorroundPositions(gor.transform.position));
+
+        }
+        else if (gor.tag == "Building") {
+
+           // aux.AddRange(GridScript.gridScript.gird.GetSorroundPositions(gor.transform.position));
+
+        }
+
+        return aux.ToArray();
+
+
+    }
 
     public static Vector3[] GetPoints(Collider collider)
     {
@@ -68,8 +99,6 @@ public sealed class Utils
     {
 
 
-
-
         var result = new Vector3[size];
 
         for (int i = 0; i < result.Length; i++)
@@ -80,6 +109,20 @@ public sealed class Utils
 
         return result;
 
+    }
+
+    internal static Vector3 PositionSubHalfBounsdssizeXZ(GameObject gameObject, int deltaPosition = 1) {
+        Collider buildingCollider = gameObject.GetComponent<Collider>();
+        Transform buildingPosition = gameObject.transform;
+
+        Vector3 unitPosition = new Vector3();
+        var v = buildingCollider.bounds.size;// buildingCollider.bounds.size.sqrMagnitude > this.transform.localScale.sqrMagnitude ? buildingCollider.bounds.size: this.transform.localScale;
+        v.x /= 2;
+        v.z /= 2;
+        v.y = 0;
+        unitPosition = (buildingPosition.position - v) - new Vector3(deltaPosition, 0, deltaPosition);
+
+        return unitPosition;
     }
 }
 
