@@ -16,11 +16,11 @@ public class Grid {
 
     private int rows;
     private int cols;
-    private int width;
-    private int height;
+    public int width;
+    public int height;
 
 
-    private Vector3 size = new Vector3();
+    public Vector3 size = new Vector3();
     private Vector3 initialposition = Vector3.zero;
 
     public Grid(int rows, int cols, int width, Vector3 initalpos, bool debugird = false) : this(rows, cols, width, width, initalpos, debugird) {

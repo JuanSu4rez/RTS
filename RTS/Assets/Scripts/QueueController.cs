@@ -13,7 +13,7 @@ public class QueueController : MonoBehaviour {
 
     public int maxwaitpositionscount = 20;
 
-    private int workpointpositions = 4;
+ 
 
 
     /// <summary>
@@ -49,8 +49,10 @@ public class QueueController : MonoBehaviour {
     void Start() {
 
 
-        if (this.GetComponent<CapsuleCollider>() != null)
-            pointstowWork = Utils.GetPoints(this.GetComponent<CapsuleCollider>());
+        //if (this.GetComponent<CapsuleCollider>() != null)
+
+        var collider = this.GetComponents<Collider>().FirstOrDefault(p => p.enabled == true);
+        pointstowWork = Utils.GetPoints(collider);
 
         worker = new GameObject[pointstowWork.Length];
 
@@ -73,7 +75,7 @@ public class QueueController : MonoBehaviour {
     void Update() {
         //si el recurso se acabo debe detenerse los demas
 
-
+     
         foreach (var go in waitlist) {
             int index = Array.FindIndex(worker, p => p == go);
 
@@ -142,9 +144,9 @@ public class QueueController : MonoBehaviour {
 
 
     public void RelasePostion(GameObject obj) {
-     
-        var t =  Time.time; 
-    
+
+        var t = Time.time;
+
         int index = Array.FindIndex(worker, p => p == obj);
         // Debug.Log(t + "Array.FindIndex(worker ");
 
@@ -163,9 +165,21 @@ public class QueueController : MonoBehaviour {
                     return;
                 }
 
+                if (!waitlist.Remove(otherworker)) {
+
+                    
+                    Debug.Log("oTHER WROKER DEBIO DESTRUIRSE "+ otherworker.name+" "+obj.name);
+                    
+                    DestroyObject(otherworker);
+                    DestroyObject(obj);
+
+                    return;
+                }
+
+
                 worker[index] = null;
 
-                waitlist.Remove(otherworker);
+              
                 int cc2 = waitlist.Count;
                 //Debug.Log(t + "waitlist change " + cc + " " + cc2);
                 var unitController = otherworker.GetComponent<UnitController>();
@@ -179,38 +193,37 @@ public class QueueController : MonoBehaviour {
 
                     //machetaso
 
-                    var _gtTask = unitController.GetTask<Task>();
+                    var cmptask = unitController.GetTask<CompositeTask>();
+                    GatheringTask gttask = null;
 
-                    if (_gtTask is CompositeTask) {
-
-                        CompositeTask cmptask = _gtTask as CompositeTask;
-                        if (cmptask.task is GatheringTask) {
-
-                            _gtTask = cmptask.task as GatheringTask;
-                        }
+                    if (cmptask != null) {
+                        gttask = cmptask.task as GatheringTask;
+                        
                     }
 
-                    if (_gtTask is GatheringTask) {
 
-                        GatheringTask gtTask = _gtTask as GatheringTask;
-                  
+                    if(gttask == null)
+                        gttask = unitController.GetTask<GatheringTask>();
+
+
+                    if (gttask != null) {
+
+                      
 
                         worker[index] = otherworker;
                         var position = pointstowWork[index];
 
                         //si al hacer el move hago el release task entonces bi se realiza la tarea
-                        unitController.Move(position, gtTask, () => {
-                            //
-
-                            gtTask.onwait = false;
-                            gtTask.ResetTask();
-                            unitController.SetTask(gtTask);
+                        unitController.Move(position, gttask, () => {
+       
+                            gttask.onwait = false;
+                            unitController.SetTask(gttask);
                             // unitController.EnableTask();
                         });
 
                     }
                     else {
-                         Debug.Log(t + unitController.gameObject.name+ " The unit doest not have a peding task. " + (_gtTask != null ? _gtTask.GetType().Name : ""));
+                        Debug.Log(t + unitController.gameObject.name + " The unit doest not have a peding task. " + (gttask != null ? gttask.GetType().Name : "Null"));
 
                     }
 
@@ -224,7 +237,7 @@ public class QueueController : MonoBehaviour {
                 worker[index] = null;
             }
 
-       
+
         }
         else {
 

@@ -6,9 +6,13 @@ public class MoveTask : Task
 {
    // public CitizeAnimationStates animationstate = CitizeAnimationStates.None;
 
-    public Vector3 position;
+    public readonly  Vector3 position;
 
     public Action action;
 
-   // public Action releaseaction;
+
+    public MoveTask(Vector3 _position) {
+        this.position = _position;
+    }
+    // public Action releaseaction;
 }

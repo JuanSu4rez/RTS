@@ -12,12 +12,6 @@ public class GridScript : MonoBehaviour
 
 
     private void Awake() {
-     
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
         if (gridScript == null) {
             gridScript = this;
         }
@@ -26,7 +20,13 @@ public class GridScript : MonoBehaviour
             Destroy(this);
         }
 
-        gird = new Grid(1000,1000,1,Vector3.zero, false);
+        gird = new Grid(1000, 1000, 1, Vector3.zero, false);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+  
 
       
     }

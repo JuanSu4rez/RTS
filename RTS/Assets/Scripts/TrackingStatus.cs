@@ -19,11 +19,6 @@ public class TrackingStatus : MonoBehaviour {
     private Texture2D textureCurrentHealt;
 
 
-    private string[] a = new string[]{
-    "NavAgentCitizenScript",
-
-    };
-
 
    
  

@@ -15,7 +15,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
     private CitizeAnimationStates animationstate;
 
 
-    private float distanceTolerance = 2;
+    private float distanceTolerance =2f;
 
     public Task task;
 
@@ -107,9 +107,9 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
         }
         */
 
-        float distanceToDestiny = Mathf.Abs(Vector3.Distance(navMeshAgent.destination, this.transform.position));
-        if (distanceTolerance >= distanceToDestiny) {
-
+        float distanceToDestiny = Mathf.Abs(Vector3.Distance(this.transform.position, mtask.position));
+        if (distanceToDestiny <= distanceTolerance  ) {
+            this.transform.position = mtask.position;
             nextrecalc = 0;
             navMeshAgent.ResetPath();
             navMeshAgent.enabled = false;
@@ -164,7 +164,10 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
                 gtask.ReleaseWorkSpot(this.gameObject);
                 var taskcopy = gtask;
                 //antes de movove se puede llamar a releasetask
-                this.Move(gtask.positionBuldingtodeposit, animstate, () => {
+                var buildinggameobject = GameScript.FindResoruceBuidingToDeposit(Team, gtask.resourceType, this.transform.position);
+
+             
+                this.Move(Utils.PositionSubHalfBounsdssizeXZ(buildinggameobject), animstate, () => {
 
                     //incrementar la capicidad del jugador del recurso dado
                     GameScript.AddResource(Team, taskcopy.resourceType, taskcopy.CurrentAmountResouce);
@@ -215,8 +218,12 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
             gtask.ReleaseWorkSpot(this.gameObject);
             //antes de move se puede llamar a release task
             var taskcopy = gtask;
+
+            var buildinggameobject = GameScript.FindResoruceBuidingToDeposit(Team, gtask.resourceType, this.transform.position);
+        
+
             //Move to positionBuldingtodeposit
-            this.Move(gtask.positionBuldingtodeposit, animstate, () => {
+            this.Move(Utils.PositionSubHalfBounsdssizeXZ(buildinggameobject), animstate, () => {
 
                 //incrementar la capicidad del jugador del recurso dado
                 GameScript.AddResource(Team, taskcopy.resourceType, taskcopy.CurrentAmountResouce);
@@ -253,7 +260,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 */
                        
                             taskcopy.onwait = flag == 0;
-                            taskcopy.ResetTask();
+                        
                             SetTask(taskcopy);
                          
 
@@ -287,8 +294,8 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
 
     public void Move(Vector3 _position,Task _task ,Action _action ){//, Action _releaseaction = null) {
-
-        this.SetTask(new CompositeTask() { position = _position, task = _task, action = _action });
+       // Debug.Log(this.gameObject.name+" Move "+ _position+" "+ _task.GetType()+" "+ (_action!= null) + " " + GetStatusTask());
+        this.SetTask(new CompositeTask(_position) {  task = _task, action = _action });
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(_position);
         this.animationstate = CitizeAnimationStates.Walking;
@@ -298,20 +305,20 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
 
     public void Move(Vector3 _position, Action _action ) {//, Action _releaseaction = null) {
-
-        this.SetTask(new MoveTask() { position = _position, action = _action });
+       // Debug.Log(this.gameObject.name + " Move " + _position + " "  + " " + (_action != null)+" "+ GetStatusTask());
+        this.SetTask(new MoveTask(_position) {  action = _action });
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(_position);
         this.animationstate = CitizeAnimationStates.Walking;
     }
 
-    private void Move(Vector3 position, CitizeAnimationStates _animationstate, Action action ) {
+    private void Move(Vector3 _position, CitizeAnimationStates _animationstate, Action _action ) {
 
-
-        this.SetTask(new MoveTask() { position = position, action = action });
+        //Debug.Log(this.gameObject.name + " Move State " + _position + " " + _animationstate + " " + (_action != null) + " " + GetStatusTask());
+        this.SetTask(new MoveTask(_position) {action = _action });
         this.animationstate = _animationstate;
         navMeshAgent.enabled = true;
-        navMeshAgent.SetDestination(position);
+        navMeshAgent.SetDestination(_position);
 
         this.animationstate = _animationstate;
     }
@@ -484,16 +491,71 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
     #region IStatus implementation 
     public string GetStatus() {
-        return citizenState.ToString() + " " + GetHealthReason() + " ";// + citizenTask.ToString() + " " + pointToMove;
+
+        string _task = "NO TASK";
+
+        if (task != null) { 
+        _task = this.task.GetType().ToString()+" ";
+        switch (task) {
+            case CompositeTask ctask:
+                _task = (ctask.position.ToString() + " has action " + (ctask.action != null))+" "+ ctask.task.GetType();
+
+                break;
+            case MoveTask mtask:
+                _task = mtask.position.ToString()+" has action "+(mtask.action!= null);
+                break;
+            case GatheringTask gtask:
+                _task = gtask.IsValidTask()+" ";
+                break;
+           
+            default:
+
+                break;
+
+
+        }
+        }
+
+        return citizenState.ToString() + " " + GetHealthReason() + " "+ _task;// + citizenTask.ToString() + " " + pointToMove;
+    }
+
+
+    public string GetStatusTask() {
+
+        string _task = "NO TASK";
+
+        if (task != null) {
+            _task = this.task.GetType().ToString() + " ";
+            switch (task) {
+                case CompositeTask ctask:
+                    _task = (ctask.position.ToString() + " has action " + (ctask.action != null)) + " " + ctask.task.GetType();
+
+                    break;
+                case MoveTask mtask:
+                    _task = mtask.position.ToString() + " has action " + (mtask.action != null);
+                    break;
+                case GatheringTask gtask:
+                    _task = gtask.IsValidTask() + " ";
+                    break;
+
+                default:
+
+                    break;
+
+
+            }
+        }
+
+        return _task;
     }
 
 
 
-    #endregion
+        #endregion
 
 
-    #region IStatus implementation 
-    public void SetTask(Task _task) {
+        #region IStatus implementation 
+        public void SetTask(Task _task) {
 
 
         // navMeshAgent.enabled = false;// = true;

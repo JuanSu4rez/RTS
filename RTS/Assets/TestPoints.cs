@@ -9,9 +9,11 @@ public class TestPoints : MonoBehaviour
    public Color color;
 
     private Vector3[] points = null;
+
+  
     void Start()
     {
-     
+  
     }
 
     // Update is called once per frame
@@ -28,6 +30,9 @@ public class TestPoints : MonoBehaviour
         foreach (var point in points) {
                 Gizmos.DrawSphere(point, 0.5f);
             }
+
+
+
         
 
 
