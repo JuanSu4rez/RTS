@@ -12,13 +12,13 @@ public class CameraScript : MonoBehaviour {
 
     private Texture2D selectionBorder = null;
 
-    private static Rect selection = new Rect(0, 0, 0, 0);
+    public static Rect selection = new Rect(0, 0, 0, 0);
 
     private readonly Vector2 empty = new Vector2(-10, -10);
 
-    private Vector2 firstclick;
+    public static Vector2 firstclick;
 
-    private Vector2 secondclick;
+    public static Vector2 secondclick;
 
     private CameraSelectionTypes cameraSelectionType = CameraSelectionTypes._None;
 
@@ -40,7 +40,7 @@ public class CameraScript : MonoBehaviour {
     [SerializeField]
     private Plane plane;
 
-    private GameObject pointtomove;
+    //private GameObject pointtomove;
 
 
 
@@ -89,11 +89,13 @@ public class CameraScript : MonoBehaviour {
         gameareas.Init();
 
         #region point to move
+        /*
         pointtomove = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         pointtomove.transform.position = Camera.main.transform.position;
         pointtomove.transform.localScale = new Vector3(1, 1, 1);
         pointtomove.GetComponent<Renderer>().enabled = false;
         pointtomove.name = "POINTTOMOVE";
+        pointtomove.tag = "Land";*/
         #endregion
 
         objectsInScene = new ArrayList(20);
@@ -391,9 +393,10 @@ public class CameraScript : MonoBehaviour {
                 string rightclickedObj = hit.transform.gameObject.name;
                 switch (rightclickedObj) {
                     case "Land":
-                        pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+                      
+                        //pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
                         soldierTemp.SetState(SoldierStates.Walking);
-                        soldierTemp.SetPointToMove(pointtomove.transform.position);
+                        soldierTemp.SetPointToMove(new Vector3(hit.point.x, 1, hit.point.z));
                         soldierTemp.ReleaseTask();
                         break;
                 }
@@ -588,8 +591,8 @@ public class CameraScript : MonoBehaviour {
                 string rightclickedObj = hit.transform.gameObject.tag;
                 switch (rightclickedObj) {
                     case "Land":
-                        pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
-                        citizenTemp.SetPointToMove(pointtomove.transform.position);
+                       // pointtomove.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+                        citizenTemp.SetPointToMove(new Vector3(hit.point.x, 1, hit.point.z));
                         citizenTemp.SetState(CitizenStates.Walking);
                         break;
                     case "Gold":
@@ -679,6 +682,26 @@ public class CameraScript : MonoBehaviour {
 
         var originalcolorback = GUI.backgroundColor;
 
+        if (DebugAreas) {
+            /*
+            Color coloraux = Color.red;
+            GUI.color = coloraux;
+            coloraux.a = 0.3f;
+            GUI.backgroundColor = coloraux;
+            GUI.Box(gameareas.GameArea, "");*/
+
+
+            GUI.color = Color.blue;
+
+            GUI.backgroundColor = Color.blue;
+            GUI.Box(gameareas.GuiArea, "");
+        }
+
+        GUI.color = originalcolor;
+        GUI.backgroundColor = originalcolorback;
+
+
+
         switch (camerastate) {
             case CameraStates.None:
 
@@ -690,13 +713,6 @@ public class CameraScript : MonoBehaviour {
                     GUI.DrawTexture(new Rect(selection.x, selection.y + selection.height, selection.width, 1), selectionBorder);
                 }
 
-                if (DebugAreas) {
-                    Color coloraux = Color.red;
-                    GUI.color = coloraux;
-                    coloraux.a = 0.3f;
-                    GUI.backgroundColor = coloraux;
-                    GUI.Button(gameareas.GameArea, "A");
-                }
 
 
                 break;
@@ -715,25 +731,12 @@ public class CameraScript : MonoBehaviour {
                 if (currentGui != null)
                     currentGui.ShowGUI(currentSelected);
 
-                if (DebugAreas) {
-                    Color coloraux = Color.red;
-                    GUI.color = coloraux;
-                    coloraux.a = 0.3f;
-                    GUI.backgroundColor = coloraux;
-                    GUI.Button(gameareas.GameArea, "A");
-
-                    coloraux = Color.blue;
-                    GUI.color = coloraux;
-                    coloraux.a = 0.3f;
-                    GUI.backgroundColor = coloraux;
-                    GUI.Button(gameareas.GuiArea, "B");
-                }
+              
 
                 break;
         }
 
-        GUI.color = originalcolor;
-        GUI.backgroundColor = originalcolorback;
+ 
     }
 
 

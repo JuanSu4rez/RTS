@@ -51,7 +51,7 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
 
     public bool IsSelected { get; set; }
 
-    private IGameFacade facade = null;
+   // private IGameFacade facade = null;
 
     private float yscale = 0;
 
@@ -77,9 +77,9 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
 
         changeColor();
 
-        facade = GameScript.GetFacade(team);
-        if (facade != null)
-            facade.AddBuilding(this.gameObject, _building);
+       // facade = GameScript.GetFacade(team);
+        //if (facade != null)
+          //  facade.AddBuilding(this.gameObject, _building);
 
         GameScript.AddBuiding(TeamId(), this);
     }
@@ -168,8 +168,8 @@ public class BuildingBehaviour : MonoBehaviour, IBulding, IStatus, ISelectable, 
             case BuildingStates.Destroyed:
 
               
-                 facade.RemoveBuilding(this.gameObject, _building);
-
+                // facade.RemoveBuilding(this.gameObject, _building);
+                //TODO llamar remove bulding
                 Destroy(this.gameObject);
                 break;
          

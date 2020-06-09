@@ -18,8 +18,17 @@ public class BuildingsInfo : ScriptableObject
         set
         {
 
+
+            _BuldingInformation = value;
+
+            for (int i = 0; i < _BuldingInformation.Length; i++) {
+                ////Debug.Log(((Buildings)i).ToString());
+
+                _BuldingInformation[i] = new BuildingInfo((Buildings)i);
+            }
         }
     }
+
 
     public BuildingsInfo()
     {

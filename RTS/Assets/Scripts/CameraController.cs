@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
@@ -51,6 +52,8 @@ public class CameraController : MonoBehaviour {
 
     }
 
+    private float cooldown = 0.8f;
+    private float timer = -1;
 
     private void MovementTypeOne() {
         Vector2 mousePosition = Input.mousePosition;
@@ -65,21 +68,64 @@ public class CameraController : MonoBehaviour {
         if (!CameraScript.gameareas.GameArea.Contains(mousePosition))
             return;
 
-        //Debug.Log("mousePosition.x " + mousePosition.x);
+        int nomovement = 0;
+
+        if (timer == 0) {
+            timer = cooldown;
+        }
+        else if (timer >= 0) {
+            timer -= Time.deltaTime;
+        }
+
+
 
         if (mousePosition.x < width / AreaScaleW) {
+
+           
+            if(timer < 0)
             gameObject.transform.position = new Vector3(--cameraPosition.x, cameraPosition.y, ++cameraPosition.z);
+           
         }
+        else{
+            nomovement++;
+        }
+
         if (mousePosition.x > width - width / AreaScaleW) {
-            gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, --cameraPosition.z);
+
+
+            if (timer < 0)
+                gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, --cameraPosition.z);
         }
+        else {
+            nomovement++;
+        }
+
         if (mousePosition.y < height / AreaScaleH) {
             //this condition used to be on mouse position greater than height - height / AreaScale
-            gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, ++cameraPosition.z);
+
+        
+
+            if (timer < 0)
+                gameObject.transform.position = new Vector3(++cameraPosition.x, cameraPosition.y, ++cameraPosition.z);
         }
+        else {
+            nomovement++;
+        }
+
+
         if (mousePosition.y > height - height / AreaScaleH) {
             //this condition used to be on mouse position less than  height / AreaScale
-            gameObject.transform.position = new Vector3(--cameraPosition.x, cameraPosition.y, --cameraPosition.z);
+
+            if (timer < 0)
+                gameObject.transform.position = new Vector3(--cameraPosition.x, cameraPosition.y, --cameraPosition.z);
+        }
+        else {
+            nomovement++;
+        }
+
+        if (nomovement >= 4) {
+            Debug.Log(Time.time+" nomovement ");
+            timer = 0;
         }
     }
 
@@ -90,7 +136,7 @@ public class CameraController : MonoBehaviour {
     bool MouseInGameArea;
 
 
-    private float nextTime = 0;
+
     private void MovementTypeTwo() {
         mousePosition = Input.mousePosition;
 
@@ -108,23 +154,15 @@ public class CameraController : MonoBehaviour {
 
 
         MouseInGameArea = CameraScript.gameareas.GameArea.Contains(mousePosition);
-        if (!MouseInGameArea) {
-
-            nextTime = 0;
+        if (!MouseInGameArea) 
             return;
-
-        }
-
-        if (nextTime == 0) {
-            nextTime = Time.time + 2;
-            return;
-        }
-
-
-
-        if (Time.time < nextTime) {
-            return;
-        }
+        
+        
+        if (timer == 0) 
+            timer = cooldown;
+        else if (timer >= 0)
+            timer -= Time.deltaTime;
+       
 
         //Debug.Log("mousePosition.x " + mousePosition.x);
 
@@ -134,66 +172,71 @@ public class CameraController : MonoBehaviour {
             || mousePosition.y < height / AreaScaleH
             || mousePosition.y > height - height / AreaScaleH
             ) {
-            //Inversion due to camera rotation
-            result.x = result.x * -1;
+            if (timer < 0) { 
+                //Inversion due to camera rotation
+                result.x = result.x * -1;
             result.z = result.y;
             result.y = 0;
 
             var finalpos = gameObject.transform.position + (result * (VelocityScale * Time.deltaTime));
             // finalpos.y = gameObject.transform.position.y;
             gameObject.transform.position = finalpos;
+                }
+        }
+        else{
+            timer = 0;
         }
 
     }
 
 
     void OnGUI() {
-        if (DebugAreas) {
-            var originalcolor = GUI.color;
+        //if (DebugAreas) {
+        //    var originalcolor = GUI.color;
 
-            var originalbackcolor = GUI.backgroundColor;
+        //    var originalbackcolor = GUI.backgroundColor;
 
-            var width = CameraScript.gameareas.GameArea.width;
-            var height = CameraScript.gameareas.GameArea.height;
-
-
-            var _width = width / AreaScaleW;
+        //    var width = CameraScript.gameareas.GameArea.width;
+        //    var height = CameraScript.gameareas.GameArea.height;
 
 
-            var _height = height / AreaScaleH;
-
-            var auxColor = Color.blue;
-            auxColor.a = 0.5f;
-
-            GUI.backgroundColor = auxColor;
-
-            GUI.Button(new Rect(0, 0, width, _height), "");
-            GUI.Button(new Rect(0, 0, _width, height), "");
-            GUI.Button(new Rect(0, height - _height, width, _height), "");
-            GUI.Button(new Rect(width - _width, 0, _width, height), "");
+        //    var _width = width / AreaScaleW;
 
 
-            auxColor = Color.white;
-            auxColor.a = 0.5f;
+        //    var _height = height / AreaScaleH;
 
-            GUI.backgroundColor = auxColor;
+        //    var auxColor = Color.blue;
+        //    auxColor.a = 0.5f;
 
-            GUI.Label(new Rect(width / 2, height / 2, 100, 100), "A");
+        //    GUI.backgroundColor = auxColor;
 
-
-
-            GUI.color = originalcolor;
-
-            GUI.backgroundColor = originalbackcolor;
-
-            if (cameraMovementType == CameraMovementType.Type2) {
-
-                Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + (result * 10));
-                GUI.Label(new Rect(Screen.width / 2 + 10, Screen.height / 2 + 10, Screen.width, 500), cameraMovementType + " " + MouseInGameArea + " " + centerScreen + " " + mousePosition + " " + distance + " " + result);
-            }
+        //    GUI.Button(new Rect(0, 0, width, _height), "");
+        //    GUI.Button(new Rect(0, 0, _width, height), "");
+        //    GUI.Button(new Rect(0, height - _height, width, _height), "");
+        //    GUI.Button(new Rect(width - _width, 0, _width, height), "");
 
 
-        }
+        //    auxColor = Color.white;
+        //    auxColor.a = 0.5f;
+
+        //    GUI.backgroundColor = auxColor;
+
+        //    GUI.Label(new Rect(width / 2, height / 2, 100, 100), "A");
+
+
+
+        //    GUI.color = originalcolor;
+
+        //    GUI.backgroundColor = originalbackcolor;
+
+        //    if (cameraMovementType == CameraMovementType.Type2) {
+
+        //        Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + (result * 10));
+        //        GUI.Label(new Rect(Screen.width / 2 + 10, Screen.height / 2 + 10, Screen.width, 500), cameraMovementType + " " + MouseInGameArea + " " + centerScreen + " " + mousePosition + " " + distance + " " + result);
+        //    }
+
+
+        //}
 
 
 

@@ -27,7 +27,7 @@ public class BuildingGui : ScriptableObject, IGui
 
         //GUI.Button(CameraScript.gameareas.GuiArea, "");
 
-        gameFacade = GameScript.GetFacade(behavior.Team);
+        //gameFacade = GameScript.GetFacade(behavior.Team);
  
 
 

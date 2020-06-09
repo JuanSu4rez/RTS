@@ -34,7 +34,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
         set
         {
             team = value;
-            gameFacade = GameScript.GetFacade(team);
+            //gameFacade = GameScript.GetFacade(team);
         }
     }
 
@@ -75,7 +75,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
         Health = 9999;
         CurrentHealth = Health;
         distanceTolerance = 2;
-        gameFacade = GameScript.GetFacade(this.team);
+        //gameFacade = GameScript.GetFacade(this.team);
         SetState( SoldierStates.Idle);
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
@@ -84,7 +84,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
         lastShoot = 0f;
 
         //changeColor();
-
+        if(gameFacade!= null)
         gameFacade.AddUnit(this.gameObject, Units.Citizen);
         vectorup.x = 0;
         vectorup.z = 0;
@@ -123,7 +123,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
                 return;
 
 
-            if (gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
+            if (gameFacade != null && gameFacade.ValidateDiplomacy(team.Team, Postures.Enemy))
             {
                 militaryTask = new MilitaryTask(collider.gameObject, MilitaryTaskType.Attack);
                 Vector3 targetDistance = Vector3.zero;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class UnitsGui : ScriptableObject, IGui
 {
@@ -9,6 +10,8 @@ public class UnitsGui : ScriptableObject, IGui
 
   
     private GameObject createdObject;
+
+    
 
     public bool HasOptionSelected()
     {
@@ -137,40 +140,48 @@ public class UnitsGui : ScriptableObject, IGui
         if (navagentcitizen == null)
             return;
 
-        var facade = GameScript.GetFacade(navagentcitizen.Team);
-
-        var buldingsinfo = facade.BuildingsInfo.BuldingInformation;
-
+     
         int counter = 0;
         int countermax = 3;
 
-        var _wpanel = Screen.width / 3.0f;
-        var _wbutton = _wpanel / 3.0f;
-        var _hbutton = _wbutton;
+    
+        var _wbutton = GameAreasManager.buttonlengtharea;
+        var _hbutton = GameAreasManager.buttonlengtharea; ;
 
-        for (int i = 0; i < buldingsinfo.Length && counter < countermax; i++)
+        var buldingsinfo = GameScript.sbuldingsInfo.BuldingInformation;
+
+        List<Buildings> avalilableBuildings = new List<Buildings>();
+        //provicional 
+        avalilableBuildings.Add(Buildings.House); 
+        avalilableBuildings.Add(Buildings.Barracks);
+        //avalilableBuildings.Add(Buildings.ArcheryRange);
+
+        for (int i = 0; i < avalilableBuildings.Count; i++)
         {
-            if (buldingsinfo[i].IsEnabled())
+            //if (buldingsinfo[avalilableBuildings[i].Ordinal()].IsEnabled())
             {
-            
+                Debug.Log("El Building "+((int)avalilableBuildings[i])+"");
+                var buildinginfo = buldingsinfo[((int)avalilableBuildings[i])];
+
                 var selected = false;
 
-
-                if( buldingsinfo[i].Icon != null)
+               
+                if(buildinginfo.Icon != null)
                 {
-                    GUI.DrawTexture(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), buldingsinfo[i].Icon);
-                    selected = GUI.Button(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), "");
+                   // GUI.DrawTexture(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), buldingsinfo[i].Icon);
+                    selected = GUI.Button(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), buildinginfo.Icon);
                    
                    
                 }
                 else
-                    selected = GUI.Button(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), buldingsinfo[i].Building.ToString());
+                    selected = GUI.Button(new Rect(counter * _wbutton, Screen.height - _hbutton, _wbutton, Screen.height - (Screen.height - _hbutton)), buildinginfo.Building.ToString());
 
 
                 if (selected)
                 {
+                   
 
-                    if (facade.CanCreateBuilding(buldingsinfo[i].Building))
+                   // if (facade.CanCreateBuilding(buldingsinfo[i].Building))
                     {
                         Vector3 _mouseposition = Input.mousePosition;
                         _mouseposition.z = Screen.height - _mouseposition.z;
@@ -178,7 +189,7 @@ public class UnitsGui : ScriptableObject, IGui
                         mouseposition.y = 0;
 
 
-                        var objectToCreate = facade.GameResource.Load<GameObject>(buldingsinfo[i].Building.ToString());
+                        var objectToCreate =GameResource.gameresource.Load<GameObject>(buildinginfo.Building.ToString());
                         mouseposition.y = objectToCreate.transform.position.y;
                         createdObject = GameObject.Instantiate(objectToCreate, mouseposition, Quaternion.identity);
                         var BuildingBehaviour = createdObject.GetComponent<BuildingBehaviour>();
@@ -192,7 +203,7 @@ public class UnitsGui : ScriptableObject, IGui
                         }
 
 
-                        createdObject.name = buldingsinfo[i].Building.ToString();
+                        createdObject.name = buildinginfo.Building.ToString();
                         this.SetObjectToBuild(createdObject);
                     }
                 }

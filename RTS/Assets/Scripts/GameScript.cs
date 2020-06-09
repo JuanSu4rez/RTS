@@ -9,6 +9,8 @@ public class GameScript : MonoBehaviour {
     [SerializeField]
     private BuildingsInfo buldingsInfo;
 
+    public static  BuildingsInfo sbuldingsInfo;
+
     [SerializeField]
     private UnitsInfo unitsInfo;
 
@@ -55,6 +57,8 @@ public class GameScript : MonoBehaviour {
     // Use this for initialization
     private static IGameFacade[] facades;
 
+    
+
 
     void Awake() {
 
@@ -75,6 +79,12 @@ public class GameScript : MonoBehaviour {
             if (unit.Costs != null && unit.Costs.Count > 0)
                 buldingsInfo.BuldingInformation[(int)unit.DevelopedBuilding].AddUnitToCreate(unitsInfo.UnitInformation[i]);
         }
+
+        sbuldingsInfo = buldingsInfo;
+
+        //se inicializa 
+        GameResource.InitSingleGameResource(assettype);
+
 
         var gameFacade = ScriptableObject.CreateInstance<GameFacade>();
         gameFacade.Team = Playerteam;
@@ -118,7 +128,7 @@ public class GameScript : MonoBehaviour {
 
     }
 
-    public static IGameFacade GetFacade(Team team) {
+    public static IGameFacade _GetFacade(Team team) {
        
 
         if (team != null  )
@@ -128,14 +138,15 @@ public class GameScript : MonoBehaviour {
     }
 
 
-    public static IGameFacade GetFacade(ITeamable_v1 team) {
+    public static IGameFacade _GetFacade(ITeamable_v1 team) {
 
 
-     
+        return null;
+        /*
         if (team != null)
             return GetFacade(team.Team);
         else
-            return null;
+            return null;*/
     }
 
 

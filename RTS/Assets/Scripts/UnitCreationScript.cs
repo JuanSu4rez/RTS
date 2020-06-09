@@ -31,7 +31,7 @@ public class UnitCreationScript : MonoBehaviour {
 
         myteam = this.GetComponent<ITeamable_v1>();
 
-        facade =GameScript.GetFacade(myteam);
+      //  facade =GameScript.GetFacade(myteam);
 
     }
 	

@@ -208,6 +208,12 @@ public enum Postures
     public static class ExtensionMethodsResources
 {
 
+    public static int Ordinal(this Enum rec) {
+
+       
+        return Convert.ToInt32(rec);
+    }
+
     public static Resources GetResource(this Resources rec, string param)
     {
 
@@ -263,10 +269,10 @@ public enum Postures
         switch (AssetType)
         {
             case AssetTypes.THREED:
-                result = "3d"+ System.IO.Path.DirectorySeparatorChar;
+                result = "3D"+ System.IO.Path.DirectorySeparatorChar;
                 break;
             case AssetTypes.TWOD:
-                result = "2d" + System.IO.Path.DirectorySeparatorChar;
+                result = "2D" + System.IO.Path.DirectorySeparatorChar;
                 break;
             case AssetTypes.MINIMAL:
                 result = "Minimal" + System.IO.Path.DirectorySeparatorChar;

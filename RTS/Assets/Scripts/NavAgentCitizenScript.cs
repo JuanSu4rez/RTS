@@ -97,7 +97,8 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1
         animator = this.gameObject.GetComponent<Animator>();      
 
         changeColor();
-        gameFacade = GameScript.GetFacade(team);
+       // gameFacade = GameScript.GetFacade(team);
+       if(gameFacade != null)
         gameFacade.AddUnit(this.gameObject, Units.Citizen);
 		
 	    InitChildrentTool(CitizenTransformChilden.Pick);

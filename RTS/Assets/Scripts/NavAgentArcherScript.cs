@@ -32,7 +32,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable_v1<
         set
         {
             team = value;
-            gameFacade = GameScript.GetFacade(team);
+            //gameFacade = GameScript.GetFacade(team);
         }
     }
 
@@ -72,7 +72,7 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable_v1<
         animator = this.gameObject.GetComponent<Animator>();
         Health = 9999;
         CurrentHealth = Health;
-        gameFacade = GameScript.GetFacade(team);
+       // gameFacade = GameScript.GetFacade(team);
         SetState( SoldierStates.Idle);
 
         //AttackRange = gameObject.GetComponent<CapsuleCollider>().bounds.;
@@ -84,9 +84,9 @@ public class NavAgentArcherScript : MonoBehaviour, IAliveBeing, IControlable_v1<
         changeColor();
 
 
-        gameFacade = GameScript.GetFacade(team);
-        if (gameFacade != null)
-          gameFacade.AddUnit(this.gameObject,Units.Archer);
+        //  gameFacade = GameScript.GetFacade(team);
+        //  if (gameFacade != null)
+        // gameFacade.AddUnit(this.gameObject,Units.Archer);
 
     }
 

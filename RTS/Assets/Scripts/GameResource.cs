@@ -12,10 +12,25 @@ public class GameResource
     private Dictionary<string, Object> cache = new Dictionary<string, Object>();
 
 
+    public static GameResource gameresource = null;
+
+
+    public static void InitSingleGameResource(AssetTypes type) {
+        gameresource = new GameResource(type);
+    }
+
+
+
+    public static void InitSingleGameResource(AssetTypes type, bool applycache) {
+        gameresource = new GameResource(type, applycache);
+    }
+
     public GameResource(AssetTypes type)
     {
         path = type.GetPath();
         applycache = false;
+
+        
     }
 
     public GameResource(AssetTypes type, bool applycache)
