@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridScript : MonoBehaviour
 {
-
+    public bool debugGrid = false;
     public static GridScript gridScript;
 
     public Grid gird = null;
@@ -20,7 +20,7 @@ public class GridScript : MonoBehaviour
             Destroy(this);
         }
 
-        gird = new Grid(1000, 1000, 1, Vector3.zero, false);
+        gird = new Grid(10, 10, 1, Vector3.zero+(Vector3.up*0.1f), this.debugGrid);
     }
 
     // Start is called before the first frame update

@@ -550,11 +550,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
     }
 
 
-
-        #endregion
-
-
-        #region IStatus implementation 
+ 
         public void SetTask(Task _task) {
 
 
