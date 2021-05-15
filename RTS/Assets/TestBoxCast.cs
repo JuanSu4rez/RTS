@@ -23,7 +23,7 @@ public class TestBoxCast : MonoBehaviour
 
         if (targetObject == null)
             return;
-        Debug.Log("Path cleared2: " + CheckPath(this.gameObject.transform.position, targetObject.transform.position));
+        //Debug.Log("Path cleared2: " + CheckPath(this.gameObject.transform.position, targetObject.transform.position));
 
         Debug.DrawLine(targetObject.transform.position, targetObject.transform.position + targetObject.transform.forward * 10, Color.blue );
         Debug.DrawLine(targetObject.transform.position, targetObject.transform.position + targetObject.transform.right * 10, Color.red );
@@ -70,7 +70,7 @@ public class TestBoxCast : MonoBehaviour
 
                 this.targetObject.transform.position = result.Value.point;
 
-                Debug.Log(" " + initialPoint + " " + initialPointLand + " " + result.Value.point);
+                //Debug.Log(" " + initialPoint + " " + initialPointLand + " " + result.Value.point);
 
 
                 var proyeccionvertical = CameraScript.firstclick + (Vector2.down * CameraScript.selection.height);
@@ -148,9 +148,9 @@ public class TestBoxCast : MonoBehaviour
         float distance = Vector3.Distance(position, target);
 
         RaycastHit[] rhit = Physics.BoxCastAll(position, halfExtents, direction, targetObject.transform.rotation, distance);
-        Debug.Log("hits "+rhit.Length);
+        //Debug.Log("hits "+rhit.Length);
 
-        Debug.Log("hits " + string.Join(";", rhit.Where(r=> r.collider.tag != "Land").Select(p=> p.collider.gameObject.name)));
+        //Debug.Log("hits " + string.Join(";", rhit.Where(r=> r.collider.tag != "Land").Select(p=> p.collider.gameObject.name)));
         bool result = rhit.Count(r => r.collider.tag != "Land")>0;
 
         Vector3 center = Vector3.Lerp(position, target, 0.5f);

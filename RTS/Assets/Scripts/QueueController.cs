@@ -148,11 +148,11 @@ public class QueueController : MonoBehaviour {
         var t = Time.time;
 
         int index = Array.FindIndex(worker, p => p == obj);
-        // Debug.Log(t + "Array.FindIndex(worker ");
+        // //Debug.Log(t + "Array.FindIndex(worker ");
 
         if (index > -1) {
 
-            //Debug.Log(t + "remuevo en la lista de trabajo " + index+" "+ worker[index]);
+            ////Debug.Log(t + "remuevo en la lista de trabajo " + index+" "+ worker[index]);
             int cc = waitlist.Count;
 
             if (waitlist.Count > 0) {
@@ -161,14 +161,14 @@ public class QueueController : MonoBehaviour {
                 var otherworker = waitlist[0];
 
                 if (otherworker == obj) {
-                    Debug.Log("El objeto removido de la lista de trabajo no puede estar disponible a trabajar.");
+                    //Debug.Log("El objeto removido de la lista de trabajo no puede estar disponible a trabajar.");
                     return;
                 }
 
                 if (!waitlist.Remove(otherworker)) {
 
                     
-                    Debug.Log("oTHER WROKER DEBIO DESTRUIRSE "+ otherworker.name+" "+obj.name);
+                    //Debug.Log("oTHER WROKER DEBIO DESTRUIRSE "+ otherworker.name+" "+obj.name);
                     
                     DestroyObject(otherworker);
                     DestroyObject(obj);
@@ -181,7 +181,7 @@ public class QueueController : MonoBehaviour {
 
               
                 int cc2 = waitlist.Count;
-                //Debug.Log(t + "waitlist change " + cc + " " + cc2);
+                ////Debug.Log(t + "waitlist change " + cc + " " + cc2);
                 var unitController = otherworker.GetComponent<UnitController>();
 
                 var resourcescript = this.GetComponent<ResourceScript>();
@@ -223,13 +223,13 @@ public class QueueController : MonoBehaviour {
 
                     }
                     else {
-                        Debug.Log(t + unitController.gameObject.name + " The unit doest not have a peding task. " + (gttask != null ? gttask.GetType().Name : "Null"));
+                        //Debug.Log(t + unitController.gameObject.name + " The unit doest not have a peding task. " + (gttask != null ? gttask.GetType().Name : "Null"));
 
                     }
 
                 }
                 else {
-                    //  Debug.Log(t + $" Worker no cumple con los componentes hasunitcontroller {hasunitcontroller} ");
+                    //  //Debug.Log(t + $" Worker no cumple con los componentes hasunitcontroller {hasunitcontroller} ");
                 }
 
             }
@@ -241,9 +241,9 @@ public class QueueController : MonoBehaviour {
         }
         else {
 
-            //Debug.Log(t + "RelasePostion "+ obj.name);
+            ////Debug.Log(t + "RelasePostion "+ obj.name);
             if (waitlist.Remove(obj)) {
-                //   Debug.Log(t+" remuevo en la lista de espera");
+                //   //Debug.Log(t+" remuevo en la lista de espera");
                 return;
             }
 

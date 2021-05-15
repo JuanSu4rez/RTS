@@ -115,7 +115,7 @@ public class TrackingStatus : MonoBehaviour {
     {
         //if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button "+status.GetStatus()))
         //    print("You clicked the button!");
-        //////Debug.log("ongui");
+        ////////Debug.Log("ongui");
         if (IsSelected())
         {//
          //  GUIStyle style = new GUIStyle();

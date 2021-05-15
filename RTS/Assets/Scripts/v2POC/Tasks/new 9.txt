@@ -1,0 +1,35 @@
+Tanto edificios como seres vivos los representa una barra de vida.
+*Generar una sola interface, para representar el estado
+IHealthPoint 
+
+
+Ser vivo 		IBeingAlive
+Edificios		IBulding
+
+public interface IBulding
+{
+    float Resistence { get; set; }
+    float TotalBuiltAmount { get; set; }
+    float CurrentBuiltAmount { get; }
+    BuildingStates State { get; set; }
+    Buildings Building { get; set; }
+
+}
+
+public interface IAliveBeing
+{
+    bool IsAlive();
+    float GetCurrentHealth();
+    float GetHealth();
+    float GetHealthReason();
+}
+
+
+Los Edificios pueden implementar unitcontroller, y tocaria crear un tipo de task el cual creara unidades
+ o desarrollar tecnologias*.
+ 
+ En lugar de IDamagable los IHealthPoint podria definir una operacion para definir el daño
+
+ 
+
+

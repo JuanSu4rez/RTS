@@ -21,7 +21,7 @@ public class UnitsGui : ScriptableObject, IGui
     // Update is called once per frame
     public void UpdateGui(GameObject selectedGameObject)
     {
-        ////Debug.Log(" UnitsGui Update " + HasOptionSelected());
+        //////Debug.Log(" UnitsGui Update " + HasOptionSelected());
         if (HasOptionSelected())
         {
 
@@ -160,7 +160,7 @@ public class UnitsGui : ScriptableObject, IGui
         {
             //if (buldingsinfo[avalilableBuildings[i].Ordinal()].IsEnabled())
             {
-                Debug.Log("El Building "+((int)avalilableBuildings[i])+"");
+                //Debug.Log("El Building "+((int)avalilableBuildings[i])+"");
                 var buildinginfo = buldingsinfo[((int)avalilableBuildings[i])];
 
                 var selected = false;

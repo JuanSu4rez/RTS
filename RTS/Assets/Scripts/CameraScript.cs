@@ -179,7 +179,7 @@ public class CameraScript : MonoBehaviour {
         else if (Input.GetMouseButtonUp(0)) {
             if (firstclick != empty) {
                 if (currentSelecteds.Count > 0) {
-                    //Debug.Log("Camera state " + camerastate);
+                    ////Debug.Log("Camera state " + camerastate);
                     //TODO VALIDATE WITH SUAREZ
                     //temporal counter
                     int citizens = 0, militar = 0, buildings = 0;
@@ -463,7 +463,7 @@ public class CameraScript : MonoBehaviour {
 
                             if (gthtask != null && gthtask.resourceType == Resources.Gold) {
 
-                                Debug.Log("Citizen is already Gathering gold");
+                                ////Debug.Log("Citizen is already Gathering gold");
                                 return;
 
                             }
@@ -476,7 +476,7 @@ public class CameraScript : MonoBehaviour {
 
                             if (gthtask != null && gthtask.resourceType == Resources.Gold) {
 
-                                Debug.Log("Citizen is already Gathering gold");
+                                ////Debug.Log("Citizen is already Gathering gold");
                                 return;
 
                             }
@@ -498,7 +498,7 @@ public class CameraScript : MonoBehaviour {
                                 var buildinggameobject = GameScript.FindResoruceBuidingToDeposit(0, Resources.Gold, unitController.transform.position);
 
                                 if (buildinggameobject == null) {
-                                    Debug.Log("!No hay edificio para depositar no se asigna la tarea");
+                                    ////Debug.Log("!No hay edificio para depositar no se asigna la tarea");
                                     return;
                                 }
 
@@ -533,12 +533,12 @@ public class CameraScript : MonoBehaviour {
 
                                 }
                                 else {
-                                    Debug.Log("Recurso no recibe mas trabajadores");
+                                    ////Debug.Log("Recurso no recibe mas trabajadores");
                                 }
 
                             }
                             else {
-                                Debug.Log("No existe queue controller");
+                                ////Debug.Log("No existe queue controller");
                             }
 
 
@@ -612,7 +612,7 @@ public class CameraScript : MonoBehaviour {
                                 citizenTemp.SetPointResource(hit.transform.position);
                             }
                             else {
-                                Debug.Log("Recurso no recibe mas trabajadores");
+                                ////Debug.Log("Recurso no recibe mas trabajadores");
                             }
 
                         }

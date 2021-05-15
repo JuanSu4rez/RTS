@@ -25,8 +25,8 @@ public class CameraController : MonoBehaviour {
     void Start() {
         cameraPosition = gameObject.transform.position;
 
-        //Debug.Log("Total de la pantalla " + Screen.width);
-        //Debug.Log("Tercio de la pantalla " + Screen.width / 3);
+        ////Debug.Log("Total de la pantalla " + Screen.width);
+        ////Debug.Log("Tercio de la pantalla " + Screen.width / 3);
     }
 
     // Update is called once per frame
@@ -124,7 +124,7 @@ public class CameraController : MonoBehaviour {
         }
 
         if (nomovement >= 4) {
-            Debug.Log(Time.time+" nomovement ");
+            //Debug.Log(Time.time+" nomovement ");
             timer = 0;
         }
     }
@@ -164,7 +164,7 @@ public class CameraController : MonoBehaviour {
             timer -= Time.deltaTime;
        
 
-        //Debug.Log("mousePosition.x " + mousePosition.x);
+        ////Debug.Log("mousePosition.x " + mousePosition.x);
 
 
         if (mousePosition.x < width / AreaScaleW

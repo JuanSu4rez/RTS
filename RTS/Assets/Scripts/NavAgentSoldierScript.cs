@@ -145,7 +145,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
 
     void OnCollisionEnter(Collision collision)
     {
-        ////Debug.log("Colision " + pointResource);
+        //////Debug.Log("Colision " + pointResource);
         var name = collision.gameObject.name;
         var tag = collision.gameObject.tag;
         switch (soldierState)
@@ -170,7 +170,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
 
     void OnCollisionStay(Collision collision)
     {
-        ////Debug.log("Collisionstay  " + pointResource);
+        //////Debug.Log("Collisionstay  " + pointResource);
         switch (soldierState)
         {
             case SoldierStates.Attacking:
@@ -185,7 +185,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
             case SoldierStates.Walking:
                 //if (collision.gameObject.name.Equals("UrbanCenter"))
                 //{
-                //    ////Debug.log("Collisionstay  UrbanCenter");
+                //    //////Debug.Log("Collisionstay  UrbanCenter");
                 //    if (citizenLabor != CitizenStates.None)
                 //    {
                 //        //TODO  ahumentar recursos al jugador
@@ -216,7 +216,7 @@ public class NavAgentSoldierScript : MonoBehaviour, IAliveBeing, IControlable_v1
     {
         
 
-        ////Debug.log(pointToMove);
+        //////Debug.Log(pointToMove);
         switch (soldierState)
         {
             case SoldierStates.Attacking:

@@ -67,7 +67,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
 
         if (task != null) {
-            // Debug.Log($"state {task.GetType().FullName}");
+            // //Debug.Log($"state {task.GetType().FullName}");
             switch (task) {
 
                 case MoveTask mtask:
@@ -84,7 +84,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
             }
         }
         else {
-            Debug.Log("state null");
+            ////Debug.Log("state null");
 
         }
 
@@ -94,7 +94,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
     float nextrecalc = 0;
 
     void ExcuteMovingTask(MoveTask mtask) {
-        Debug.Log("ExcuteMovingTask");
+        ////Debug.Log("ExcuteMovingTask");
 
         /*
         if (nextrecalc == 0)
@@ -268,7 +268,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
                     }
                     else {
-                        Debug.Log("Recurso no recibe mas trabajadores");
+                        ////Debug.Log("Recurso no recibe mas trabajadores");
                     }
 
                 }
@@ -294,7 +294,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
 
     public void Move(Vector3 _position,Task _task ,Action _action ){//, Action _releaseaction = null) {
-       // Debug.Log(this.gameObject.name+" Move "+ _position+" "+ _task.GetType()+" "+ (_action!= null) + " " + GetStatusTask());
+       // //Debug.Log(this.gameObject.name+" Move "+ _position+" "+ _task.GetType()+" "+ (_action!= null) + " " + GetStatusTask());
         this.SetTask(new CompositeTask(_position) {  task = _task, action = _action });
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(_position);
@@ -305,7 +305,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
 
     public void Move(Vector3 _position, Action _action ) {//, Action _releaseaction = null) {
-       // Debug.Log(this.gameObject.name + " Move " + _position + " "  + " " + (_action != null)+" "+ GetStatusTask());
+       // //Debug.Log(this.gameObject.name + " Move " + _position + " "  + " " + (_action != null)+" "+ GetStatusTask());
         this.SetTask(new MoveTask(_position) {  action = _action });
         navMeshAgent.enabled = true;
         navMeshAgent.SetDestination(_position);
@@ -314,7 +314,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
     private void Move(Vector3 _position, CitizeAnimationStates _animationstate, Action _action ) {
 
-        //Debug.Log(this.gameObject.name + " Move State " + _position + " " + _animationstate + " " + (_action != null) + " " + GetStatusTask());
+        ////Debug.Log(this.gameObject.name + " Move State " + _position + " " + _animationstate + " " + (_action != null) + " " + GetStatusTask());
         this.SetTask(new MoveTask(_position) {action = _action });
         this.animationstate = _animationstate;
         navMeshAgent.enabled = true;
@@ -351,7 +351,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
             switch (task) {
 
                 case MoveTask mtask:
-                    //Debug.Log($"{frame} Amimation MoveTask");
+                    ////Debug.Log($"{frame} Amimation MoveTask");
                     if (animationstate != CitizeAnimationStates.None)
                         _intanimationState = (int)animationstate;
 
@@ -374,7 +374,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
                     break;
                 case GatheringTask gtask:
-                    // Debug.Log($"{frame} Amimation GatheringTask");
+                    // //Debug.Log($"{frame} Amimation GatheringTask");
 
                     if (!gtask.onwait) {
 
@@ -398,7 +398,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
                     }
 
-                    // Debug.Log($"ANIMATION GATHERING {gtask.resourceType} {animationState}");
+                    // //Debug.Log($"ANIMATION GATHERING {gtask.resourceType} {animationState}");
 
 
                     break;

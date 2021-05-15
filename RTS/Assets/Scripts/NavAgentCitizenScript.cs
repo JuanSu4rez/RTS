@@ -179,7 +179,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1
                                         SetPointToMove(position);                                     
                                     }
                                     else{
-                                        Debug.Log("Recurso no recibe mas trabajadores");
+                                        //Debug.Log("Recurso no recibe mas trabajadores");
                                     }
                                     */
                                 }
@@ -219,12 +219,12 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1
 
     /*
     void OnCollisionStay(Collision collision){
-        //Debug.Log("Collisionstay  ");
+        ////Debug.Log("Collisionstay  ");
         switch (citizenState){
             case CitizenStates.Attacking:
                 break;
             case CitizenStates.Building:
-                //Debug.Log("Collisionstay  Building ");
+                ////Debug.Log("Collisionstay  Building ");
                 break;
             case CitizenStates.Died:
                 break;
@@ -238,7 +238,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1
                 break;
             case CitizenStates.Walking:
                 if (collision.gameObject.name.Equals("UrbanCenter")){
-                    //Debug.Log("Collisionstay  UrbanCenter ");
+                    ////Debug.Log("Collisionstay  UrbanCenter ");
                 }
                 else if (collision.gameObject.name.Equals("POINTTOMOVE")){					
 					//evitar esto manejarlo por update manejando un rango de toleracia
@@ -419,7 +419,7 @@ public class NavAgentCitizenScript : MonoBehaviour, IAliveBeing, IControlable_v1
 
     private void BuildProgress(){
         if (CitizenTask.IsValidCitizenTask(citizenTask)){
-            ////Debug.log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
+            //////Debug.Log("CurrentBuiltAmount  " + building.CurrentBuiltAmount);
             if (citizenTask.IsTaskOnPorgress())
                 citizenTask.AddCurrentBuiltAmount(this.BuildingSpeed);
             else if (citizenTask.BuildingBehaviour.CheckState(BuildingStates.Built)){

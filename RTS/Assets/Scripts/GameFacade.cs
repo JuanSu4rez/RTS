@@ -114,7 +114,7 @@ public class GameFacade : ScriptableObject, IGameFacade
         ResourceAmount resourceAmount = Player.GetResourceAmount(type);
         if (resourceAmount.Amount >= amount)
             resourceAmount.DiscountResource(amount);
-        ////Debug.Log(" - START DiscountResources - tipo : " + type + " Amount jugador " + resourceAmount.Amount);
+        //////Debug.Log(" - START DiscountResources - tipo : " + type + " Amount jugador " + resourceAmount.Amount);
     }
 
     public GameObject FindNearBuldingToDeposit(Vector3 player, Resources resource)
@@ -247,12 +247,12 @@ public class GameFacade : ScriptableObject, IGameFacade
         }
         catch (UnityException ex)
         {
-            //Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
+            ////Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
 
         }
         catch (Exception ex)
         {
-            //Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
+            ////Debug.Log("ERROR ValidateDiplomacy" + ex.Message + " " + FacadeName);
 
         }
         return false;
@@ -379,7 +379,7 @@ public class Player : ScriptableObject
                 result = WoodAmount;
                 break;
             default:
-                //Debug.Log("ResourceAmount default" + resource);
+                ////Debug.Log("ResourceAmount default" + resource);
                 break;
         }
 

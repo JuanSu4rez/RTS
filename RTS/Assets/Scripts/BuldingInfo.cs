@@ -22,7 +22,7 @@ public class BuildingsInfo : ScriptableObject
             _BuldingInformation = value;
 
             for (int i = 0; i < _BuldingInformation.Length; i++) {
-                ////Debug.Log(((Buildings)i).ToString());
+                //////Debug.Log(((Buildings)i).ToString());
 
                 _BuldingInformation[i] = new BuildingInfo((Buildings)i);
             }
@@ -36,7 +36,7 @@ public class BuildingsInfo : ScriptableObject
         _BuldingInformation = new BuildingInfo[myEnumMemberCount];
         for (int i =0;i< _BuldingInformation.Length;i++)
         {
-            ////Debug.Log(((Buildings)i).ToString());
+            //////Debug.Log(((Buildings)i).ToString());
 
             _BuldingInformation[i] = new BuildingInfo((Buildings)i);
         }

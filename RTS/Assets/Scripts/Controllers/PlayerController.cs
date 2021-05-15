@@ -77,7 +77,7 @@ public class PlayerController  {
                 WoodAmount.AddResource(amount);
                 break;
             default:
-                //Debug.Log("ResourceAmount default" + resource);
+                ////Debug.Log("ResourceAmount default" + resource);
                 break;
         }
 
@@ -101,7 +101,7 @@ public class PlayerController  {
                 result = WoodAmount;
                 break;
             default:
-                //Debug.Log("ResourceAmount default" + resource);
+                ////Debug.Log("ResourceAmount default" + resource);
                 break;
         }
 
