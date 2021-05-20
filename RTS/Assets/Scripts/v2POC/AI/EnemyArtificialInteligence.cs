@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyArtificialInteligence : MonoBehaviour
+namespace V2.AI
 {
-    // Use this for initialization
-    void Start() {
+    public class EnemyArtificialInteligence : MonoBehaviour
+    {
+        // Use this for initialization
+        void Start() {
 
+        }
+
+        // Update is called once per frame
+        void Update() {
+
+        }
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
 }

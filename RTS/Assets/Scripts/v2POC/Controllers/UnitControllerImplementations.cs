@@ -2,8 +2,16 @@
 {
     public partial class UnitController : V2.Interfaces.IDamagable
     {
-        public void AddDamage(float damage) {
-            this.CurrentHealth -= damage;
+        public float AddDamage(float damage) {
+            var result = this.CurrentHealth - damage;
+            if(result < 0) {
+                result += damage;
+            }
+            else {
+                result = damage;
+            }
+            this.CurrentHealth -= result;
+            return result;
         }
     }
 }

@@ -10,7 +10,10 @@ namespace V2.Controllers
 {
     public partial class UnitController : MonoBehaviour, IUnitController,IHealthPoint{
         public ITask toDo;
-        public float CurrentHealth { get; set; }
+        [SerializeField]
+        private float _currentHealth;
+        public float CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
+        public bool IsSelected { get; set; }
         void Start() {
             AssingTask(DoingNothing.nothing);
         }

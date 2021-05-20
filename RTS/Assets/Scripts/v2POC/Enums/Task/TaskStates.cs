@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-public enum TaskStates{
-   OnTheWay,
-   Waiting,
-   Performing,
-   Depositing,
-   Completed
+
+namespace V2.Enums.Task
+{
+    public enum TaskStates
+    {
+        OnTheWay,
+        Waiting,
+        Performing,
+        Depositing,
+        Completed
+    }
 }
 

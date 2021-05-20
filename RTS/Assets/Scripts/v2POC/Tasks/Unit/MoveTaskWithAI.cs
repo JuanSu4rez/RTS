@@ -3,6 +3,7 @@ using System.Collections;
 using V2.Interfaces;
 using V2.Interfaces.Task;
 using UnityEngine.AI;
+using V2.Enums.Task;
 
 namespace V2.Tasks.Unit
 {
@@ -21,7 +22,7 @@ namespace V2.Tasks.Unit
             goNavMeshAgent.SetDestination(this.Destiny);
         }
         public bool IsComplete() {
-            return taskState != TaskStates.Completed;
+            return taskState == TaskStates.Completed;
         }
         public void Update() {
             var transform = this.GameObject.transform;

@@ -2,15 +2,28 @@
 using System.Collections;
 using V2.Interfaces;
 using V2.Interfaces.Task;
+using V2.Enums.Task;
+using V2.Enums;
 
 namespace V2.Tasks.Unit
 {
     public class GatheringTask : ICompoundTask {
-        public IMoveTask MoveTask { get; set; }
         public GameObject GameObject { get; set; }
         public GameObject GameObjectResource { get; set; }
-        public bool HasToWait { get; set; }
-        private TaskStates taskState;
+        public IMoveTask MoveTask { get; set; }
+        private V2.Interfaces.IResource iResource;
+        public TaskStates taskState;
+        public ResourceTypes resourceType;
+        public GatheringTask(GameObject gameObject,
+            GameObject gameObjectResource,
+            IMoveTask moveTask,
+            bool hasToWait) {
+            this.GameObject = gameObject;
+            this.GameObjectResource = gameObjectResource;
+            this.iResource = this.GameObjectResource.GetComponent<V2.Interfaces.IResource>();
+            this.resourceType = iResource.GetResource();
+            this.MoveTask = moveTask;
+        }
         public bool IsComplete() {
             return taskState == TaskStates.Completed;
         }
@@ -19,7 +32,7 @@ namespace V2.Tasks.Unit
                 case TaskStates.OnTheWay:
                     MoveTask.Update();
                     if(MoveTask.IsComplete()) {
-                        taskState = HasToWait ? TaskStates.Waiting : TaskStates.Performing;
+                        taskState = TaskStates.Performing;
                         //if there is no more resorce then task completed
                         //perhaps find another resource
                     }
@@ -29,12 +42,7 @@ namespace V2.Tasks.Unit
                     //get an amount of resource and add it to the unit, until its capacity is reached
 
                     break;
-                case TaskStates.Depositing:
-                    MoveTask.Update();
-                    if(MoveTask.IsComplete()) {
-                       //add the resource to the player
-                       //go to the resource
-                    }
+             
                     break;
                 case TaskStates.Completed:
                     break;
