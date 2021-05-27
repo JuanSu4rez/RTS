@@ -16,13 +16,13 @@ namespace V2.GUI
         }
 
         void OnMouseDown() {
-            Debug.Log("OnMouseDown "+ Input.GetMouseButtonDown(0)+" "+ Input.GetMouseButtonDown(1)+" "+ Input.GetMouseButtonDown(2));
+            //Debug.Log("OnMouseDown "+ Input.GetMouseButtonDown(0)+" "+ Input.GetMouseButtonDown(1)+" "+ Input.GetMouseButtonDown(2));
             if(Input.GetMouseButtonDown(0)) Debug.Log("Pressed left click.");
             if(Input.GetMouseButtonDown(1)) Debug.Log("Pressed right click.");
             if(Input.GetMouseButtonDown(2)) Debug.Log("Pressed middle click.");
         }// OnMouseDown is called when the user has pressed the mouse button while over the Collider.
         void OnMouseDrag() {
-            Debug.Log("OnMouseDrag");
+            //Debug.Log("OnMouseDrag");
         }// OnMouseDrag is called when the user has clicked on a Collider and is still holding down the mouse.
         void OnMouseEnter() {
             // Debug.Log("OnMouseEnter");

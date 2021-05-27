@@ -45,13 +45,7 @@ public class TestBoxCast : MonoBehaviour
 
             Vector3 horizaontalmouseproyection = Camera.main.ScreenToWorldPoint(CameraScript.firstclick + (Vector2.right * CameraScript.selection.width));
           
-            this.targetObject.transform.position = initialPoint;
-
-           // Debug.DrawLine(targetObject.transform.position, verticalmouseproyection, Color.red);
-           // Debug.DrawLine(targetObject.transform.position, targetObject.transform.position + targetObject.transform.up, Color.blue);
-           // Debug.DrawLine(targetObject.transform.position, horizaontalmouseproyection, Color.cyan);
-
-            //this.targetObject.transform.localScale = new Vector3(CameraScript.selection.height, 0, CameraScript.selection.width);
+           // this.targetObject.transform.position = initialPoint;
 
             Vector3 initialPointLand = Vector3.zero;
 
@@ -67,11 +61,6 @@ public class TestBoxCast : MonoBehaviour
             {
                 initialPointLand = result.Value.point;
                 Debug.DrawLine(initialPoint, initialPointLand, Color.magenta);
-
-                this.targetObject.transform.position = result.Value.point;
-
-                //Debug.Log(" " + initialPoint + " " + initialPointLand + " " + result.Value.point);
-
 
                 var proyeccionvertical = CameraScript.firstclick + (Vector2.down * CameraScript.selection.height);
 
@@ -95,15 +84,8 @@ public class TestBoxCast : MonoBehaviour
 
                 if (result0.HasValue &&  result1.HasValue) {
                     secondPointLand = result.Value.point;
-                   // Debug.DrawLine(second, secondPointLand, Color.yellow);
-
-                  //  var aux = (targetObject.transform.right * CameraScript.selection.height);
-                    // verticalmouseproyection = initialPointLand + aux;
-
+                 
                     Debug.DrawLine(initialPointLand, result0.Value.point, Color.cyan);
-
-                  //  aux = (targetObject.transform.forward * CameraScript.selection.width);
-                    //horizaontalmouseproyection = initialPointLand + aux;
 
                     Debug.DrawLine(initialPointLand, result1.Value.point, Color.gray);
 
@@ -116,15 +98,6 @@ public class TestBoxCast : MonoBehaviour
                     this.targetObject.transform.localScale = new Vector3((Mathf.Abs((initialPointLand- result0.Value.point).magnitude) ), 1,
                   (Mathf.Abs((initialPointLand - result1.Value.point).magnitude))
                         );
-
-
-                    /*
-                     aux = (Vector3.right * CameraScript.selection.width);
-                    verticalmouseproyection = initialPointLand + aux;
-
-                    Debug.DrawLine(initialPointLand, verticalmouseproyection, Color.blue);*/
-
-                    //horizaontalmouseproyection = secondPointLand + (Vector2.right * CameraScript.selection.width);
 
 
                 }

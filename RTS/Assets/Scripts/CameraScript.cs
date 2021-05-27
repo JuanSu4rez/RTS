@@ -177,6 +177,7 @@ public class CameraScript : MonoBehaviour {
             return;
         }
         else if (Input.GetMouseButtonUp(0)) {
+            /*
             if (firstclick != empty) {
                 if (currentSelecteds.Count > 0) {
                     ////Debug.Log("Camera state " + camerastate);
@@ -186,7 +187,7 @@ public class CameraScript : MonoBehaviour {
                     for (int i = 0; i < currentSelecteds.Count; i++) {
                         var obj = ((GameObject)currentSelecteds[i]);
 
-                        obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
+                        //obj.gameObject.GetComponent<ISelectable>().IsSelected = true;
                         //todo temporal
                         if (obj.GetComponent<NavAgentCitizenScript>() != null) {
                             citizens++;
@@ -263,6 +264,9 @@ public class CameraScript : MonoBehaviour {
                 firstclick = empty;
                 secondclick = empty;
             }
+            */
+            firstclick = empty;
+            secondclick = empty;
         }
 
         if (Input.GetMouseButton(0) && firstclick != empty) {
@@ -283,7 +287,7 @@ public class CameraScript : MonoBehaviour {
             //selection = new Rect(firstclick.x, Screen.height - firstclick.y, secondclick.x - firstclick.x, (Screen.height - secondclick.y) - (Screen.height - firstclick.y));
 
             selection = new Rect(selectionStart.x, selectionStart.y, width, heigth);
-
+            /*
             //TODO SELECT ALL THE GAMEOBJECTS THAT BELONG TO YOUR TEAM ON THE AREA
             //TODO FILTER BY TEAM
             if (selection.width != 0 && selection.height != 0) {
@@ -301,20 +305,21 @@ public class CameraScript : MonoBehaviour {
 
                     if (selection.Contains(get2sCoordinates(obj))) {
                         currentSelecteds.Add(obj);
-                        iselectable.IsSelected = true;
+                       // iselectable.IsSelected = true;
                     }
                     else {
 
                         currentSelecteds.Remove(obj);
-                        iselectable.IsSelected = false;
+                        //iselectable.IsSelected = false;
                     }
                 }
+                */
             }
             else if (currentSelecteds.Count > 0) {
 
-                ClearSelection();
+               // ClearSelection();
             }
-        }
+        //}
     }
 
     private void ClearSelection() {
