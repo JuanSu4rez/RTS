@@ -2,10 +2,12 @@
 using System.Collections;
 using V2.GUI;
 using System.Linq;
+using V2.Interfaces.GUI;
+using UnityEngine.EventSystems;
 
-namespace V2.Behaviours
+namespace V2.GUI.Mouse.Behaviours
 {
-    public class Mouse3DSelectionBehaviour : MonoBehaviour
+    public class Mouse3DSelectionBehaviour : MonoBehaviour, IMouseListenerUp
     {
         [SerializeField]
         private GameObject targetObject;
@@ -22,14 +24,14 @@ namespace V2.Behaviours
         void Update() {
             if(mouseController.MouseState == V2.Enums.GUI.MouseStates.Dragged) {
                 Rect selection = mouseController.GetRectangle();
-                Vector3 initialPoint = UnityEngine.Camera.main.ScreenToWorldPoint(mouseController.InitialMousePosition);
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(mouseController.InitialMousePosition);
+                var initialPosition = mouseController.GetInitialPosition();//.InitialMousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(initialPosition);
                 var results = Physics.RaycastAll(ray, Mathf.Infinity);
                 RaycastHit? raycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");
                 if(!raycastHitOnLand.HasValue) {
                     return;
                 }
-                Vector2 verticalProyection2D = mouseController.InitialMousePosition + selection.height * Vector2.down;
+                Vector2 verticalProyection2D = initialPosition + selection.height * Vector2.down;
                 Vector3 verticalProyection3D = UnityEngine.Camera.main.ScreenToWorldPoint(verticalProyection2D);
                 ray = UnityEngine.Camera.main.ScreenPointToRay(verticalProyection2D);
                 results = Physics.RaycastAll(ray, Mathf.Infinity);
@@ -37,7 +39,9 @@ namespace V2.Behaviours
                 if(!heightRaycastHitOnLand.HasValue) {
                     return;
                 }
-                Vector2 HorizontalProyection2D = mouseController.InitialMousePosition + selection.width * Vector2.right;
+                Debug.DrawLine(heightRaycastHitOnLand.Value.point, heightRaycastHitOnLand.Value.point + new Vector3(0, 120, 0), Color.blue);
+
+                Vector2 HorizontalProyection2D = initialPosition + selection.width * Vector2.right;
                 Vector3 HorizontalProyection3D = UnityEngine.Camera.main.ScreenToWorldPoint(HorizontalProyection2D);
                 ray = UnityEngine.Camera.main.ScreenPointToRay(HorizontalProyection2D);
                 results = Physics.RaycastAll(ray, Mathf.Infinity);
@@ -92,6 +96,16 @@ namespace V2.Behaviours
                 this.targetObject.transform.position = UnityEngine.Camera.main.transform.position + (Vector3.up + -Vector3.forward) * 100;
                 this.targetObject.transform.localScale = new Vector3(1, 1, 1);
                 }
+            }
+        }
+
+
+        public void OnUp(PointerEventData data) {
+            switch(mouseController.MouseState) {
+                case Enums.GUI.MouseStates.Pressed:
+                    //send a ray to select one unit
+                    break;
+                
             }
         }
 

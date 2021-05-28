@@ -3,17 +3,22 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using System;
 using V2.Enums.GUI;
+using System.Linq;
+using V2.Interfaces.GUI;
 
-namespace V2.GUI
+namespace V2.GUI.Mouse
 {
-    public partial class MouseController : MonoBehaviour    {
+    public  class MouseController : MonoBehaviour    {
+        public IMouseListenerDown listenerDown{ get; set; }
+        public IMouseListenerDrag listenerDrag { get; set; }
+        public IMouseListenerUp listenerDrop { get; set; }
         private MouseStates mouseState = MouseStates._none;
         private Vector2 initialMousePosition;
         public Vector2 InitialMousePosition { get => initialMousePosition; }
         private Vector2 lastMousePosition;
         public Vector2 LastMousePosition { get => lastMousePosition; }
         public MouseStates MouseState { get => mouseState; }
-        private Rect rectangle = new Rect();
+        private Rect mouseArea = new Rect();
         // Use this for initialization
         void Start() {
             enabled = false;
@@ -42,35 +47,46 @@ namespace V2.GUI
             selectionEnd.y = initialMousePosition.y <= lastMousePosition.y ? Screen.height - initialMousePosition.y : Screen.height - lastMousePosition.y;
             float width = selectionEnd.x - selectionStart.x;
             float heigth = selectionEnd.y - selectionStart.y;
-            rectangle.Set(selectionStart.x,selectionStart.y, width, heigth);
-            return rectangle;
+            mouseArea.Set(selectionStart.x,selectionStart.y, width, heigth);
+            return mouseArea;
         }
 
-        // Update is called once per frame
-        void Update() {
-
+        internal Vector2 GetInitialPosition() {
+            Vector2 selectionStart = new Vector2();
+            Vector2 selectionEnd = selectionStart;
+            selectionStart.x = initialMousePosition.x <= lastMousePosition.x ? initialMousePosition.x : lastMousePosition.x;
+            selectionStart.y = initialMousePosition.y >= lastMousePosition.y ?  initialMousePosition.y :  lastMousePosition.y;
+            selectionEnd.x = initialMousePosition.x <= lastMousePosition.x ? lastMousePosition.x : initialMousePosition.x;
+            selectionEnd.y = initialMousePosition.y <= lastMousePosition.y ?  initialMousePosition.y :  lastMousePosition.y;
+            return selectionStart;
         }
         private void _PointerDown(PointerEventData data) {
            //Debug.Log("_PointerDown");
             mouseState = MouseStates.Pressed;
             initialMousePosition = data.position;
+            if(listenerDown != null) {
+                listenerDown.OnDown(data);
+            }
         }
         private void _MouseDrag(PointerEventData data) {
            //Debug.Log("_MouseDrag");
             mouseState = MouseStates.Dragged;
             lastMousePosition = data.position;
+            if(listenerDrag != null) {
+                listenerDrag.OnDrag(data);
+            }
         }
         private void _PointerUp(PointerEventData data) {
-           //Debug.Log("_PointerUp");
             switch(mouseState) {
                 case MouseStates._none:
                     break;
                 case MouseStates.Pressed:
-                   //Debug.Log("Mouse was only pressed.");
                     break;
                 case MouseStates.Dragged:
-                   //Debug.Log("Mouse was Pressed and Dragged.");
                     break;
+            }
+            if(listenerDrop != null) {
+                listenerDrop.OnUp(data);
             }
             mouseState = MouseStates._none;
             initialMousePosition = Vector2.zero;

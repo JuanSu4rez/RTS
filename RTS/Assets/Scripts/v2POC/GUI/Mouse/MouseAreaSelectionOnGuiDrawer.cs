@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using System;
 using V2.Enums.GUI;
 
-namespace V2.GUI
+namespace V2.GUI.Mouse
 {
     public  class MouseAreaSelectionOnGuiDrawer:MonoBehaviour
     {

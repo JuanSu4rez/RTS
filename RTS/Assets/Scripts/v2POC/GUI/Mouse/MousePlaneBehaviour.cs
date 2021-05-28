@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace V2.GUI
+namespace V2.GUI.Mouse
 {
     public class MousePlaneBehaviour: MonoBehaviour
     {
