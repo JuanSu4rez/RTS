@@ -4,19 +4,17 @@ using UnityEngine;
 using UnityEditor;
 namespace V2.Controllers
 {
-    public partial class UnitController
-    {
+    public partial class UnitController{
         private Texture2D textureHealt;
         private Texture2D textureCurrentHealt;
         // Update is called once per frame
         void OnGUI() {
 
-            if(this.IsHealthOk() &&
+            if(this.IsAlive() &&
                 IsSelected) {
                 Vector3 screenPos = UnityEngine.Camera.main.WorldToScreenPoint(this.transform.position);
                 Vector2 v2 = new Vector2(screenPos.x, Screen.height - screenPos.y);
                 UnityEngine.GUI.contentColor = Color.cyan;
-            
                 drawHealthGUIBar();
             }
         }

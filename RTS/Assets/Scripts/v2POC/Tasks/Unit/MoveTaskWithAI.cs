@@ -5,7 +5,7 @@ using V2.Interfaces.Task;
 using UnityEngine.AI;
 using V2.Enums.Task;
 
-namespace V2.Tasks.Unit
+namespace V2.Tasks.Unit.Citizen
 {
     public class MoveTaskWithAI : IMoveTask{
         public GameObject GameObject { get; set; }
@@ -13,9 +13,9 @@ namespace V2.Tasks.Unit
         private TaskStates taskState;
         private NavMeshAgent goNavMeshAgent;
         private float distanceOfTolerance = 2f;
-        public MoveTaskWithAI(GameObject GameObject, Vector3 Destiny) {
-            this.GameObject = GameObject;
-            this.Destiny = Destiny;
+        public MoveTaskWithAI(GameObject _gameObject, Vector3 _destiny) {
+            this.GameObject = _gameObject;
+            this.Destiny = _destiny;
             goNavMeshAgent = this.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if(goNavMeshAgent == null)
                 throw new System.Exception("The Game Object does not have a NavMeshAgent.");

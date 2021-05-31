@@ -5,6 +5,7 @@ using V2.Interfaces;
 using V2.Tasks.Unit;
 using V2.Interfaces.Task;
 using System;
+using V2.Tasks.Unit.Citizen;
 
 namespace V2.Controllers
 {
@@ -19,7 +20,7 @@ namespace V2.Controllers
         }
         void Update() {
             //Debug.Log(Time.time + " " +this.GetType());
-            if(IsHealthOk() &&
+            if( IsAlive() &&
                 toDo != null &&
                 toDo as DoingNothing == null) {
                 toDo.Update();
@@ -32,15 +33,17 @@ namespace V2.Controllers
         public void AssingTask(ITask task) {
             toDo = task;
             if(
-                !(task is DoingNothing) &&
+                !( task is DoingNothing ) &&
                  toDo.GameObject != this.gameObject
-                )
-            toDo.GameObject = this.gameObject;
+            ) 
+            { 
+                toDo.GameObject = this.gameObject;
+            }
         }
         public ITask GetTask() {
             return toDo;
         }
-        public bool IsHealthOk() {
+        public bool IsAlive() {
             return CurrentHealth > 0;
         }
     }

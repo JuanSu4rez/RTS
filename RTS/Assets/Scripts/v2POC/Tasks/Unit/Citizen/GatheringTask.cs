@@ -5,7 +5,7 @@ using V2.Interfaces.Task;
 using V2.Enums.Task;
 using V2.Enums;
 
-namespace V2.Tasks.Unit
+namespace V2.Tasks.Unit.Citizen
 {
     public class GatheringTask : ICompoundTask {
         public GameObject GameObject { get; set; }
@@ -14,10 +14,7 @@ namespace V2.Tasks.Unit
         private V2.Interfaces.IResource iResource;
         public TaskStates taskState;
         public ResourceTypes resourceType;
-        public GatheringTask(GameObject gameObject,
-            GameObject gameObjectResource,
-            IMoveTask moveTask,
-            bool hasToWait) {
+        public GatheringTask(GameObject gameObject,  GameObject gameObjectResource,  IMoveTask moveTask, bool hasToWait) {
             this.GameObject = gameObject;
             this.GameObjectResource = gameObjectResource;
             this.iResource = this.GameObjectResource.GetComponent<V2.Interfaces.IResource>();
@@ -40,9 +37,6 @@ namespace V2.Tasks.Unit
                 case TaskStates.Performing:
                     //after a period of time 
                     //get an amount of resource and add it to the unit, until its capacity is reached
-
-                    break;
-             
                     break;
                 case TaskStates.Completed:
                     break;

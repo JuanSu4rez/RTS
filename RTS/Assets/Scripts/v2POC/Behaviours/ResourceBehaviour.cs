@@ -41,6 +41,10 @@ namespace V2.Behaviours
             this.CurrentHealth -= result;
             return result;
         }
+
+        public bool IsAlive() {
+            throw new System.NotImplementedException();
+        }
     }
 
 }

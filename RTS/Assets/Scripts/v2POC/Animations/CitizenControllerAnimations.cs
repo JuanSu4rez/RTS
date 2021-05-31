@@ -17,12 +17,7 @@ namespace V2.Animations
             citizeAnimationState = Enums.Citizen.CitizenAnimationStates.None;
             animator = this.gameObject.GetComponent<Animator>();
             unitController = this.gameObject.GetComponent<IUnitController>();
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Pick);
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Axe);
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Hammer);
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Gold);
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Meat);
-            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Wood);
+            HideChildrenElements();
         }
         // Update is called once per frame
         void Update() {
@@ -30,79 +25,110 @@ namespace V2.Animations
         private void LateUpdate() {
             SetAnimation();
         }
+
         private void SetAnimation() {
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Pick);
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Axe);
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Hammer);
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Gold);
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Meat);
-            EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Wood);
-            Enums.Citizen.CitizenAnimationStates current = this.citizeAnimationState;
+            HideChildrenElements();
+            var animationState = this.GetAnimationState();
+            switch(animationState) {
+                case Enums.Citizen.CitizenAnimationStates.Attacking:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Axe, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Building:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Hammer, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Gold:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Pick, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Wood:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Axe, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.CarryingGold:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Gold, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.CarryingWood:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Wood, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.CarryingMeat:
+                    EnableChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Meat, true);
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Died:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Escaping:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Gathering:
+
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Idle:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.None:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Walking:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Dying1:
+                    break;
+                case Enums.Citizen.CitizenAnimationStates.Dying2:
+                    break;
+            }
+            animator.SetInteger("state", (int)animationState);
+        }
+
+        public void HideChildrenElements() {
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Pick);
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Axe);
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Hammer);
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Gold);
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Meat);
+            InitChildrentTool(Enums.Citizen.CitizenTransformChildren.Gathered_Wood);
+        }
+
+        public Enums.Citizen.CitizenAnimationStates GetAnimationState() {
             this.citizeAnimationState = Enums.Citizen.CitizenAnimationStates.None;
-            int _intanimationState = (int)CitizeAnimationStates.None;
             var task = unitController.GetTask();
             switch(task) {
                 case IMoveTask mtask:
                     citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
                     break;
-                case V2.Tasks.Unit.GatheringTask gtask:
+                case V2.Tasks.Unit.Citizen.GatheringTask gtask:
                     if(gtask.taskState == TaskStates.OnTheWay) {
                         citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
                     }
                     else {
                         switch(gtask.resourceType) {
                             case Enums.ResourceTypes.Food:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Axe, true);
                                 citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Wood;
                                 break;
                             case Enums.ResourceTypes.Gold:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Pick, true);
                                 citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Gold;
                                 break;
-                            case Enums.ResourceTypes.None:
-                                break;
                             case Enums.ResourceTypes.Rock:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Pick, true);
                                 citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Gold;
                                 break;
                             case Enums.ResourceTypes.Wood:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Axe, true);
                                 citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Wood;
                                 break;
                         }
                     }
                     break;
-                case V2.Tasks.Unit.DepositingTask deptask:
-                    if(deptask.taskState == TaskStates.OnTheWay) {
-                        citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
-                    }
-                    else {
-                        switch(deptask.resourceType) {
-                            case Enums.ResourceTypes.Food:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Gathered_Meat, true);
-                                citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingMeat;
-                                break;
-                            case Enums.ResourceTypes.Gold:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Gathered_Gold, true);
-                                citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingGold;
-                                break;
-                            case Enums.ResourceTypes.None:
-                                break;
-                            case Enums.ResourceTypes.Rock:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Gathered_Gold, true);
-                                citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingGold;
-                                break;
-                            case Enums.ResourceTypes.Wood:
-                                EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren.Gathered_Wood, true);
-                                citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingWood;
-                                break;
-                        }
+                case V2.Tasks.Unit.Citizen.DepositingTask deptask:
+                    switch(deptask.resourceType) {
+                        case Enums.ResourceTypes.Food:
+                            citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingMeat;
+                            break;
+                        case Enums.ResourceTypes.Gold:
+                            citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingGold;
+                            break;
+                        case Enums.ResourceTypes.Rock:
+                            citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingGold;
+                            break;
+                        case Enums.ResourceTypes.Wood:
+                            citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingWood;
+                            break;
                     }
                     break;
             }
-            _intanimationState = (int)citizeAnimationState;
-            animator.SetInteger("state", _intanimationState);
+            return citizeAnimationState;
         }
+
         private void InitChildrentTool(V2.Enums.Citizen.CitizenTransformChildren children) {
             EnableChildrentTool(children);
         }

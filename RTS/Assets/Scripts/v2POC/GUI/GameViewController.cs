@@ -10,7 +10,7 @@ namespace V2.GUI
         private UnityEngine.UI.Image OptionsPanel;
         // Use this for initialization
         void Start() {
-          
+          V2.Classes.Grid.InitGrid();
         }
         // Update is called once per frame
         void Update() {

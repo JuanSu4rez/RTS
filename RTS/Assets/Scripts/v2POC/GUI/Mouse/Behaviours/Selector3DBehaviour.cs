@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-namespace V2.Behaviours
+
+namespace V2.GUI.Mouse.Behaviours
 {
     public class Selector3DBehaviour : MonoBehaviour
     {
         private List<GameObject> selection = new List<GameObject>();
+        public MouseController MouseController { get; set; }
         int lastselection = 0;
         // Use this for initialization
         void Start() {
@@ -19,6 +21,9 @@ namespace V2.Behaviours
             }
         }
         void OnCollisionEnter(Collision col) {
+            if(MouseController.MouseState != Enums.GUI.MouseStates.Dragged) {
+                return;
+            }
             bool add = false;
             switch(col.gameObject.tag) {
                 case "Citizen":
@@ -35,8 +40,10 @@ namespace V2.Behaviours
                     iselectable.IsSelected = true;
             }
         }
-
         void OnCollisionExit(Collision col) {
+            if(MouseController.MouseState != Enums.GUI.MouseStates.Dragged) {
+                return;
+            }
             bool add = false;
             switch(col.gameObject.tag) {
                 case "Citizen":
@@ -52,7 +59,14 @@ namespace V2.Behaviours
                 if(iselectable != null)
                     iselectable.IsSelected = false;
             }
-
+        }
+        public void ClearSelection() {
+            foreach(var gameObject in selection) {
+                var iselectable = gameObject.GetComponent<ISelectable>();
+                if(iselectable != null)
+                    iselectable.IsSelected = false;
+            }
+            selection.Clear();
         }
     }
 }
