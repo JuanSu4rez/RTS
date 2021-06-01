@@ -88,7 +88,7 @@ namespace V2.Animations
                 case IMoveTask mtask:
                     citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
                     break;
-                case V2.Tasks.Unit.Citizen.GatheringTask gtask:
+                case V2.Tasks.Unit.Citizen.CmpGatheringTask gtask:
                     if(gtask.taskState == TaskStates.OnTheWay) {
                         citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
                     }
@@ -109,7 +109,7 @@ namespace V2.Animations
                         }
                     }
                     break;
-                case V2.Tasks.Unit.Citizen.DepositingTask deptask:
+                case V2.Tasks.Unit.Citizen.CmpDepositingTask deptask:
                     switch(deptask.resourceType) {
                         case Enums.ResourceTypes.Food:
                             citizeAnimationState = Enums.Citizen.CitizenAnimationStates.CarryingMeat;

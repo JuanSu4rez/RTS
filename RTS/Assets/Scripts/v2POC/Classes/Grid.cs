@@ -6,7 +6,7 @@ using System;
 namespace V2.Classes
 {
     public class Grid {
-        public static  readonly Grid grid = new Grid(1000, 1000, 1,false);
+        public static  readonly Grid grid = new Grid(1000, 1000, 2,true);
         public static void InitGrid() {
 
         }
@@ -24,17 +24,18 @@ namespace V2.Classes
             this.initialposition = initalpos;
             size = new Vector3(width, 0, height);
             if(debugird) {
-                DebugGrid();
+                DebugGrid(300);
             }
         }
 
         public void DebugGrid(int time = 10) {
             var _debugWidth = rows;
+            var gridColor = new Color(0, 0, 0, 0.2f);
             for(int i = 0; i < rows; i++) {
-                Debug.DrawLine(new Vector3(0, 0, i), new Vector3(_debugWidth, 0, i), Color.cyan, time);
+                Debug.DrawLine(new Vector3(0, 0, i*width), new Vector3(_debugWidth, 0, i * width), gridColor, time);
             }
             for(int i = 0; i < cols; i++) {
-                Debug.DrawLine(new Vector3(i, 0, 0), new Vector3(i, 0, _debugWidth), Color.cyan, time);
+                Debug.DrawLine(new Vector3(i * height, 0, 0), new Vector3(i * height, 0, _debugWidth), gridColor, time);
             }
         }
 

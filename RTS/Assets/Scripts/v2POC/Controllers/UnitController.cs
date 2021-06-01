@@ -14,7 +14,6 @@ namespace V2.Controllers
         [SerializeField]
         private float _currentHealth;
         public float CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
-        public bool IsSelected { get; set; }
         void Start() {
             AssingTask(DoingNothing.nothing);
         }

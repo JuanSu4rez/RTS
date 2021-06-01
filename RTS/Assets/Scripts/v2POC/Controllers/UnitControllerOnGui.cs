@@ -28,12 +28,12 @@ namespace V2.Controllers
                 textureCurrentHealt.SetPixel(0, 0, Color.green);
                 textureCurrentHealt.Apply();
             }
-            var sqwidth = 100;
-            var sqheight = 10;
+            var sqwidth = 100/2;
+            var sqheight = 10 / 2;
             Vector3 screenPos = UnityEngine.Camera.main.WorldToScreenPoint(this.transform.position);
             screenPos += new Vector3(-( sqwidth / 2 ), 30);
-            UnityEngine.GUI.DrawTexture(new Rect(screenPos.x, Screen.height - screenPos.y, sqwidth, sqheight), textureHealt);
-            var rect = new Rect(new Vector2(screenPos.x, Screen.height - screenPos.y), new Vector2(sqwidth *(CurrentHealth / 100), 10));
+            UnityEngine.GUI.DrawTexture(new Rect(screenPos.x, Screen.height - screenPos.y-10, sqwidth, 2), textureHealt);
+            var rect = new Rect(new Vector2(screenPos.x, Screen.height - screenPos.y-10), new Vector2(sqwidth *(CurrentHealth / 100), 2));
             UnityEngine.GUI.DrawTexture(rect, textureCurrentHealt);
         }
     }

@@ -16,7 +16,6 @@ namespace V2.Controllers.TestControllers
         void Update() {
             var destinyPosition = this.transform.position + ( 15 * ( Vector3.left + -Vector3.forward ) );
             unitController.AssingTask(new MoveTaskWithAI(this.gameObject, destinyPosition));
-            unitController.IsSelected = true;
             this.enabled = false;
         }
     }

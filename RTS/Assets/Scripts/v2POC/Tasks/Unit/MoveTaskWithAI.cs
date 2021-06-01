@@ -5,7 +5,7 @@ using V2.Interfaces.Task;
 using UnityEngine.AI;
 using V2.Enums.Task;
 
-namespace V2.Tasks.Unit.Citizen
+namespace V2.Tasks.Unit
 {
     public class MoveTaskWithAI : IMoveTask{
         public GameObject GameObject { get; set; }
@@ -31,7 +31,6 @@ namespace V2.Tasks.Unit.Citizen
                 transform.position = Destiny;
                 goNavMeshAgent.ResetPath();
                 taskState = TaskStates.Completed;
-                goNavMeshAgent.enabled = false;
             }
         }
     }

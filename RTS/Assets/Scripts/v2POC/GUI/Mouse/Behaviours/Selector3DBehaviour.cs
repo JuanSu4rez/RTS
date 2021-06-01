@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using V2.Enums;
 
 namespace V2.GUI.Mouse.Behaviours
 {
     public class Selector3DBehaviour : MonoBehaviour
     {
         private List<GameObject> selection = new List<GameObject>();
+        public List<GameObject> Selection { get => selection; }
         public MouseController MouseController { get; set; }
         int lastselection = 0;
         // Use this for initialization
@@ -35,7 +37,7 @@ namespace V2.GUI.Mouse.Behaviours
             }
             if(add) {
                 selection.Add(col.gameObject);
-                var iselectable = col.gameObject.GetComponent<ISelectable>();
+                var iselectable = col.gameObject.GetComponent<V2.Interfaces.ISelectable>();
                 if(iselectable != null)
                     iselectable.IsSelected = true;
             }
@@ -55,18 +57,21 @@ namespace V2.GUI.Mouse.Behaviours
             }
             if(add) {
                 selection.Remove(col.gameObject);
-                var iselectable = col.gameObject.GetComponent<ISelectable>();
+                var iselectable = col.gameObject.GetComponent<V2.Interfaces.ISelectable>();
                 if(iselectable != null)
                     iselectable.IsSelected = false;
             }
         }
         public void ClearSelection() {
             foreach(var gameObject in selection) {
-                var iselectable = gameObject.GetComponent<ISelectable>();
+                var iselectable = gameObject.GetComponent<V2.Interfaces.ISelectable>();
                 if(iselectable != null)
                     iselectable.IsSelected = false;
             }
             selection.Clear();
+        }
+        public KindOfSelection GetKindOfSelection() {
+            return KindOfSelection.Citizens;
         }
     }
 }

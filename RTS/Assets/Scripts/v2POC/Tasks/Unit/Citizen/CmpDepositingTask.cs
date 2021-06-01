@@ -7,7 +7,7 @@ using V2.Enums;
 
 namespace V2.Tasks.Unit.Citizen
 {
-    public class DepositingTask : ICompoundTask {
+    public class CmpDepositingTask : ICompoundTask {
         public IMoveTask MoveTask { get; set; }
         public GameObject GameObject { get; set; }
         public GameObject GameObjectResource { get; set; }
@@ -15,7 +15,7 @@ namespace V2.Tasks.Unit.Citizen
         private V2.Interfaces.IResource iResource;
         public TaskStates taskState;
         public ResourceTypes resourceType;
-        public DepositingTask(GameObject gameObject,GameObject gameObjectResource,IMoveTask moveTask) {
+        public CmpDepositingTask(GameObject gameObject,GameObject gameObjectResource,IMoveTask moveTask) {
             this.GameObject = gameObject;
             this.GameObjectResource = gameObjectResource;
             this.iResource = this.GameObjectResource.GetComponent<V2.Interfaces.IResource>();
