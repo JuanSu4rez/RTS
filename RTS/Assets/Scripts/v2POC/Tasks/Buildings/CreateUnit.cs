@@ -10,9 +10,9 @@ namespace V2.Tasks
     [System.Obsolete]
     public class CreateUnit : ITask{
         public GameObject GameObject { get; set; }
-        private UnitsEnum unitToBeCreated;
+        private EntityType unitToBeCreated;
         private float time = 0;
-        public CreateUnit(UnitsEnum unitToBeCreated) {
+        public CreateUnit(EntityType unitToBeCreated) {
             this.unitToBeCreated = unitToBeCreated;
             this.time = this.unitToBeCreated.TimeToCreate();
         }

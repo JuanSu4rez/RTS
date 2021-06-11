@@ -30,12 +30,6 @@ public class TestPoints : MonoBehaviour
         foreach (var point in points) {
                 Gizmos.DrawSphere(point, 0.5f);
             }
-
-
-
-        
-
-
     }
 
 }

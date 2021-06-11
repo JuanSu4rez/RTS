@@ -88,12 +88,14 @@ public class QueueController : MonoBehaviour {
     }
 
     public virtual void OnDrawGizmos() {
+        if(!Application.isPlaying)
+            return;
+
         if (pointstowWork != null) {
             Gizmos.color = Color.red;
             foreach (var point in pointstowWork) {
                 Gizmos.DrawSphere(point, 0.5f);
             }
-
         }
         if (pointsTowait != null) {
 

@@ -7,16 +7,16 @@ namespace V2.Enums
 
     public static class EnumExtencionsMethods
     {
-        public static float TimeToCreate(this UnitsEnum unitType) {
+        public static float TimeToCreate(this EntityType unitType) {
 
             switch(unitType) {
-                case UnitsEnum.Archer:
+                case EntityType.Archer:
                     break;
-                case UnitsEnum.Citizen:
+                case EntityType.Citizen:
                     break;
-                case UnitsEnum.Knight:
+                case EntityType.Knight:
                     break;
-                case UnitsEnum.SwordMan:
+                case EntityType.SwordMan:
                     break;
             }
             return 10;

@@ -6,6 +6,7 @@ using V2.Interfaces.GUI;
 using UnityEngine.EventSystems;
 using V2.Behaviours;
 using System;
+using System.Collections.Generic;
 
 namespace V2.GUI.Mouse.Behaviours
 {
@@ -109,14 +110,16 @@ namespace V2.GUI.Mouse.Behaviours
             var selection = selector3DBehaviour.Selection;
             var destiny = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(raycastHitOnLand.Value.point);
             var sorroundpoins = V2.Classes.Grid.grid.GetSorroundPositions(raycastHitOnLand.Value.point);
+            List<Vector3> destinyPoints = new List<Vector3>();
+            destinyPoints.Add(destiny);
+            destinyPoints.AddRange(sorroundpoins);
             int i = 0;
             int assigned = 0;
+           
             foreach(var selected in selection) {
                 var controller = selected.GetComponent<Controllers.UnitController>();
                 if(controller) {
-                    if(i != 0) {
-                        destiny =  sorroundpoins[(i - 1) % sorroundpoins.Length];
-                    }
+                    destiny = destinyPoints[i% destinyPoints.Count];
                     controller.AssingTask(new V2.Tasks.Unit.MoveTaskWithAI(selected, destiny));
                     assigned++;
                 }

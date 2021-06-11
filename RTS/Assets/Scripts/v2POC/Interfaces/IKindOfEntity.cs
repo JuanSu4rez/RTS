@@ -5,8 +5,7 @@ using V2.Enums;
 
 namespace V2.Interfaces
 {
-    public interface IUnit: IHealthPoint, IDamagable, ISelectable, IEntityType 
-    {
-        
+    public interface IKindOfEntity {
+        KindsOfEntities KindOfUnit { get;  }
     }
 }

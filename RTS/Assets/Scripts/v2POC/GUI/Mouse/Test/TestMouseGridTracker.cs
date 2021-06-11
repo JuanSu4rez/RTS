@@ -17,7 +17,6 @@ public class TestMouseGridTracker : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-
         Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
         var results = Physics.RaycastAll(ray, Mathf.Infinity);
         RaycastHit? raycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");

@@ -7,8 +7,8 @@ namespace V2.GUI.Mouse.Behaviours
 {
     public class Selector3DBehaviour : MonoBehaviour
     {
-        private List<GameObject> selection = new List<GameObject>();
-        public List<GameObject> Selection { get => selection; }
+        private HashSet<GameObject> selection = new HashSet<GameObject>();
+        public HashSet<GameObject> Selection { get => selection; }
         public MouseController MouseController { get; set; }
         int lastselection = 0;
         // Use this for initialization
@@ -26,16 +26,16 @@ namespace V2.GUI.Mouse.Behaviours
             if(MouseController.MouseState != Enums.GUI.MouseStates.Dragged) {
                 return;
             }
-            bool add = false;
+            bool flag = false;
             switch(col.gameObject.tag) {
                 case "Citizen":
-                    add = true;
+                    flag = true;
                     break;
                 case "Military":
-                    add = true;
+                    flag = true;
                     break;
             }
-            if(add) {
+            if(flag) {
                 selection.Add(col.gameObject);
                 var iselectable = col.gameObject.GetComponent<V2.Interfaces.ISelectable>();
                 if(iselectable != null)
@@ -46,16 +46,16 @@ namespace V2.GUI.Mouse.Behaviours
             if(MouseController.MouseState != Enums.GUI.MouseStates.Dragged) {
                 return;
             }
-            bool add = false;
+            bool flag = false;
             switch(col.gameObject.tag) {
                 case "Citizen":
-                    add = true;
+                    flag = true;
                     break;
                 case "Military":
-                    add = true;
+                    flag = true;
                     break;
             }
-            if(add) {
+            if(flag) {
                 selection.Remove(col.gameObject);
                 var iselectable = col.gameObject.GetComponent<V2.Interfaces.ISelectable>();
                 if(iselectable != null)

@@ -8,9 +8,11 @@ namespace V2.Controllers.TestControllers
 {
     public class TestCitizenController : MonoBehaviour{
         private UnitController unitController;
+        private Vector3[] points = null;
     // Use this for initialization
         void Start() {
             unitController = this.GetComponent<UnitController>();
+             points = unitController.GetSurroundingPoints();
         }
         // Update is called once per frame
         void Update() {

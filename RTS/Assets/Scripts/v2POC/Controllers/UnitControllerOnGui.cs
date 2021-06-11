@@ -28,7 +28,7 @@ namespace V2.Controllers
                 textureCurrentHealt.SetPixel(0, 0, Color.green);
                 textureCurrentHealt.Apply();
             }
-            var sqwidth = 100/2;
+            var sqwidth = 10/2;
             var sqheight = 10 / 2;
             Vector3 screenPos = UnityEngine.Camera.main.WorldToScreenPoint(this.transform.position);
             screenPos += new Vector3(-( sqwidth / 2 ), 30);

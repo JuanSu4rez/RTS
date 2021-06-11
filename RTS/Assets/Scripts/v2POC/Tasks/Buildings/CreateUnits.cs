@@ -9,12 +9,12 @@ namespace V2.Tasks
 {
     public class CreateUnits : ITask{
         public GameObject GameObject { get; set; }
-        private List<UnitsEnum> unitsToBeCreated;
+        private List<EntityType> unitsToBeCreated;
         private float time;
         public CreateUnits(int capacity = 20) {
             if(capacity <= 0)
                 throw new System.ArgumentException("Invalid capacity");
-            unitsToBeCreated = new List<UnitsEnum>(capacity);
+            unitsToBeCreated = new List<EntityType>(capacity);
         }
         public bool IsComplete() {
             return unitsToBeCreated.Count == 0;
@@ -29,7 +29,7 @@ namespace V2.Tasks
                 }
             }
         }
-        public void AddUnit(UnitsEnum unitToCreate) {
+        public void AddUnit(EntityType unitToCreate) {
             if(unitsToBeCreated.Count == 0)
                 time = unitToCreate.TimeToCreate();
             unitsToBeCreated.Add(unitToCreate);
