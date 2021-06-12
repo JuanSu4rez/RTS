@@ -10,10 +10,12 @@ namespace V2.Tasks.Unit.Citizen
     public abstract class CompundTask : ICompoundTask {
         public GameObject GameObject { get; set; }
         public IMoveTask MoveTask { get; set; }
+        public ITask Task { get; set; }
         public TaskStates taskState;
-        public CompundTask(GameObject gameObject, IMoveTask moveTask) {
+        public CompundTask(GameObject gameObject, IMoveTask moveTask, ITask task) {
             this.GameObject = gameObject;
             this.MoveTask = moveTask;
+            this.Task = task;
             taskState = TaskStates.OnTheWay;
         }
         public bool IsComplete() {
@@ -28,10 +30,16 @@ namespace V2.Tasks.Unit.Citizen
                     }
                     break;
                 case TaskStates.Performing:
-                    PerformTask();
+                    Task.Update();
+                    if(Task.IsComplete()) {
+                        taskState = TaskStates.Completed;
+                    }
+                    else {
+                        TaskFinished();
+                    }
                     break;
             }
         }
-        public abstract void PerformTask();
+        public abstract void TaskFinished();
     }
 }

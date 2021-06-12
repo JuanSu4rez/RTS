@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using V2.Enums;
 
 namespace V2.Controllers
 {
-    public partial class UnitController : V2.Interfaces.IDamagable, V2.Interfaces.ISelectable, V2.Interfaces.IEntityType , V2.Interfaces.ISurroundingPoints
+    public partial class UnitController : V2.Interfaces.IDamagable, V2.Interfaces.ISelectable, V2.Interfaces.IEntityType, V2.Interfaces.ISurroundingPoints
     {
         [SerializeField]
         private EntityType entityType;
-        public EntityType UnitType => entityType;
+        public EntityType EntityType => entityType;
         [SerializeField]
         private KindsOfEntities kindOfEntity;
-        public KindsOfEntities KindOfUnit => kindOfEntity;
+        public KindsOfEntities KindOfEntity => kindOfEntity;
         public bool IsSelected { get; set; }
         public float AddDamage(float damage) {
             var result = this.CurrentHealth - damage;
@@ -26,33 +27,31 @@ namespace V2.Controllers
         private Vector3[] cacheSurroundingPoints = null;
         public Vector3[] GetSurroundingPoints() {
             if(!IsAlive()) {
-                if(cacheSurroundingPoints.Length != 0)
-                    cacheSurroundingPoints = new Vector3[0];
                 return cacheSurroundingPoints;
             }
+            if(canCalculateStaticUnitPoints())
+                return cacheSurroundingPoints;
+            calculateUnitPoints();
+            return cacheSurroundingPoints;
+        }
+        private bool canCalculateStaticUnitPoints() {
             var gameObject = this.gameObject;
             V2.Interfaces.IUnitController iUnitController = this;
-            switch(this.kindOfEntity) {
-                case KindsOfEntities.Building:
-                    if(cacheSurroundingPoints == null) {
-                        cacheSurroundingPoints = V2.Utils.SurroundingPoints.GetPoints(ref gameObject, ref iUnitController);
-                    }
-                    return cacheSurroundingPoints;
-                    break;
-                case KindsOfEntities.Resource:
-                    if(cacheSurroundingPoints == null) {
-                        cacheSurroundingPoints = V2.Utils.SurroundingPoints.GetPoints(ref gameObject, ref iUnitController);
-                    }
-                    return cacheSurroundingPoints;
-                    break;
-            }
-  
-            var currentPosition = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(this.transform.position);
-            if(lastPosition !=  currentPosition) {
-                lastPosition = currentPosition;
+            if(this.kindOfEntity == KindsOfEntities.Building ||
+                this.kindOfEntity == KindsOfEntities.Resource) {
                 cacheSurroundingPoints = V2.Utils.SurroundingPoints.GetPoints(ref gameObject, ref iUnitController);
+                return true;
             }
-            return cacheSurroundingPoints;
+            return false;
+        }
+        private void calculateUnitPoints() {
+            var gameObject = this.gameObject;
+            V2.Interfaces.IUnitController iunitController = this;
+            var currentPosition = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(this.transform.position);
+            if(lastPosition != currentPosition) {
+                lastPosition = currentPosition;
+                cacheSurroundingPoints = V2.Utils.SurroundingPoints.GetPoints(ref gameObject, ref iunitController);
+            }
         }
     }
 }

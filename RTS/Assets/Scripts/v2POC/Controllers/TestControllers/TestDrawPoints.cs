@@ -10,13 +10,12 @@ namespace V2.Controllers.TestControllers
             unitController = this.GetComponent<UnitController>();
             points = unitController.GetSurroundingPoints();
         }
-        public virtual void OnDrawGizmos() {
-            if(!Application.isPlaying)
-                return;
+        private void Update() {
             points = unitController.GetSurroundingPoints();
-            Gizmos.color = new Color(1, 0, 0, 0.33f);
+            if(points == null)
+                return;
             foreach(var point in points) {
-                Gizmos.DrawSphere(point, 0.5f);
+                Debug.DrawLine(point, point + Vector3.up * 0.2f, Color.red);
             }
         }
     }

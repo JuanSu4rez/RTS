@@ -11,6 +11,7 @@ namespace V2.Enums{
         SwordMan,
         //Resources
         GoldMine,
+        RockMine,
         Three,
         //Buildings
         House,

@@ -8,7 +8,6 @@ namespace V2.Enums
     public static class EnumExtencionsMethods
     {
         public static float TimeToCreate(this EntityType unitType) {
-
             switch(unitType) {
                 case EntityType.Archer:
                     break;
@@ -20,6 +19,24 @@ namespace V2.Enums
                     break;
             }
             return 10;
+        }
+
+        public static ResourceTypes GetResourceType(this EntityType unitType) {
+            switch(unitType) {
+                case EntityType.GoldMine:
+                    return ResourceTypes.Gold;
+                    break;
+                case EntityType.WildPig:
+                    return ResourceTypes.Food;
+                    break;
+                case EntityType.Three:
+                    return ResourceTypes.Wood;
+                    break;
+                case EntityType.RockMine:
+                    return ResourceTypes.Rock;
+                    break;
+            }
+            return ResourceTypes._None;
         }
 
     }

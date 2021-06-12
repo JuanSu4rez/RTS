@@ -11,13 +11,10 @@ namespace V2.Utils
     public static class SurroundingPoints {
         public static Vector3[] GetPoints(ref GameObject go, ref IUnitController controller) {
             List<Vector3> points = new List<Vector3>();
-            if(go == null || controller == null) { 
+            if(go == null || controller == null || V2.Classes.Grid.grid == null) { 
                 return points.ToArray();
             }
-            if(V2.Classes.Grid.grid  == null) {
-                return points.ToArray();
-            }
-            switch(controller.KindOfUnit) {
+            switch(controller.KindOfEntity) {
                 case KindsOfEntities.Animal:
                     CalculateAnimalPoints(ref points, ref go, ref controller );
                     return points.ToArray();
@@ -31,8 +28,7 @@ namespace V2.Utils
                     return points.ToArray();
                     break;
             }
-            switch(controller.UnitType) {
-              
+            switch(controller.EntityType) {
                 case EntityType.GoldMine:
                     GetPointsByCollider(ref points, ref go, ref controller);
                     break;
@@ -41,7 +37,6 @@ namespace V2.Utils
                 case EntityType.House:
                     GetPointsByCollider(ref points, ref go, ref controller);
                     break;
-               
             }
             return points.ToArray();
         }

@@ -6,9 +6,9 @@ namespace V2.Enums
 {
     public enum ResourceTypes
     {
+        _None,
         Food,
         Gold,
-        None,
         Rock,
         Wood,
     }

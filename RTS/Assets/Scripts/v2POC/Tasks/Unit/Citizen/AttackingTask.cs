@@ -5,10 +5,9 @@ using V2.Interfaces.Task;
 
 namespace V2.Tasks.Unit.Citizen
 {
-    public class CmpBuildingTask : ICompoundTask {
-        public IMoveTask MoveTask { get; set; }
+    public class AttackingTask : ITask{
         public GameObject GameObject { get; set; }
-        public GameObject GameObjectBuilding{ get; set; }
+        public GameObject GameTarget { get; set; }
         public bool IsComplete() {
             return false;
         }

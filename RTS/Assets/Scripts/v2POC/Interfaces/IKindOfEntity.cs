@@ -6,6 +6,6 @@ using V2.Enums;
 namespace V2.Interfaces
 {
     public interface IKindOfEntity {
-        KindsOfEntities KindOfUnit { get;  }
+        KindsOfEntities KindOfEntity { get;  }
     }
 }

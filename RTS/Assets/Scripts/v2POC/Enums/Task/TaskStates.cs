@@ -10,7 +10,7 @@ namespace V2.Enums.Task
         OnTheWay,
         Waiting,
         Performing,
-        Depositing,
+        CanNotBeContinued,
         Completed
     }
 }
