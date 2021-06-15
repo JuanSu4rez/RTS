@@ -10,7 +10,9 @@ namespace V2.Behaviours
         [SerializeField]
         private float _currentHealth;
         public float CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
-
+        [SerializeField]
+        private float _MaxHealth;
+        public float MaxHealth { get => _MaxHealth; set => _MaxHealth = value; }
         [SerializeField]
         private ResourceTypes resourceType;
 

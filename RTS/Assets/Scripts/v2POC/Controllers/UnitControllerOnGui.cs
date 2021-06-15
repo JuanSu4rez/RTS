@@ -9,7 +9,6 @@ namespace V2.Controllers
         private Texture2D textureCurrentHealt;
         // Update is called once per frame
         void OnGUI() {
-
             if(this.IsAlive() &&
                 IsSelected) {
                 Vector3 screenPos = UnityEngine.Camera.main.WorldToScreenPoint(this.transform.position);
@@ -33,7 +32,7 @@ namespace V2.Controllers
             Vector3 screenPos = UnityEngine.Camera.main.WorldToScreenPoint(this.transform.position);
             screenPos += new Vector3(-( sqwidth / 2 ), 30);
             UnityEngine.GUI.DrawTexture(new Rect(screenPos.x, Screen.height - screenPos.y-10, sqwidth, 2), textureHealt);
-            var rect = new Rect(new Vector2(screenPos.x, Screen.height - screenPos.y-10), new Vector2(sqwidth *(CurrentHealth / 100), 2));
+            var rect = new Rect(new Vector2(screenPos.x, Screen.height - screenPos.y-10), new Vector2(sqwidth *(_currentHealth / _maxHealth), 2));
             UnityEngine.GUI.DrawTexture(rect, textureCurrentHealt);
         }
     }

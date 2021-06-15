@@ -2,7 +2,7 @@
 using UnityEditor;
 namespace V2.Interfaces.Task
 {
-    public interface ITaskWithValidation:Task.ITask {
+    public interface IComplexTask:Task.ITask, IPreviousTask, INextTask {
         bool CanBeContinued();
     }
 }

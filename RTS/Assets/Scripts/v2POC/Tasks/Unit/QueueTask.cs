@@ -30,28 +30,30 @@ namespace V2.Tasks.Unit
             currentTask.Update();
             if(currentTask.IsComplete()) {
                 ListOfTask.RemoveAt(0);
-                AssingNextTask();
+                AssingNextTask(ref currentTask);
             }
             else {
-                AssingPreviousTask();
+                AssingPreviousTask(ref currentTask);
             }
         }
-        private void AssingNextTask() {
-            var INextTask = ListOfTask[0] as INextTask;
-            if(INextTask != null) {
-                var nextTask = INextTask.NextTask();
-                if(nextTask != null)
-                    //in case of multiple task
+        private void AssingNextTask(ref ITask currentTask) {
+            var IComplexTask = currentTask as IComplexTask;
+            if(IComplexTask != null) {
+                var nextTask = IComplexTask.NextTask();
+                if(nextTask != null) { 
+                    //this method is claa after removing the currentTask
+                    //in case of multiple task we can not override them
                     ListOfTask.Insert(0, nextTask);
+                }
             }
         }
-        private void AssingPreviousTask() {
-            var ITaskWithStates = ListOfTask[0] as ITaskWithValidation;
-            var IPreviousTask = ListOfTask[0] as IPreviousTask;
-            if(ITaskWithStates != null && IPreviousTask != null && !ITaskWithStates.CanBeContinued()) {
-                var previousTask = IPreviousTask.PreviousTask();
-                if(previousTask != null)
+        private void AssingPreviousTask(ref ITask currentTask) {
+            var IComplexTask = currentTask as IComplexTask;
+            if(IComplexTask != null &&  !IComplexTask.CanBeContinued()) {
+                var previousTask = IComplexTask.PreviousTask();
+                if(previousTask != null) { 
                     ListOfTask.Insert(0, previousTask);
+                }
             }
         }
     }

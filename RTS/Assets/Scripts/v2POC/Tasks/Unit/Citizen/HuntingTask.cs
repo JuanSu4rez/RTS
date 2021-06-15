@@ -7,7 +7,7 @@ using V2.Enums;
 
 namespace V2.Tasks.Unit.Citizen
 {
-    public class HuntingTask : ITaskWithValidation, IPreviousTask, INextTask {
+    public class HuntingTask : IComplexTask{
         public GameObject GameObject { get; set; }
         public GameObject GameObjectAnimal { get; set; }
         public TaskStates taskState;

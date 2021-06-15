@@ -6,25 +6,37 @@ using V2.Tasks.Unit;
 using V2.Interfaces.Task;
 using System;
 using V2.Tasks.Unit.Citizen;
+using V2.Enums;
 
 namespace V2.Controllers
 {
-    public partial class UnitController : MonoBehaviour, IUnitController,IHealthPoint{
+    public partial class UnitController : MonoBehaviour, IUnitController,IHealthPoint,ITeam{
         private ITask toDo;
         [SerializeField]
         private float _currentHealth;
-        public float CurrentHealth { get => _currentHealth; set => _currentHealth = value; }
-        private Vector3 lastPosition;
+        public float CurrentHealth {
+            get => _currentHealth;
+            set => _currentHealth = value;
+        }
+        [SerializeField]
+        private float _maxHealth;
+        public float MaxHealth {
+            get => this._maxHealth;
+            set {
+                if(KindOfEntity == Enums.KindsOfEntities.Resource){
+                    _maxHealth = value;
+                }
+            }
+        }
+        [SerializeField]
+        private TeamsList _team;
+        public TeamsList Team { get => _team; set => _team = value; }
         void Start() {
             AssingTask(DoingNothing.nothing);
             TagValidation();
-            lastPosition = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(this.transform.position);
-        }
-        private void TagValidation() {
-            if(String.IsNullOrEmpty(this.gameObject.tag) ||
-              this.kindOfEntity.ToString() != this.gameObject.tag) {
-                this.gameObject.tag = this.kindOfEntity.ToString();
-            }
+            InitLastCenteredPosition();
+            SetEntityObject();
+            InitEntityData();
         }
         void Update() {
             //Debug.Log(Time.time + " " +this.GetType());
