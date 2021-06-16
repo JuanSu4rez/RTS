@@ -5,10 +5,15 @@ using System.Text;
 namespace V2.Enums
 {
     public enum TeamsList {
-       _TeamGaia,
+       _TeamNature,
        TeamOne,
        TeamTwo,
        TeamThree,
-       TeamFour
+       TeamFour,
+       TeamFive,
+       TeamSix,
+       TeamSeven,
+       TeamEight,
+       TeamGaia
     }
 }

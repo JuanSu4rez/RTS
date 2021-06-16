@@ -16,6 +16,8 @@ namespace V2.Enums{
         //Buildings
         House,
         //Animals
-        WildPig
+        WildPig,
+        Deer,
+        Sheep
     }
 }

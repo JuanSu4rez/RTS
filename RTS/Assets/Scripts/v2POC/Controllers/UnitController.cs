@@ -33,7 +33,7 @@ namespace V2.Controllers
         public TeamsList Team { get => _team; set => _team = value; }
         void Start() {
             AssingTask(DoingNothing.nothing);
-            TagValidation();
+            //TagValidation();
             InitLastCenteredPosition();
             SetEntityObject();
             InitEntityData();
