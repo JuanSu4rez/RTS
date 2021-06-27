@@ -26,6 +26,7 @@ public class UnitController : MonoBehaviour, IMovable, ISelectable, IFigther, IW
 
     private NavMeshAgent navMeshAgent;
 
+ 
     private Animator animator;
 
 

@@ -1,0 +1,7 @@
+seleccion click izq
+seleciono aldeano
+-opciones
+-seleciono casa
+-pongo la casa
+-los aldeanos van
+

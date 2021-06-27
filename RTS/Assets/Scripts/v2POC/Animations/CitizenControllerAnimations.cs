@@ -85,6 +85,12 @@ namespace V2.Animations
             this.citizeAnimationState = Enums.Citizen.CitizenAnimationStates.None;
             var task = unitController.GetTask();
             switch(task) {
+                case IQueueTask queueTask:
+                    task = queueTask.Current();
+                    break;
+            }
+        
+            switch(task) {
                 case IMoveTask mtask:
                     citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Walking;
                     break;
@@ -122,18 +128,21 @@ namespace V2.Animations
                             break;
                     }
                     break;
+                case V2.Tasks.Unit.Citizen.BuildingTask buildingTask:
+                    citizeAnimationState = Enums.Citizen.CitizenAnimationStates.Building;
+                    break;
             }
             return citizeAnimationState;
         }
 
         private void InitChildrentTool(V2.Enums.Citizen.CitizenTransformChildren children) {
-            EnableChildrentTool(children);
-        }
-        private void EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren children, bool enable = false) {
-            var id = (int)children;
-            if(this.transform.childCount > id) {
-                this.transform.GetChild(id).gameObject.SetActive(enable);
-            }
-        }
+    EnableChildrentTool(children);
+}
+private void EnableChildrentTool(V2.Enums.Citizen.CitizenTransformChildren children, bool enable = false) {
+    var id = (int)children;
+    if(this.transform.childCount > id) {
+        this.transform.GetChild(id).gameObject.SetActive(enable);
+    }
+}
     }
 }

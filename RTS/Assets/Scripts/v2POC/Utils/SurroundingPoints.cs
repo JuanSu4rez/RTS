@@ -67,29 +67,32 @@ namespace V2.Utils
             var boundshalfsize = size * 1f;
             var initialpoint = go.transform.position;
             initialpoint = go.transform.position + ( bounds.size * 0.5f ) +
-                ( ( Vector3.forward + Vector3.right ) * GridScript.gridScript.gird.width * 0.5f );
+                ( ( Vector3.forward + Vector3.right ) * V2.Classes.Grid.grid.width * 0.5f );
+            //Debug.DrawLine(initialpoint, initialpoint + Vector3.up * 10, Color.cyan,1000);
             //todo this depends on th y of the object
             initialpoint.y = 0;
+            initialpoint =  V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(initialpoint);
             int i = 0;
             Vector3 right = Vector3.right;
             Vector3 up = Vector3.forward;
-            var sizeX = bounds.size.x + GridScript.gridScript.gird.width;
-            var sizeZ = bounds.size.z + GridScript.gridScript.gird.width;
+            var sizeX = (bounds.size.x + V2.Classes.Grid.grid.width) / V2.Classes.Grid.grid.width;
+            var sizeZ = (bounds.size.z + V2.Classes.Grid.grid.width) / V2.Classes.Grid.grid.width;
+            //Debug.DrawLine(initialpoint+ -Vector3.right * sizeX ,( initialpoint + -Vector3.right * sizeX ) + Vector3.up * 10, Color.cyan, 1000);
             for(; i < sizeX; i++) {
-                points.Add(( -right * i * GridScript.gridScript.gird.width ) + initialpoint);
+                points.Add(( -right * i * V2.Classes.Grid.grid.width ) + initialpoint);
             }
-            initialpoint = ( -right * i * GridScript.gridScript.gird.width ) + initialpoint;
+            initialpoint = ( -right * i * V2.Classes.Grid.grid.width ) + initialpoint;
             for(i = 0; i < sizeZ; i++) {
-                points.Add(( -up * i * GridScript.gridScript.gird.width ) + initialpoint);
+                points.Add(( -up * i * V2.Classes.Grid.grid.width ) + initialpoint);
             }
-            initialpoint = ( -up * i * GridScript.gridScript.gird.width ) + initialpoint;
+            initialpoint = ( -up * i * V2.Classes.Grid.grid.width ) + initialpoint;
             i = 0;
             for(; i < sizeX; i++) {
-                points.Add(( right * i * GridScript.gridScript.gird.width ) + initialpoint);
+                points.Add(( right * i * V2.Classes.Grid.grid.width ) + initialpoint);
             }
-            initialpoint = ( right * i * GridScript.gridScript.gird.width ) + initialpoint;
+            initialpoint = ( right * i * V2.Classes.Grid.grid.width ) + initialpoint;
             for(i = 0; i < sizeZ; i++) {
-                points.Add(( up * i * GridScript.gridScript.gird.width ) + initialpoint);
+                points.Add(( up * i * V2.Classes.Grid.grid.width ) + initialpoint);
             }
         }
         private static void CalculateByCapsuleCollider(ref List<Vector3> points, ref GameObject go, ref IUnitController controller, CapsuleCollider capsule) {

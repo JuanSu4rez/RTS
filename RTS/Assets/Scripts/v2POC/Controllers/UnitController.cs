@@ -37,6 +37,7 @@ namespace V2.Controllers
             InitLastCenteredPosition();
             SetEntityObject();
             InitEntityData();
+            GetSurroundingPoints();
         }
         void Update() {
             //Debug.Log(Time.time + " " +this.GetType());
@@ -44,15 +45,20 @@ namespace V2.Controllers
                 toDo != null &&
                 toDo as DoingNothing == null) {
                 toDo.Update();
-                if(toDo.IsComplete()) {
+                if(toDo.IsComplete()) { 
                     toDo = null;
                     AssingTask(DoingNothing.nothing);
                 }
             }
         }
-        public void AssingTask(ITask task) {
-            toDo = task;
-            if(!( task is DoingNothing ) &&
+        public void AssingTask(ITask newTask) {
+            switch(toDo) {
+                case IDiposeTask disposeTask:
+                    disposeTask.Dispose();
+                    break;
+            }
+            toDo = newTask;
+            if(!( newTask is DoingNothing ) &&
                  toDo.GameObject != this.gameObject) 
             { 
                 toDo.GameObject = this.gameObject;

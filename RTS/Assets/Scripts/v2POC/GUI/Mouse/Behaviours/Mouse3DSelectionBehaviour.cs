@@ -89,12 +89,15 @@ namespace V2.GUI.Mouse.Behaviours
             }
         }
         public void OnDown(PointerEventData data) {
-            if(data.button == PointerEventData.InputButton.Left
-                && selector3DBehaviour.Selection.Count > 0) {
-                if(ProvisionalTaskWalkingAsignation())
-                    return;
+            if(data.button == PointerEventData.InputButton.Left) {
+                if(selector3DBehaviour.Selection.Count > 0) {
+                    if(ProvisionalTaskWalkingAsignation())
+                        return;
+                }
             }
+            else{ 
             selector3DBehaviour.ClearSelection();
+            }
         }
 
         private bool ProvisionalTaskWalkingAsignation() {
