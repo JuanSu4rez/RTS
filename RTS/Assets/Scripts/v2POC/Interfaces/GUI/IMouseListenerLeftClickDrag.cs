@@ -4,8 +4,8 @@ using UnityEngine.EventSystems;
 
 namespace V2.Interfaces.GUI
 {
-    public interface IMouseListenerDown
+    public interface IMouseListenerLeftClickDrag
     {
-        void OnDown(PointerEventData data);
+        void OnDrag(PointerEventData data);
     }
 }

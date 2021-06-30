@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace V2.GUI.Mouse.Behaviours
 {
-    public class Mouse3DSelectionBehaviour : MonoBehaviour, IMouseListenerDown, IMouseListenerUp
+    public class Mouse3DSelectionBehaviour : MonoBehaviour, IMouseListenerLeftClickDown, IMouseListenerLeftClickUp, IMouseListenerLeftClickDrag, IMouseListenerRightClickDown
     {
         [SerializeField]
         private GameObject targetObject;
@@ -29,7 +29,10 @@ namespace V2.GUI.Mouse.Behaviours
                 return;
             }
             selector3DBehaviour.MouseController = mouseController;
-            mouseController.listenerDown = this;
+            mouseController.mouseListenerLeftClickDown = this;
+            mouseController.mouseListenerLeftClickUp = this;
+            mouseController.mouseListenerLeftClickDrag = this;
+            mouseController.mouseListenerRightClickDown = this;
         }
 
         // Update is called once per frame
@@ -54,7 +57,6 @@ namespace V2.GUI.Mouse.Behaviours
                     return;
                 }
                 Debug.DrawLine(heightRaycastHitOnLand.Value.point, heightRaycastHitOnLand.Value.point + new Vector3(0, 120, 0), Color.blue);
-
                 Vector2 HorizontalProyection2D = initialPosition + selection.width * Vector2.right;
                 Vector3 HorizontalProyection3D = UnityEngine.Camera.main.ScreenToWorldPoint(HorizontalProyection2D);
                 ray = UnityEngine.Camera.main.ScreenPointToRay(HorizontalProyection2D);
@@ -80,24 +82,42 @@ namespace V2.GUI.Mouse.Behaviours
                 }
             }
         }
+
+        void IMouseListenerRightClickDown.OnDown(PointerEventData data) {
+            //Debug.Log("Right click down.");
+            if(selector3DBehaviour.Selection.Count > 0) {
+                if(ProvisionalTaskWalkingAsignation())
+                    return;
+            }
+        }
+
+        public void OnDown(PointerEventData data) {
+            //Debug.Log("Left click down.");
+            selector3DBehaviour.ClearSelection();
+        }
+
         public void OnUp(PointerEventData data) {
+            //Debug.Log("Left click up.");
             switch(mouseController.MouseState) {
                 case Enums.GUI.MouseStates.Pressed:
                     //send a ray to select one unit
                     break;
-
+                default:
+                    //Move the reference cube
+                    break;
             }
         }
-        public void OnDown(PointerEventData data) {
-            if(data.button == PointerEventData.InputButton.Left) {
-                if(selector3DBehaviour.Selection.Count > 0) {
-                    if(ProvisionalTaskWalkingAsignation())
-                        return;
-                }
-            }
-            else{ 
-            selector3DBehaviour.ClearSelection();
-            }
+
+
+        public void OnDrag(PointerEventData data) {
+            //Debug.Log("Left click drag.");
+            Vector2 initialMouseRectanglePosition;
+            Vector2 initialPosPlusRectangleHeight;
+            Vector2 initialPosPlusRectangleWidht;
+            Vector3 initialMRectPos3dCast;
+            Vector3 initialMRectPosPlusRectangleHeight3dCast;
+            Vector3 initialMRectPosPlusRectangleWidht3dCast;
+
         }
 
         private bool ProvisionalTaskWalkingAsignation() {
@@ -118,17 +138,19 @@ namespace V2.GUI.Mouse.Behaviours
             destinyPoints.AddRange(sorroundpoins);
             int i = 0;
             int assigned = 0;
-           
+
             foreach(var selected in selection) {
                 var controller = selected.GetComponent<Controllers.UnitController>();
                 if(controller) {
-                    destiny = destinyPoints[i% destinyPoints.Count];
+                    destiny = destinyPoints[i % destinyPoints.Count];
                     controller.AssingTask(new V2.Tasks.Unit.MoveTaskWithAI(selected, destiny));
                     assigned++;
                 }
                 i++;
             }
-            return assigned>0;
+            return assigned > 0;
         }
+
+      
     }
 }

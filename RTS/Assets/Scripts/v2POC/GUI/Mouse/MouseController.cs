@@ -5,13 +5,18 @@ using System;
 using V2.Enums.GUI;
 using System.Linq;
 using V2.Interfaces.GUI;
+using  UnityEngine.EventSystems;
 
 namespace V2.GUI.Mouse
 {
     public  class MouseController : MonoBehaviour    {
-        public IMouseListenerDown listenerDown{ get; set; }
-        public IMouseListenerDrag listenerDrag { get; set; }
-        public IMouseListenerUp listenerDrop { get; set; }
+        public IMouseListenerLeftClickDown mouseListenerLeftClickDown { get; set; }
+        public IMouseListenerLeftClickDrag mouseListenerLeftClickDrag { get; set; }
+        public IMouseListenerLeftClickUp mouseListenerLeftClickUp { get; set; }
+        public IMouseListenerRightClickDown mouseListenerRightClickDown { get; set; }
+        public IMouseListenerRightClickDrag mouseListenerRightClickDrag { get; set; }
+        public IMouseListenerRightClickUp mouseListenerRightClickUp { get; set; }
+        public PointerEventData.InputButton? InputButton { get; private set; }
         private MouseStates mouseState = MouseStates._none;
         private Vector2 initialMousePosition;
         public Vector2 InitialMousePosition { get => initialMousePosition; }
@@ -64,29 +69,43 @@ namespace V2.GUI.Mouse
            //Debug.Log("_PointerDown");
             mouseState = MouseStates.Pressed;
             initialMousePosition = data.position;
-            if(listenerDown != null) {
-                listenerDown.OnDown(data);
+            InputButton = data.button;
+            switch(InputButton) {
+                case PointerEventData.InputButton.Right:
+                    mouseListenerRightClickDown?.OnDown(data);
+                    break;
+                case PointerEventData.InputButton.Middle:
+                    break;
+                default:
+                    mouseListenerLeftClickDown?.OnDown(data);
+                    break;
             }
         }
         private void _MouseDrag(PointerEventData data) {
            //Debug.Log("_MouseDrag");
             mouseState = MouseStates.Dragged;
             lastMousePosition = data.position;
-            if(listenerDrag != null) {
-                listenerDrag.OnDrag(data);
+            switch(InputButton) {
+                case PointerEventData.InputButton.Right:
+                    mouseListenerRightClickDrag?.OnDrag(data);
+                    break;
+                case PointerEventData.InputButton.Middle:
+                    break;
+                default:
+                    mouseListenerLeftClickDrag?.OnDrag(data);
+                    break;
             }
         }
         private void _PointerUp(PointerEventData data) {
-            switch(mouseState) {
-                case MouseStates._none:
+            switch(InputButton) {
+                case PointerEventData.InputButton.Right:
+                    mouseListenerRightClickUp?.OnUp(data);
                     break;
-                case MouseStates.Pressed:
+                case PointerEventData.InputButton.Middle:
                     break;
-                case MouseStates.Dragged:
+                default:
+                    mouseListenerLeftClickUp?.OnUp(data);
                     break;
-            }
-            if(listenerDrop != null) {
-                listenerDrop.OnUp(data);
             }
             mouseState = MouseStates._none;
             initialMousePosition = Vector2.zero;
