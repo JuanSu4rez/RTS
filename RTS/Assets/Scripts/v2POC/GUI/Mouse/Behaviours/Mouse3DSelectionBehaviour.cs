@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 using V2.Behaviours;
 using System;
 using System.Collections.Generic;
+using V2.Structs;
+using V2.Utils;
+using V2.Constans;
 
 namespace V2.GUI.Mouse.Behaviours
 {
@@ -34,92 +37,82 @@ namespace V2.GUI.Mouse.Behaviours
             mouseController.mouseListenerLeftClickDrag = this;
             mouseController.mouseListenerRightClickDown = this;
         }
-
         // Update is called once per frame
         void Update() {
-            if(mouseController.MouseState == V2.Enums.GUI.MouseStates.Dragged) {
-                Rect selection = mouseController.GetRectangle();
-                var initialPosition = mouseController.GetInitialPosition();//.InitialMousePosition);
-                //REFACTOR Ray hit from 2d
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(initialPosition);
-                var results = Physics.RaycastAll(ray, Mathf.Infinity);
-                RaycastHit? raycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");
-                if(!raycastHitOnLand.HasValue) {
-                    return;
-                }
-                //
-                Vector2 verticalProyection2D = initialPosition + selection.height * Vector2.down;
-                Vector3 verticalProyection3D = UnityEngine.Camera.main.ScreenToWorldPoint(verticalProyection2D);
-                ray = UnityEngine.Camera.main.ScreenPointToRay(verticalProyection2D);
-                results = Physics.RaycastAll(ray, Mathf.Infinity);
-                RaycastHit? heightRaycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");
-                if(!heightRaycastHitOnLand.HasValue) {
-                    return;
-                }
-                Debug.DrawLine(heightRaycastHitOnLand.Value.point, heightRaycastHitOnLand.Value.point + new Vector3(0, 120, 0), Color.blue);
-                Vector2 HorizontalProyection2D = initialPosition + selection.width * Vector2.right;
-                Vector3 HorizontalProyection3D = UnityEngine.Camera.main.ScreenToWorldPoint(HorizontalProyection2D);
-                ray = UnityEngine.Camera.main.ScreenPointToRay(HorizontalProyection2D);
-                results = Physics.RaycastAll(ray, Mathf.Infinity);
-                RaycastHit? widthRaycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");
-                if(!widthRaycastHitOnLand.HasValue) {
-                    return;
-                }
-                var finalPosition = ( raycastHitOnLand.Value.point -
-                    ( ( raycastHitOnLand.Value.point - widthRaycastHitOnLand.Value.point ) * 0.5f ) -
-                    ( ( raycastHitOnLand.Value.point - heightRaycastHitOnLand.Value.point ) * 0.5f ) );
-                this.targetObject.transform.position = finalPosition;
-                var localscale_y = ( Mathf.Abs(( raycastHitOnLand.Value.point - widthRaycastHitOnLand.Value.point ).magnitude) );
-                var localscale_x = Mathf.Abs(( raycastHitOnLand.Value.point - heightRaycastHitOnLand.Value.point ).magnitude);
-                this.targetObject.transform.localScale = new Vector3(localscale_x, 1, localscale_y);
-            }
-            else if(mouseController.MouseState == Enums.GUI.MouseStates._none) {
-
-                if(this.targetObject.transform.position != ( UnityEngine.Camera.main.transform.position + ( Vector3.up + -Vector3.forward ) * 100 )
-               ) {
-                    this.targetObject.transform.position = UnityEngine.Camera.main.transform.position + ( Vector3.up + -Vector3.forward ) * 100;
-                    this.targetObject.transform.localScale = new Vector3(1, 1, 1);
-                }
-            }
+         
         }
-
+        #region mouse_events 
         void IMouseListenerRightClickDown.OnDown(PointerEventData data) {
             //Debug.Log("Right click down.");
             if(selector3DBehaviour.Selection.Count > 0) {
-                if(ProvisionalTaskWalkingAsignation())
-                    return;
+                ProvisionalTaskWalkingAsignation()
             }
         }
-
         public void OnDown(PointerEventData data) {
             //Debug.Log("Left click down.");
             selector3DBehaviour.ClearSelection();
         }
-
+        public void OnDrag(PointerEventData data) {
+            //Debug.Log("Left click drag.");
+            CaculateCubeSelection();
+        }
         public void OnUp(PointerEventData data) {
             //Debug.Log("Left click up.");
             switch(mouseController.MouseState) {
                 case Enums.GUI.MouseStates.Pressed:
                     //send a ray to select one unit
                     break;
-                default:
-                    //Move the reference cube
+                case Enums.GUI.MouseStates.Dragged:
+                    //send a ray to select one unit
+                    HideCubeSelection();
+                    //if there is no selection validate two rays
                     break;
             }
         }
-
-
-        public void OnDrag(PointerEventData data) {
-            //Debug.Log("Left click drag.");
-            Vector2 initialMouseRectanglePosition;
-            Vector2 initialPosPlusRectangleHeight;
-            Vector2 initialPosPlusRectangleWidht;
-            Vector3 initialMRectPos3dCast;
-            Vector3 initialMRectPosPlusRectangleHeight3dCast;
-            Vector3 initialMRectPosPlusRectangleWidht3dCast;
-
+        #endregion
+        #region Cube selection
+        private void CaculateCubeSelection() {
+            var screenRectVertexes = this.mouseController.GetScreenRectVertexes();
+            RectangleProjectedVetexes rectangleProjectedVetexes = new RectangleProjectedVetexes();
+            if(TryGetProjectedPoints(screenRectVertexes, ref rectangleProjectedVetexes)) {
+                AssingCubeSelectionPositionAndScale(ref rectangleProjectedVetexes);
+            }
         }
+        private bool TryGetProjectedPoints(RectangleVetexes rectangleVetexes, ref RectangleProjectedVetexes projectedVetexes ) {
+           var topLeftHit =  PhisycsUtils.GetRaycastHitFromPoint(rectangleVetexes.TopLeft, Layers.LayerLand);
+            if(!topLeftHit.HasValue)
+                return false;
+            var bottomLeftHit = PhisycsUtils.GetRaycastHitFromPoint(rectangleVetexes.BottomLeft, Layers.LayerLand);
+            if(!bottomLeftHit.HasValue)
+                return false;
+            var topRightHit = PhisycsUtils.GetRaycastHitFromPoint(rectangleVetexes.TopRight, Layers.LayerLand);
+            if(!topRightHit.HasValue)
+                return false;
+            projectedVetexes.TopLeft = topLeftHit.Value.point;
+            projectedVetexes.BottomLeft = bottomLeftHit.Value.point;
+            projectedVetexes.TopRight = topRightHit.Value.point;
+            projectedVetexes.SetYToZero();
+            return true;
+        }
+        private void AssingCubeSelectionPositionAndScale(ref RectangleProjectedVetexes rectangleProjectedVetexes) {
+            var finalPosition = ( rectangleProjectedVetexes.TopLeft -
+                ( ( rectangleProjectedVetexes.TopLeft - rectangleProjectedVetexes.TopRight ) * 0.5f ) -
+                ( ( rectangleProjectedVetexes.TopLeft - rectangleProjectedVetexes.BottomLeft ) * 0.5f ) );
+            this.targetObject.transform.position = finalPosition;
 
+            var localscale_y = Mathf.Abs(( rectangleProjectedVetexes.TopLeft - rectangleProjectedVetexes.TopRight ).magnitude);
+            var localscale_x = Mathf.Abs(( rectangleProjectedVetexes.TopLeft - rectangleProjectedVetexes.BottomLeft ).magnitude);
+            this.targetObject.transform.localScale = new Vector3(localscale_x, 1, localscale_y);
+        }
+        private void HideCubeSelection() {
+            if(this.targetObject.transform.position != ( UnityEngine.Camera.main.transform.position + ( Vector3.up + -Vector3.forward ) * 100 )
+            ) {
+                this.targetObject.transform.position = UnityEngine.Camera.main.transform.position + ( Vector3.up + -Vector3.forward ) * 100;
+                this.targetObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        #endregion
+        #region taskasignation
         private bool ProvisionalTaskWalkingAsignation() {
             //REFACTOR Ray hit from 2d
             Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -150,7 +143,6 @@ namespace V2.GUI.Mouse.Behaviours
             }
             return assigned > 0;
         }
-
-      
+        #endregion
     }
 }

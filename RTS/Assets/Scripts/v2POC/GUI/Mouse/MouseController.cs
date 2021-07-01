@@ -6,6 +6,7 @@ using V2.Enums.GUI;
 using System.Linq;
 using V2.Interfaces.GUI;
 using  UnityEngine.EventSystems;
+using V2.Structs;
 
 namespace V2.GUI.Mouse
 {
@@ -41,6 +42,17 @@ namespace V2.GUI.Mouse
             entry_0.eventID = EventTriggerType.PointerUp;
             entry_0.callback.AddListener((data) => { _PointerUp((PointerEventData)data); });
             triggerObject.triggers.Add(entry_0);
+        }
+
+        internal RectangleVetexes GetScreenRectVertexes() {
+            Rect selection = GetRectangle();
+            var initialPosition = GetInitialPosition();
+            return new RectangleVetexes() {
+                TopLeft = initialPosition,
+                BottomLeft = initialPosition + selection.height * Vector2.down,
+                TopRight = initialPosition + selection.width * Vector2.right,
+        
+            };
         }
 
         internal Rect GetRectangle() {

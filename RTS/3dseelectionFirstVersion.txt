@@ -1,0 +1,37 @@
+   if(mouseController.MouseState == V2.Enums.GUI.MouseStates.Dragged) {
+                 //  CaculateCubeSelection();
+                /*  Rect selection = mouseController.GetRectangle();
+                  var initialPosition = mouseController.GetInitialPosition();//.InitialMousePosition);
+                  //REFACTOR Ray hit from 2d
+                  int layerMask = 1 << 8;
+                  Ray ray = UnityEngine.Camera.main.ScreenPointToRay(initialPosition);
+                  var results = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                  RaycastHit? raycastHitOnLand = results.FirstOrDefault();
+                  if(!raycastHitOnLand.HasValue) {
+                      return;
+                  }
+                  //
+                  Vector2 verticalProyection2D = initialPosition + selection.height * Vector2.down;
+                  ray = UnityEngine.Camera.main.ScreenPointToRay(verticalProyection2D);
+                  results = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                  RaycastHit? heightRaycastHitOnLand = results.FirstOrDefault();
+                  if(!heightRaycastHitOnLand.HasValue) {
+                      return;
+                  }
+                 //Debug.DrawLine(heightRaycastHitOnLand.Value.point, heightRaycastHitOnLand.Value.point + new Vector3(0, 120, 0), Color.blue);
+                  Vector2 HorizontalProyection2D = initialPosition + selection.width * Vector2.right;
+                  ray = UnityEngine.Camera.main.ScreenPointToRay(HorizontalProyection2D);
+                  results = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
+                  RaycastHit? widthRaycastHitOnLand = results.FirstOrDefault();
+                  if(!widthRaycastHitOnLand.HasValue) {
+                      return;
+                  }
+                  var finalPosition = ( raycastHitOnLand.Value.point -
+                      ( ( raycastHitOnLand.Value.point - widthRaycastHitOnLand.Value.point ) * 0.5f ) -
+                      ( ( raycastHitOnLand.Value.point - heightRaycastHitOnLand.Value.point ) * 0.5f ) );
+                  this.targetObject.transform.position = finalPosition;
+                  var localscale_y = ( Mathf.Abs(( raycastHitOnLand.Value.point - widthRaycastHitOnLand.Value.point ).magnitude) );
+                  var localscale_x = Mathf.Abs(( raycastHitOnLand.Value.point - heightRaycastHitOnLand.Value.point ).magnitude);
+                  this.targetObject.transform.localScale = new Vector3(localscale_x, 1, localscale_y);  */
+            }
+            

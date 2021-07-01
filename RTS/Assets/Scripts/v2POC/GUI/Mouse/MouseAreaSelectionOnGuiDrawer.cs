@@ -28,6 +28,8 @@ namespace V2.GUI.Mouse
         }
       
         void OnGUI() {
+            if(mouseController.InputButton != PointerEventData.InputButton.Left)
+                return;
             var originalcolor = UnityEngine.GUI.color;
             var originalcolorback = UnityEngine.GUI.backgroundColor;
             UnityEngine.GUI.color = Color.blue;
