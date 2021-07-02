@@ -86,11 +86,12 @@ namespace V2.GUI.Mouse
                 case PointerEventData.InputButton.Right:
                     mouseListenerRightClickDown?.OnDown(data);
                     break;
-                case PointerEventData.InputButton.Middle:
-                    break;
-                default:
+                case PointerEventData.InputButton.Left:
                     mouseListenerLeftClickDown?.OnDown(data);
                     break;
+                case PointerEventData.InputButton.Middle:
+                    break;
+             
             }
         }
         private void _MouseDrag(PointerEventData data) {
@@ -115,7 +116,7 @@ namespace V2.GUI.Mouse
                     break;
                 case PointerEventData.InputButton.Middle:
                     break;
-                default:
+                case PointerEventData.InputButton.Left:
                     mouseListenerLeftClickUp?.OnUp(data);
                     break;
             }

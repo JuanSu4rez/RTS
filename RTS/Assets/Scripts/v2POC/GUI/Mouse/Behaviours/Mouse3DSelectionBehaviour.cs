@@ -44,30 +44,45 @@ namespace V2.GUI.Mouse.Behaviours
         #region mouse_events 
         void IMouseListenerRightClickDown.OnDown(PointerEventData data) {
             //Debug.Log("Right click down.");
-            if(selector3DBehaviour.Selection.Count > 0) {
-                ProvisionalTaskWalkingAsignation()
+            if(selector3DBehaviour.Selection.Count > 0)  {
+                ProvisionalTaskWalkingAsignation();
             }
         }
-        public void OnDown(PointerEventData data) {
-            //Debug.Log("Left click down.");
+         void IMouseListenerLeftClickDown.OnDown(PointerEventData data) {
+            Debug.Log("Left click down. ClearSelection");
             selector3DBehaviour.ClearSelection();
+            
         }
-        public void OnDrag(PointerEventData data) {
+         void IMouseListenerLeftClickDrag.OnDrag(PointerEventData data) {
             //Debug.Log("Left click drag.");
             CaculateCubeSelection();
         }
-        public void OnUp(PointerEventData data) {
+        void IMouseListenerLeftClickUp.OnUp(PointerEventData data) {
             //Debug.Log("Left click up.");
+            GameObject gameObject = null;
             switch(mouseController.MouseState) {
                 case Enums.GUI.MouseStates.Pressed:
-                    //send a ray to select one unit
+                    gameObject =  SendRay(data.position);
                     break;
                 case Enums.GUI.MouseStates.Dragged:
-                    //send a ray to select one unit
                     HideCubeSelection();
-                    //if there is no selection validate two rays
+                    if(selector3DBehaviour.Selection.Count == 0) {
+                        gameObject = SendRay(data.position);
+                        if(gameObject == null) {
+                           gameObject = SendRay(mouseController.GetInitialPosition());
+                        }
+                    }
                     break;
             }
+            selector3DBehaviour.AddSelectedUnit(ref gameObject);
+        }
+        private GameObject SendRay(Vector2 position) {
+            RaycastHit? rayCastHit = null;
+            var tags = new string[] { Constans.Tags.Building, Constans.Tags.Military, Constans.Tags.Citizen, Constans.Tags.Resource };
+            var hits = PhisycsUtils.RaycastAll(position);
+            rayCastHit = hits.FirstOrDefault(p => tags.Contains(p.collider?.gameObject?.tag) && p.collider?.gameObject?.GetComponent<Interfaces.ISelectable>() != null);
+            var gameObject = rayCastHit != null ? rayCastHit.Value.collider?.gameObject : null;
+            return gameObject;
         }
         #endregion
         #region Cube selection
@@ -117,21 +132,26 @@ namespace V2.GUI.Mouse.Behaviours
             //REFACTOR Ray hit from 2d
             Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
             var results = Physics.RaycastAll(ray, Mathf.Infinity);
-            RaycastHit? raycastHitOnLand = results.FirstOrDefault(p => p.collider.gameObject.tag == "Land");
-            if(!raycastHitOnLand.HasValue) {
+            var tags = new string[] { Constans.Tags.Building, Constans.Tags.Military, Constans.Tags.Citizen, Constans.Tags.Resource };
+            RaycastHit? raycastHit = null;
+            raycastHit = results.FirstOrDefault(p => tags.Contains(p.collider?.gameObject?.tag));
+           
+            //If hits something diferent from land
+            if(raycastHit!= null && raycastHit.Value.collider?.gameObject != null) {
                 return false;
-            }
-            //
+            }   
+            raycastHit = results.FirstOrDefault(p => p.collider != null && p.collider.gameObject.tag == Constans.Tags.Land);
+            if(!raycastHit.HasValue || raycastHit.Value.collider?.gameObject == null)
+                return false;
             //if palyer hit in the land
             var selection = selector3DBehaviour.Selection;
-            var destiny = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(raycastHitOnLand.Value.point);
-            var sorroundpoins = V2.Classes.Grid.grid.GetSorroundPositions(raycastHitOnLand.Value.point);
+            var destiny = V2.Classes.Grid.grid.getCenteredGridPositionFromWorldPosition(raycastHit.Value.point);
+            var sorroundpoins = V2.Classes.Grid.grid.GetSorroundPositions(raycastHit.Value.point);
             List<Vector3> destinyPoints = new List<Vector3>();
             destinyPoints.Add(destiny);
             destinyPoints.AddRange(sorroundpoins);
             int i = 0;
             int assigned = 0;
-
             foreach(var selected in selection) {
                 var controller = selected.GetComponent<Controllers.UnitController>();
                 if(controller) {

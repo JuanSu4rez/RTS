@@ -10,11 +10,16 @@ namespace V2.Utils
 {
     public static class PhisycsUtils
     {
-        public static RaycastHit? GetRaycastHitFromPoint( Vector2 position ,  int layerMask) {
+        public static RaycastHit? GetRaycastHitFromPoint( Vector2 position ,  int layerMask){
             layerMask = 1 << layerMask;
             Ray ray = UnityEngine.Camera.main.ScreenPointToRay(position);
             var results = Physics.RaycastAll(ray, Mathf.Infinity, layerMask);
             return results.FirstOrDefault();
+        }
+        public static RaycastHit[] RaycastAll(Vector2 position) {
+            Ray ray = UnityEngine.Camera.main.ScreenPointToRay(position);
+            var results = Physics.RaycastAll(ray, Mathf.Infinity);
+            return results;
         }
     }
 }
