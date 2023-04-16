@@ -6,7 +6,7 @@ public class TestSceneOne : MonoBehaviour
 
     // Use this for initialization
     void Start() {
-        var player = GameObject.Find("player");
+        var player = GameObject.Find("worker");
         var tg = player.GetComponent<TaskGatheringManager>();
         var resource = GameObject.Find("resource");
         tg.Init(resource.GetComponent<ResourceBehaviour>());

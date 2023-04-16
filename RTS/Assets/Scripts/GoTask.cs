@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoTask : RtsTask
+public class GoTask : Task
 {
     [SerializeField]
     private Vector3 Destiny;
@@ -14,7 +14,7 @@ public class GoTask : RtsTask
     }
 
     // Update is called once per frame
-    public override void MyUpdate() {
+    public override void TaskUpdate() {
 
         Debug.Log("GoTask update");
         this.gameObject.transform.position = Destiny;

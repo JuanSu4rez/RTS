@@ -14,10 +14,14 @@ public class ResourceBehaviour : MonoBehaviour
             GameObject.Destroy(this.gameObject);
         }
     }
-
+  
     public int DiscountAmount(int discount) {
-        int discountedAmount = ( _amount - discount );
-        _amount = ( discountedAmount < 0 ) ? 0 : discountedAmount;
+        if(discount > _amount) {
+            _amount = 0;
+        }
+        else {
+            _amount -= discount;
+        }
         return discount;
     }
 }

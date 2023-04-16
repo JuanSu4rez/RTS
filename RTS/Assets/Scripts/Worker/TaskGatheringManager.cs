@@ -4,50 +4,27 @@ using System;
 
 public class TaskGatheringManager : MonoBehaviour
 {
-    private RtsTask currentTask = null;
-    private System.Collections.Generic.Queue<RtsTask> _taskQueue = new System.Collections.Generic.Queue<RtsTask>();
-
     private ResourceBehaviour _resourceBehaviour;
     private WorkerBehaviour _workerBehaviour;
-    private Vector3 placeToDeposit = Vector3.zero;
+    private Vector3 _placeToDeposit = Vector3.zero;
+    private TaskExecutor _taskExecutor;
     // Use this for initialization
     private void Awake() {
         enabled = false;
+        _workerBehaviour = this.gameObject.GetComponent<WorkerBehaviour>();
+        _taskExecutor = this.gameObject.GetComponent<TaskExecutor>();
+        
     }
 
     void Start() {
-        _workerBehaviour = this.gameObject.GetComponent<WorkerBehaviour>();
+
     }
     // Update is called once per frame
     void Update() {
-      
-    }
-
-    private void LateUpdate() {
         if(_resourceBehaviour == null) {
             return;
         }
-        Debug.Log("LateUdapte");
-        if(_taskQueue.Count > 0) {
-            if(currentTask == null) {
-                currentTask = _taskQueue.Peek();
-                currentTask.enabled = true;
-                System.Threading.Thread.Sleep(300);
-                return;
-            }
-            if(currentTask.IsFinished()) {
-                var doneTask = _taskQueue.Dequeue();
-                doneTask.enabled = false;
-                currentTask = _taskQueue.Count > 0 ? _taskQueue.Peek() : null;
-                if(currentTask != null) { 
-                    currentTask.enabled = true;
-                }
-                taskTransition(doneTask, currentTask);
-                System.Threading.Thread.Sleep(300);
-                return;
-            }
-        }
-        else {
+        if(_taskExecutor.HasEnded) {
             //deposit the current
             //Current gets cleaned
             _workerBehaviour.GatheringCapacity.Current = 0;
@@ -56,15 +33,13 @@ public class TaskGatheringManager : MonoBehaviour
             }
             else {
                 //find a new resource kind or finish
-             
             }
         }
-
-        System.Threading.Thread.Sleep(300);
     }
 
-    private void taskTransition(RtsTask doneTask, RtsTask newTask) {
-
+    private void taskTransition(Task doneTask, Task newTask) {
+        //just to slow
+        System.Threading.Thread.Sleep(500);
         if(newTask == null) {
             return;
         }
@@ -82,9 +57,11 @@ public class TaskGatheringManager : MonoBehaviour
         gotask.SetDestiny(resourceBehaviour.gameObject.transform.position);
         var gatherResourceTask = this.gameObject.GetComponent<GatherResourceTask>();
         gatherResourceTask.SetResource(resourceBehaviour);
-        _taskQueue.Enqueue(gotask);
-        _taskQueue.Enqueue(gatherResourceTask);
-        _taskQueue.Enqueue(gotask);
+        _taskExecutor.SetTaskTransition(taskTransition);    
+        _taskExecutor.Enqueue(gotask);
+        _taskExecutor.Enqueue(gatherResourceTask);
+        _taskExecutor.Enqueue(gotask);
         this.enabled = true;
+        _taskExecutor.enabled  = true;
     }
 }

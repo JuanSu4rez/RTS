@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GatherResourceTask : RtsTask
+public class GatherResourceTask : Task
 {
     private ResourceBehaviour _resourceBehaviour;
     private WorkerBehaviour _workerBehaviour;
@@ -10,14 +10,15 @@ public class GatherResourceTask : RtsTask
         enabled = false;
     }
 
-    public override void MyStart() {
+    public override void TaskStart() {
         _workerBehaviour = this.gameObject.GetComponent<WorkerBehaviour>();
     }
 
     // Update is called once per frame
-    public override void MyUpdate() {
+    public override void TaskUpdate() {
         var discounted = _resourceBehaviour.DiscountAmount(_workerBehaviour.GatheringSpeed);
         _workerBehaviour.GatheringCapacity.Current += discounted;
+        System.Threading.Thread.Sleep(100);
     }
 
     public override bool IsFinished() {
