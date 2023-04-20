@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField]
     private float _foodAmount;
-    public float FoodAmount { get => _foodAmount; set => _foodAmount = value; }
+    public float FoodAmount { get => _foodAmount; }
     
     // Use this for initialization
     void Start() {
@@ -14,5 +15,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update() {
 
+    }
+
+    public void AddFoodAmount(float amountToAdd) {
+        _foodAmount += amountToAdd;
     }
 }

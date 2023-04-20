@@ -17,11 +17,13 @@ public class ResourceBehaviour : MonoBehaviour
   
     public int DiscountAmount(int discount) {
         if(discount > _amount) {
+            var discounted = _amount;
             _amount = 0;
+            return discounted;
         }
         else {
             _amount -= discount;
+            return discount;
         }
-        return discount;
     }
 }

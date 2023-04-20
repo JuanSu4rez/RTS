@@ -21,4 +21,12 @@ public class WorkerBehaviour : MonoBehaviour
     void Update() {
 
     }
+
+    public int AmountToDiscount() { 
+        var amountToDiscount = GatheringSpeed;
+        if(GatheringCapacity.Current + amountToDiscount > GatheringCapacity.Limit) {
+            amountToDiscount = GatheringCapacity.Limit - GatheringCapacity.Current;
+        }
+      return amountToDiscount;
+    }
 }
