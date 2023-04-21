@@ -4,12 +4,13 @@ using System;
 
 public class TaskGatheringManager : MonoBehaviour
 {
-    private static Action<float> defAction = (amountOfResource) => { };
+    private static Action<ResourceType, float> defAction = ( resourceType , amountOfResource) => { };
     private ResourceBehaviour _resourceBehaviour;
     private WorkerBehaviour _workerBehaviour;
     private Vector3 _placeToDeposit;
     public Vector3 PlaceToDeposit { set { _placeToDeposit = value; } }
-    public Action<float> AddResourceAction { get; set; } = defAction;
+    public Action<ResourceType, float> AddResourceAction { get; set; } = defAction;
+    private ResourceType _resourceType;
     private TaskExecutor _taskExecutor;
     // Use this for initialization
     private void Awake() {
@@ -28,7 +29,7 @@ public class TaskGatheringManager : MonoBehaviour
         if(_taskExecutor.HasEnded) {
             //deposit the current
             
-            AddResourceAction(_workerBehaviour.GatheringCapacity.Current);
+            AddResourceAction(_resourceType, _workerBehaviour.GatheringCapacity.Current);
             //Current gets cleaned
             _workerBehaviour.GatheringCapacity.Current = 0;
             if(_resourceBehaviour != null && !_resourceBehaviour.IsEmpty) {
@@ -55,6 +56,8 @@ public class TaskGatheringManager : MonoBehaviour
 
     public void Init(ResourceBehaviour resourceBehaviour) {
         _resourceBehaviour = resourceBehaviour;
+        _resourceType = _resourceBehaviour.ResourceType;
+
         var gotask = this.gameObject.GetComponent<GoTask>();
         //place to gather
         gotask.SetDestiny(resourceBehaviour.gameObject.transform.position);

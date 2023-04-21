@@ -7,6 +7,11 @@ public class ResourceBehaviour : MonoBehaviour
     [SerializeField]
     private int _amount;
 
+    [SerializeField]
+    private ResourceType _resourceType;
+
+    public ResourceType ResourceType => _resourceType;
+
     public bool IsEmpty => _amount == 0;
 
     void Update() {

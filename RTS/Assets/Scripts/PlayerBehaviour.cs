@@ -17,6 +17,14 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
+    public void AddResource(ResourceType resourceType, float amountToAdd) {
+        switch(resourceType) {
+            case ResourceType.Food:
+                AddFoodAmount(amountToAdd);
+                break;
+        }
+    }
+
     public void AddFoodAmount(float amountToAdd) {
         _foodAmount += amountToAdd;
     }
