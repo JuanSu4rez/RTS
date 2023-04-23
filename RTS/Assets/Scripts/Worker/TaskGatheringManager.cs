@@ -12,7 +12,7 @@ public class TaskGatheringManager : MonoBehaviour{
     public Action<ResourceType, float> AddResourceAction { get; set; } = defAction;
     private ResourceType _resourceType;
     private TaskExecutor _taskExecutor;
-    private Vector3 lastGatheringPosition;
+    private Vector3 _lastGatheringPosition;
     // Use this for initialization
     private void Awake() {
         enabled = false;
@@ -40,7 +40,7 @@ public class TaskGatheringManager : MonoBehaviour{
                 //find a new resource or finish
                 //we have to check by the range of view
                 var gotask = this.gameObject.GetComponent<GoTask>();
-                gotask.SetDestiny(lastGatheringPosition);
+                gotask.SetDestination(_lastGatheringPosition);
                 gotask.enabled = true;
             }
         }
@@ -55,7 +55,7 @@ public class TaskGatheringManager : MonoBehaviour{
         if(doneTask is GatherResourceTask gatherResourceTask
                      && newTask is GoTask goTask) {
             //place to deposit
-            goTask.SetDestiny(_placeToDeposit);
+            goTask.SetDestination(_placeToDeposit);
         }
     }
 
@@ -65,8 +65,8 @@ public class TaskGatheringManager : MonoBehaviour{
 
         var gotask = this.gameObject.GetComponent<GoTask>();
         //place to gather
-        lastGatheringPosition = resourceBehaviour.gameObject.transform.position;
-        gotask.SetDestiny(resourceBehaviour.gameObject.transform.position);
+        _lastGatheringPosition = resourceBehaviour.gameObject.transform.position;
+        gotask.SetDestination(resourceBehaviour.gameObject.transform.position);
 
         var gatherResourceTask = this.gameObject.GetComponent<GatherResourceTask>();
         gatherResourceTask.SetResource(resourceBehaviour);

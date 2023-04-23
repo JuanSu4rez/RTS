@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GoTask : Task{
     [SerializeField]
-    private Vector3 Destiny;
+    private Vector3 _destination;
 
     // Start is called before the first frame update
     private void Start() {
@@ -15,16 +15,16 @@ public class GoTask : Task{
     public override void TaskUpdate() {
 
         Debug.Log("GoTask update");
-        this.gameObject.transform.position = Destiny;
+        this.gameObject.transform.position = _destination;
         
     }
 
     public override bool IsFinished() {
-        return Destiny == this.gameObject.transform.position;
+        return _destination == this.gameObject.transform.position;
     }
 
-    public void SetDestiny(Vector3 destiny) {
-        Destiny = destiny;
+    public void SetDestination(Vector3 destiny) {
+        _destination = destiny;
     }
 
 }
