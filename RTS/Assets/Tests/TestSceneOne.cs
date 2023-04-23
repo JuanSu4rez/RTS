@@ -8,28 +8,26 @@ public class TestSceneOne : MonoBehaviour{
     void Start() {
         startPlayerOneWorkerGatheringTask();
         startPlayerTwoWrokerGatheringTask();
-       
-      
     }
 
     private void startPlayerOneWorkerGatheringTask() {
 
         startPlayerWorkerGatheringTask(
-           playerGameObjectName: "player_one",
-           workerGameObjectName: "worker_1_001",
-           buildingGameObjectName: "building_1_001",
-           resourceGameObjectName: "resource_001",
-           playerScoreFoodGameObjectName: "playerOneScore");
+           playerGameObjectName: "Player_one",
+           workerGameObjectName: "Worker_1_001",
+           buildingGameObjectName: "Building_1_001",
+           resourceGameObjectName: "Resource_001",
+           playerScoreFoodGameObjectName: "PlayerOneScore");
     }
 
     private void startPlayerTwoWrokerGatheringTask() {
    
         startPlayerWorkerGatheringTask(
-            playerGameObjectName: "player_two",
-            workerGameObjectName: "worker_2_001", 
-            buildingGameObjectName: "building_2_001",
-            resourceGameObjectName: "resource_002",
-            playerScoreFoodGameObjectName: "playerTwoScore");
+            playerGameObjectName: "Player_two",
+            workerGameObjectName: "Worker_2_001", 
+            buildingGameObjectName: "Building_2_001",
+            resourceGameObjectName: "Resource_002",
+            playerScoreFoodGameObjectName: "PlayerTwoScore");
     }
 
     private void startPlayerWorkerGatheringTask(string playerGameObjectName, string workerGameObjectName , string buildingGameObjectName, string resourceGameObjectName, string playerScoreFoodGameObjectName) {
@@ -46,13 +44,16 @@ public class TestSceneOne : MonoBehaviour{
     private void startGatheringTask(GameObject player, GameObject worker, GameObject building_to_deposit, GameObject resource, GameObject playerScoreFoodGameObject) {
 
         var playerBehaviour = player.GetComponent<PlayerBehaviour>();
+        var viewScore = playerScoreFoodGameObject.GetComponent<ViewScore>();
+        var playerFacade = player.GetComponent<PlayerFacade>();
+        playerFacade.Init(playerBehaviour, viewScore);
+
         var taskGatheringManager = worker.GetComponent<TaskGatheringManager>();
         taskGatheringManager.PlaceToDeposit = building_to_deposit.transform.position;
-        taskGatheringManager.AddResourceAction = playerBehaviour.AddResource;
+        taskGatheringManager.AddResourceAction = playerFacade.AddResource;
         taskGatheringManager.Init(resource.GetComponent<ResourceBehaviour>());
 
-        var viewComponent =  playerScoreFoodGameObject.GetComponentInChildren<PlayerScoreResourceView>();
-        viewComponent.Init(()=> playerBehaviour.FoodAmount.ToString());
+
     }
 
     // Update is called once per frame

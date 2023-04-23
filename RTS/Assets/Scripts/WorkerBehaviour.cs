@@ -10,8 +10,7 @@ public class WorkerBehaviour : MonoBehaviour{
 
     [SerializeField]
     private int _gatheringSpeed;
-
-    public int GatheringSpeed => _gatheringSpeed;
+ 
     // Use this for initialization
     void Start() {
 
@@ -23,10 +22,10 @@ public class WorkerBehaviour : MonoBehaviour{
     }
 
     public int GetAmountToDiscount() { 
-        var amountToDiscount = GatheringSpeed;
-        if(GatheringCapacity.Current + amountToDiscount > GatheringCapacity.Limit) {
-            amountToDiscount = GatheringCapacity.Limit - GatheringCapacity.Current;
+        var gatheringSpeed = _gatheringSpeed;
+        if(GatheringCapacity.Current + gatheringSpeed > GatheringCapacity.Limit) {
+            gatheringSpeed = GatheringCapacity.Limit - GatheringCapacity.Current;
         }
-      return amountToDiscount;
+      return gatheringSpeed;
     }
 }

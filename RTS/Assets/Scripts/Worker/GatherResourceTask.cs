@@ -16,10 +16,7 @@ public class GatherResourceTask : Task{
 
     // Update is called once per frame
     public override void TaskUpdate() {
-        var amountToDiscount = _workerBehaviour.GatheringSpeed;
-        if(_workerBehaviour.GatheringCapacity.Current + amountToDiscount > _workerBehaviour.GatheringCapacity.Limit) {
-            amountToDiscount = _workerBehaviour.GatheringCapacity.Limit - _workerBehaviour.GatheringCapacity.Current;
-        }
+       
         var discounted = _resourceBehaviour.DiscountAmount(_workerBehaviour.GetAmountToDiscount());
         _workerBehaviour.GatheringCapacity.Current += discounted;
         //TODO remove sleep

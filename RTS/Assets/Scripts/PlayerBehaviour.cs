@@ -4,6 +4,9 @@ using System.Collections;
 public class PlayerBehaviour : MonoBehaviour{
 
     [SerializeField]
+    private Team team;
+
+    [SerializeField]
     private float _foodAmount;
     public float FoodAmount { get => _foodAmount; }
     

@@ -37,7 +37,8 @@ public class TaskGatheringManager : MonoBehaviour{
                 Init(_resourceBehaviour);
             }
             else {
-                //find a new resource kind or finish
+                //find a new resource or finish
+                //we have to check by the range of view
             }
         }
     }
