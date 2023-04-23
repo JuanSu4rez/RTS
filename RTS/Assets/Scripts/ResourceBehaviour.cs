@@ -2,8 +2,8 @@
 using System.Collections;
 
 [System.Serializable]
-public class ResourceBehaviour : MonoBehaviour
-{
+public class ResourceBehaviour : MonoBehaviour{
+
     [SerializeField]
     private int _amount;
 

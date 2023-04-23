@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class TaskExecutor : MonoBehaviour
-{
+public class TaskExecutor : MonoBehaviour{
+
     private Queue<Task> _taskQueue = new Queue<Task>();
     private Task _currentTask = null;
     private Action<Task, Task> _taskTransitionAction;

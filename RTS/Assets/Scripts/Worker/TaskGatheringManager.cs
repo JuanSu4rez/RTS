@@ -2,8 +2,8 @@
 using System.Collections;
 using System;
 
-public class TaskGatheringManager : MonoBehaviour
-{
+public class TaskGatheringManager : MonoBehaviour{
+
     private static Action<ResourceType, float> defAction = ( resourceType , amountOfResource) => { };
     private ResourceBehaviour _resourceBehaviour;
     private WorkerBehaviour _workerBehaviour;
@@ -12,6 +12,7 @@ public class TaskGatheringManager : MonoBehaviour
     public Action<ResourceType, float> AddResourceAction { get; set; } = defAction;
     private ResourceType _resourceType;
     private TaskExecutor _taskExecutor;
+
     // Use this for initialization
     private void Awake() {
         enabled = false;
@@ -42,7 +43,7 @@ public class TaskGatheringManager : MonoBehaviour
     }
 
     private void taskTransition(Task doneTask, Task newTask) {
-        //just to slow
+        //TODO remove sleep
         System.Threading.Thread.Sleep(250);
         if(newTask == null) {
             return;

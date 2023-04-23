@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Task: MonoBehaviour
-{
+public abstract class Task: MonoBehaviour{
+
     void Start() {
         TaskStart();
     }

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorkerBehaviour : MonoBehaviour
-{
+public class WorkerBehaviour : MonoBehaviour{
+
     [SerializeField]
     private Capacity _gatheringCapacity;
 
@@ -22,7 +22,7 @@ public class WorkerBehaviour : MonoBehaviour
 
     }
 
-    public int AmountToDiscount() { 
+    public int GetAmountToDiscount() { 
         var amountToDiscount = GatheringSpeed;
         if(GatheringCapacity.Current + amountToDiscount > GatheringCapacity.Limit) {
             amountToDiscount = GatheringCapacity.Limit - GatheringCapacity.Current;

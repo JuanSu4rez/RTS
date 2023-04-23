@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoTask : Task
-{
+public class GoTask : Task{
     [SerializeField]
     private Vector3 Destiny;
-   
 
     // Start is called before the first frame update
     private void Start() {

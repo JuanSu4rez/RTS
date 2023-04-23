@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GatherResourceTask : Task
-{
+public class GatherResourceTask : Task{
+
     private ResourceBehaviour _resourceBehaviour;
     private WorkerBehaviour _workerBehaviour;
     // Use this for initialization
@@ -20,8 +20,9 @@ public class GatherResourceTask : Task
         if(_workerBehaviour.GatheringCapacity.Current + amountToDiscount > _workerBehaviour.GatheringCapacity.Limit) {
             amountToDiscount = _workerBehaviour.GatheringCapacity.Limit - _workerBehaviour.GatheringCapacity.Current;
         }
-        var discounted = _resourceBehaviour.DiscountAmount(amountToDiscount);
+        var discounted = _resourceBehaviour.DiscountAmount(_workerBehaviour.GetAmountToDiscount());
         _workerBehaviour.GatheringCapacity.Current += discounted;
+        //TODO remove sleep
         System.Threading.Thread.Sleep(100);
     }
 

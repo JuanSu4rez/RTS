@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBehaviour : MonoBehaviour
-{
+public class PlayerBehaviour : MonoBehaviour{
+
     [SerializeField]
     private float _foodAmount;
     public float FoodAmount { get => _foodAmount; }
